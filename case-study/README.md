@@ -33,7 +33,7 @@
   - [9.1. Code Generation](#91-code-generation)
   - [9.2. Writing Messages](#92-writing-messages)
   - [9.3. Reading Messages](#93-reading-messages)
-- [10. Schema Evolution](#schema-evolution)
+- [10. Schema Evolution](#10-schema-evolution)
   - [10.1. Backward Compatible Changes](#101-backward-compatible-changes)
   - [10.2. Breaking Changes](#102-breaking-changes)
   - [10.3. Best Practices](#103-best-practices)
