@@ -937,7 +937,7 @@ Example Avro mapping (same as unbounded) but with custom cardinality annotations
     "doc": "Contained equipment.",
     "modelReference": "http://iec.ch/TC57/CIM100#EquipmentContainer.Equipments",
     "minCardDoc": "[min cardinality = 2] Application level validation will be required to ensure the array contains at least 2 items.",
-    "maxCardDoc": "[max cardinality = 4] Application level validation will be required to ensure the array contains at most 4 items.
+    "maxCardDoc": "[max cardinality = 4] Application level validation will be required to ensure the array contains at most 4 items."
 }
 ```
 
@@ -1127,8 +1127,7 @@ Container structure:
   "fields": [
     {
       "name": "RemedialActionApplied",
-      "type": {"type": "array", "items": "RemedialActionApplied"},
-      "default": []
+      "type": {"type": "array", "items": "RemedialActionApplied"}
     }
   ]
 }
