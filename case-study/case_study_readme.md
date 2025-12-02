@@ -67,9 +67,7 @@ CIMTool utilizes what is known as "builders" to generate these various artifacts
 
 ## Avro Schema Builder Latest Release
 
-  -   1.0.0-beta
-
-      - The beta release is available here on GitHub at [CIMTool-2.2.0](./builder/apache-avro-schema.xsl).
+  - The beta release is available here on GitHub at [CIMTool-2.2.0](../builder/apache-avro-schema.xsl).
 
 ## CIMTool Workflow for Generating Artifacts
 
