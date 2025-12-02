@@ -1,5 +1,37 @@
 ```JSON
 [
+     "header": {
+         {
+              "name": "profProfile",
+              "type": "string",
+              "doc": "URI of the DX-PROF profile this dataset conforms to, e.g. https://ap.cim4.eu/StateVariables/3.0."
+         },
+         {
+              "name": "identifier",
+              "type": "string",
+              "doc": "Dataset identifier, aligned with dcterms:identifier / dcat:Dataset.@about."
+         },
+         {
+              "name": "isVersionOf",
+              "type": [ "null", "string" ],
+              "doc": "URI of the logical dataset or model this is a version of (dct:isVersionOf)."
+         },
+         {
+              "name": "version",
+              "type": [ "null", "string" ],
+              "doc": "Version label for this dataset instance (aligned with dcat:version). Useful when multiple messages represent different versions of the same time slice."
+         },
+         {
+              "name": "startDate",
+              "type": "string",
+              "doc": "Start of the validity interval for this dataset, aligned with dcat:startDate (ISO-8601). Typically the case time of the power system state."
+         },
+         {
+              "name": "schemaRef",
+              "type": "string",
+              "doc": "Dereferenceable URI or Schema Registry URL for the Avro schema used to encode this dataset."
+         }
+     },
      {
           "type": "enum",
           "name": "LimitKind",
@@ -102,91 +134,91 @@
           "fields": [
                {
                     "name": "addressGeneral",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "First line of a free form address or some additional address information (for example a mail stop).",
                     "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.addressGeneral"
                },
                {
                     "name": "addressGeneral2",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "(if applicable) Second line of a free form address.",
                     "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.addressGeneral2"
                },
                {
                     "name": "addressGeneral3",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "(if applicable) Third line of a free form address.",
                     "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.addressGeneral3"
                },
                {
                     "name": "buildingName",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "(if applicable) In certain cases the physical location of the place of interest does not have a direct point of entry from the street, but may be located inside a larger structure such as a building, complex, office block, apartment, etc.",
                     "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.buildingName"
                },
                {
                     "name": "code",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "(if applicable) Utilities often make use of external reference systems, such as those of the town-planner's department or surveyor general's mapping system, that allocate global reference codes to streets.",
                     "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.code"
                },
                {
                     "name": "floorIdentification",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "The identification by name or number, expressed as text, of the floor in the building as part of this address.",
                     "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.floorIdentification"
                },
                {
                     "name": "name",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "Name of the street.",
                     "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.name"
                },
                {
                     "name": "number",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "Designator of the specific location on the street.",
                     "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.number"
                },
                {
                     "name": "prefix",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "Prefix to the street name. For example: North, South, East, West.",
                     "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.prefix"
                },
                {
                     "name": "suffix",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "Suffix to the street name. For example: North, South, East, West.",
                     "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.suffix"
                },
                {
                     "name": "suiteNumber",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "Number of the apartment or suite.",
                     "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.suiteNumber"
                },
                {
                     "name": "type",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "Type of street. Examples include: street, circle, boulevard, avenue, road, drive, etc.",
                     "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.type"
                },
                {
                     "name": "withinTownLimits",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "True if this street is within the legal geographical boundaries of the specified town (default).",
                     "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.withinTownLimits"
@@ -202,35 +234,35 @@
           "fields": [
                {
                     "name": "code",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "Town code.",
                     "modelReference": "http://iec.ch/TC57/CIM100#TownDetail.code"
                },
                {
                     "name": "country",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "Name of the country.",
                     "modelReference": "http://iec.ch/TC57/CIM100#TownDetail.country"
                },
                {
                     "name": "name",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "Town name.",
                     "modelReference": "http://iec.ch/TC57/CIM100#TownDetail.name"
                },
                {
                     "name": "section",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "Town section. For example, it is common for there to be 36 sections per township.",
                     "modelReference": "http://iec.ch/TC57/CIM100#TownDetail.section"
                },
                {
                     "name": "stateOrProvince",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "Name of the state or province.",
                     "modelReference": "http://iec.ch/TC57/CIM100#TownDetail.stateOrProvince"
@@ -246,21 +278,21 @@
           "fields": [
                {
                     "name": "language",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "The language in which the address is specified, using ISO 639-1 two digit language code.",
                     "modelReference": "http://iec.ch/TC57/CIM100#StreetAddress.language"
                },
                {
                     "name": "poBox",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "Post office box.",
                     "modelReference": "http://iec.ch/TC57/CIM100#StreetAddress.poBox"
                },
                {
                     "name": "postalCode",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "Postal code for the address.",
                     "modelReference": "http://iec.ch/TC57/CIM100#StreetAddress.postalCode"
@@ -308,42 +340,42 @@
                },
                {
                     "name": "inService",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "Specifies the availability of the equipment. True means the equipment is available for topology processing, which determines if the equipment is energized or not. False means that the equipment is treated by network applications as if it is not in the model.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Equipment.inService"
                },
                {
                     "name": "normallyInService",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "Specifies the availability of the equipment under normal operating conditions. True means the equipment is available for topology processing, which determines if the equipment is energized or not. False means that the equipment is treated by network applications as if it is not in the model.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Equipment.normallyInService"
                },
                {
                     "name": "normalOpen",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "The attribute is used in cases when no Measurement for the status value is present. If the Switch has a status measurement the Discrete.normalValue is expected to match with the Switch.normalOpen.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Switch.normalOpen"
                },
                {
                     "name": "open",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "The attribute tells if the switch is considered open when used as input to topology processing.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Switch.open"
                },
                {
                     "name": "ratedCurrent",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "The maximum continuous current carrying capacity in amps governed by the device material and construction.The attribute shall be a positive value.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Switch.ratedCurrent"
                },
                {
                     "name": "retained",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "Branch is retained in the topological solution. The flow through retained switches will normally be calculated in power flow.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Switch.retained"
@@ -371,49 +403,49 @@
                },
                {
                     "name": "inService",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "Specifies the availability of the equipment. True means the equipment is available for topology processing, which determines if the equipment is energized or not. False means that the equipment is treated by network applications as if it is not in the model.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Equipment.inService"
                },
                {
                     "name": "normallyInService",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "Specifies the availability of the equipment under normal operating conditions. True means the equipment is available for topology processing, which determines if the equipment is energized or not. False means that the equipment is treated by network applications as if it is not in the model.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Equipment.normallyInService"
                },
                {
                     "name": "normalOpen",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "The attribute is used in cases when no Measurement for the status value is present. If the Switch has a status measurement the Discrete.normalValue is expected to match with the Switch.normalOpen.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Switch.normalOpen"
                },
                {
                     "name": "open",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "The attribute tells if the switch is considered open when used as input to topology processing.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Switch.open"
                },
                {
                     "name": "ratedCurrent",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "The maximum continuous current carrying capacity in amps governed by the device material and construction.The attribute shall be a positive value.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Switch.ratedCurrent"
                },
                {
                     "name": "retained",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "Branch is retained in the topological solution. The flow through retained switches will normally be calculated in power flow.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Switch.retained"
                },
                {
                     "name": "lengthFromTerminal1",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "The length to the place where the cut is located starting from side one of the cut line segment, i.e. the line segment Terminal with sequenceNumber equal to 1.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Cut.lengthFromTerminal1"
@@ -435,42 +467,42 @@
                },
                {
                     "name": "inService",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "Specifies the availability of the equipment. True means the equipment is available for topology processing, which determines if the equipment is energized or not. False means that the equipment is treated by network applications as if it is not in the model.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Equipment.inService"
                },
                {
                     "name": "normallyInService",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "Specifies the availability of the equipment under normal operating conditions. True means the equipment is available for topology processing, which determines if the equipment is energized or not. False means that the equipment is treated by network applications as if it is not in the model.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Equipment.normallyInService"
                },
                {
                     "name": "normalOpen",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "The attribute is used in cases when no Measurement for the status value is present. If the Switch has a status measurement the Discrete.normalValue is expected to match with the Switch.normalOpen.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Switch.normalOpen"
                },
                {
                     "name": "open",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "The attribute tells if the switch is considered open when used as input to topology processing.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Switch.open"
                },
                {
                     "name": "ratedCurrent",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "The maximum continuous current carrying capacity in amps governed by the device material and construction.The attribute shall be a positive value.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Switch.ratedCurrent"
                },
                {
                     "name": "retained",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "Branch is retained in the topological solution. The flow through retained switches will normally be calculated in power flow.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Switch.retained"
@@ -498,42 +530,42 @@
                },
                {
                     "name": "inService",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "Specifies the availability of the equipment. True means the equipment is available for topology processing, which determines if the equipment is energized or not. False means that the equipment is treated by network applications as if it is not in the model.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Equipment.inService"
                },
                {
                     "name": "normallyInService",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "Specifies the availability of the equipment under normal operating conditions. True means the equipment is available for topology processing, which determines if the equipment is energized or not. False means that the equipment is treated by network applications as if it is not in the model.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Equipment.normallyInService"
                },
                {
                     "name": "normalOpen",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "The attribute is used in cases when no Measurement for the status value is present. If the Switch has a status measurement the Discrete.normalValue is expected to match with the Switch.normalOpen.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Switch.normalOpen"
                },
                {
                     "name": "open",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "The attribute tells if the switch is considered open when used as input to topology processing.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Switch.open"
                },
                {
                     "name": "ratedCurrent",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "The maximum continuous current carrying capacity in amps governed by the device material and construction.The attribute shall be a positive value.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Switch.ratedCurrent"
                },
                {
                     "name": "retained",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "Branch is retained in the topological solution. The flow through retained switches will normally be calculated in power flow.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Switch.retained"
@@ -555,42 +587,42 @@
                },
                {
                     "name": "inService",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "Specifies the availability of the equipment. True means the equipment is available for topology processing, which determines if the equipment is energized or not. False means that the equipment is treated by network applications as if it is not in the model.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Equipment.inService"
                },
                {
                     "name": "normallyInService",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "Specifies the availability of the equipment under normal operating conditions. True means the equipment is available for topology processing, which determines if the equipment is energized or not. False means that the equipment is treated by network applications as if it is not in the model.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Equipment.normallyInService"
                },
                {
                     "name": "normalOpen",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "The attribute is used in cases when no Measurement for the status value is present. If the Switch has a status measurement the Discrete.normalValue is expected to match with the Switch.normalOpen.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Switch.normalOpen"
                },
                {
                     "name": "open",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "The attribute tells if the switch is considered open when used as input to topology processing.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Switch.open"
                },
                {
                     "name": "ratedCurrent",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "The maximum continuous current carrying capacity in amps governed by the device material and construction.The attribute shall be a positive value.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Switch.ratedCurrent"
                },
                {
                     "name": "retained",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "Branch is retained in the topological solution. The flow through retained switches will normally be calculated in power flow.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Switch.retained"
@@ -660,7 +692,7 @@
                },
                {
                     "name": "acceptableDuration",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "The nominal acceptable duration of the limit. Limits are commonly expressed in terms of the time limit for which the limit is normally acceptable. The actual acceptable duration of a specific limit may depend on other local factors such as temperature or wind speed. The attribute has meaning only if the flag isInfiniteDuration is set to false, hence it shall not be exchanged when isInfiniteDuration is set to true.",
                     "modelReference": "http://iec.ch/TC57/CIM100#OperationalLimitType.acceptableDuration"
@@ -677,7 +709,7 @@
                },
                {
                     "name": "isInfiniteDuration",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "Defines if the operational limit type has infinite duration. If true, the limit has infinite duration. If false, the limit has definite duration which is defined by the attribute acceptableDuration.",
                     "modelReference": "http://iec.ch/TC57/CIM100#OperationalLimitType.isInfiniteDuration"
@@ -709,42 +741,42 @@
                },
                {
                     "name": "inService",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "Specifies the availability of the equipment. True means the equipment is available for topology processing, which determines if the equipment is energized or not. False means that the equipment is treated by network applications as if it is not in the model.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Equipment.inService"
                },
                {
                     "name": "normallyInService",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "Specifies the availability of the equipment under normal operating conditions. True means the equipment is available for topology processing, which determines if the equipment is energized or not. False means that the equipment is treated by network applications as if it is not in the model.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Equipment.normallyInService"
                },
                {
                     "name": "normalOpen",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "The attribute is used in cases when no Measurement for the status value is present. If the Switch has a status measurement the Discrete.normalValue is expected to match with the Switch.normalOpen.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Switch.normalOpen"
                },
                {
                     "name": "open",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "The attribute tells if the switch is considered open when used as input to topology processing.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Switch.open"
                },
                {
                     "name": "ratedCurrent",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "The maximum continuous current carrying capacity in amps governed by the device material and construction.The attribute shall be a positive value.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Switch.ratedCurrent"
                },
                {
                     "name": "retained",
-                    "type": ["null", "boolean"],
+                    "type": [ "null", "boolean" ],
                     "default": null,
                     "doc": "Branch is retained in the topological solution. The flow through retained switches will normally be calculated in power flow.",
                     "modelReference": "http://iec.ch/TC57/CIM100#Switch.retained"
@@ -831,7 +863,7 @@
           "fields": [
                {
                     "name": "absoluteValue",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Absolute value from a power flow calculation on a given terminal related to a given operational limit. For instance, if the operational limit is 1000 A and the current flow is 1100 A the absoluteValue is reported as 1100 A.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.absoluteValue"
@@ -850,49 +882,49 @@
                },
                {
                     "name": "value",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "The value of the limit violation in percent related to the value of the operational limit that is violated. For instance, if the operational limit is 1000 A and the current flow is 1100 A the value is reported as 110 %.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.value"
                },
                {
                     "name": "valueA",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Current from a power flow calculation on a given terminal. The value shall be a positive value or zero.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueA"
                },
                {
                     "name": "valueAngle",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Voltage angle value from a power flow calculation on a given terminal.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueAngle"
                },
                {
                     "name": "valueV",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Voltage value from a power flow calculation on a given terminal. The attribute shall be a positive value.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueV"
                },
                {
                     "name": "valueVA",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Apparent power value from a power flow calculation on a given terminal.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueVA"
                },
                {
                     "name": "valueVAR",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Reactive power value from a power flow calculation on a given terminal.Load sign convention is used, i.e. positive sign means flow out from a TopologicalNode (bus) into the conducting equipment.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueVAR"
                },
                {
                     "name": "valueW",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Active power value from a power flow calculation on a given terminal.Load sign convention is used, i.e. positive sign means flow out from a TopologicalNode (bus) into the conducting equipment.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueW"
@@ -914,7 +946,7 @@
                },
                {
                     "name": "ReportedByRegion",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "The region which reports this limit violation. Note that the value of this field is the identifier (e.g. mRID) used to reference the Region external to this profile.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.ReportedByRegion"
@@ -930,7 +962,7 @@
           "fields": [
                {
                     "name": "absoluteValue",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Absolute value from a power flow calculation on a given terminal related to a given operational limit. For instance, if the operational limit is 1000 A and the current flow is 1100 A the absoluteValue is reported as 1100 A.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.absoluteValue"
@@ -949,49 +981,49 @@
                },
                {
                     "name": "value",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "The value of the limit violation in percent related to the value of the operational limit that is violated. For instance, if the operational limit is 1000 A and the current flow is 1100 A the value is reported as 110 %.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.value"
                },
                {
                     "name": "valueA",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Current from a power flow calculation on a given terminal. The value shall be a positive value or zero.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueA"
                },
                {
                     "name": "valueAngle",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Voltage angle value from a power flow calculation on a given terminal.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueAngle"
                },
                {
                     "name": "valueV",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Voltage value from a power flow calculation on a given terminal. The attribute shall be a positive value.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueV"
                },
                {
                     "name": "valueVA",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Apparent power value from a power flow calculation on a given terminal.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueVA"
                },
                {
                     "name": "valueVAR",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Reactive power value from a power flow calculation on a given terminal.Load sign convention is used, i.e. positive sign means flow out from a TopologicalNode (bus) into the conducting equipment.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueVAR"
                },
                {
                     "name": "valueW",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Active power value from a power flow calculation on a given terminal.Load sign convention is used, i.e. positive sign means flow out from a TopologicalNode (bus) into the conducting equipment.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueW"
@@ -1013,7 +1045,7 @@
                },
                {
                     "name": "ReportedByRegion",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "The region which reports this limit violation. Note that the value of this field is the identifier (e.g. mRID) used to reference the Region external to this profile.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.ReportedByRegion"
@@ -1057,7 +1089,7 @@
                },
                {
                     "name": "StageForRemedialActionScheme",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "The stage of the remedial action scheme that is applied. Note that the value of this field is the identifier (e.g. mRID) used to reference the Stage external to this profile.",
                     "modelReference": "https://cim4.eu/ns/nc#RemedialActionApplied.StageForRemedialActionScheme"
@@ -1098,5 +1130,4 @@
           ]
      }
 ]
-
 ```

@@ -1,4 +1,36 @@
 [
+     "header": {
+         {
+              "name": "profProfile",
+              "type": "string",
+              "doc": "URI of the DX-PROF profile this dataset conforms to, e.g. https://ap.cim4.eu/StateVariables/3.0."
+         },
+         {
+              "name": "identifier",
+              "type": "string",
+              "doc": "Dataset identifier, aligned with dcterms:identifier / dcat:Dataset.@about."
+         },
+         {
+              "name": "isVersionOf",
+              "type": [ "null", "string" ],
+              "doc": "URI of the logical dataset or model this is a version of (dct:isVersionOf)."
+         },
+         {
+              "name": "version",
+              "type": [ "null", "string" ],
+              "doc": "Version label for this dataset instance (aligned with dcat:version). Useful when multiple messages represent different versions of the same time slice."
+         },
+         {
+              "name": "startDate",
+              "type": "string",
+              "doc": "Start of the validity interval for this dataset, aligned with dcat:startDate (ISO-8601). Typically the case time of the power system state."
+         },
+         {
+              "name": "schemaRef",
+              "type": "string",
+              "doc": "Dereferenceable URI or Schema Registry URL for the Avro schema used to encode this dataset."
+         }
+     },
      {
           "type": "enum",
           "name": "UnitMultiplier",
@@ -36,7 +68,7 @@
           "fields": [
                {
                     "name": "absoluteValue",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Absolute value from a power flow calculation on a given terminal related to a given operational limit. For instance, if the operational limit is 1000 A and the current flow is 1100 A the absoluteValue is reported as 1100 A.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.absoluteValue"
@@ -55,49 +87,49 @@
                },
                {
                     "name": "value",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "The value of the limit violation in percent related to the value of the operational limit that is violated. For instance, if the operational limit is 1000 A and the current flow is 1100 A the value is reported as 110 %.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.value"
                },
                {
                     "name": "valueA",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Current from a power flow calculation on a given terminal. The value shall be a positive value or zero.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueA"
                },
                {
                     "name": "valueAngle",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Voltage angle value from a power flow calculation on a given terminal.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueAngle"
                },
                {
                     "name": "valueV",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Voltage value from a power flow calculation on a given terminal. The attribute shall be a positive value.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueV"
                },
                {
                     "name": "valueVA",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Apparent power value from a power flow calculation on a given terminal.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueVA"
                },
                {
                     "name": "valueVAR",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Reactive power value from a power flow calculation on a given terminal.Load sign convention is used, i.e. positive sign means flow out from a TopologicalNode (bus) into the conducting equipment.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueVAR"
                },
                {
                     "name": "valueW",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Active power value from a power flow calculation on a given terminal.Load sign convention is used, i.e. positive sign means flow out from a TopologicalNode (bus) into the conducting equipment.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueW"
@@ -110,14 +142,14 @@
                },
                {
                     "name": "OperationalLimit",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "The operational limit that has this limit violation. Note that the value of this field is the identifier (e.g. mRID) used to reference the OperationalLimit external to this profile.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.OperationalLimit"
                },
                {
                     "name": "ReportedByRegion",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "The region which reports this limit violation. Note that the value of this field is the identifier (e.g. mRID) used to reference the Region external to this profile.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.ReportedByRegion"
@@ -133,7 +165,7 @@
           "fields": [
                {
                     "name": "absoluteValue",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Absolute value from a power flow calculation on a given terminal related to a given operational limit. For instance, if the operational limit is 1000 A and the current flow is 1100 A the absoluteValue is reported as 1100 A.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.absoluteValue"
@@ -152,49 +184,49 @@
                },
                {
                     "name": "value",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "The value of the limit violation in percent related to the value of the operational limit that is violated. For instance, if the operational limit is 1000 A and the current flow is 1100 A the value is reported as 110 %.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.value"
                },
                {
                     "name": "valueA",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Current from a power flow calculation on a given terminal. The value shall be a positive value or zero.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueA"
                },
                {
                     "name": "valueAngle",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Voltage angle value from a power flow calculation on a given terminal.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueAngle"
                },
                {
                     "name": "valueV",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Voltage value from a power flow calculation on a given terminal. The attribute shall be a positive value.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueV"
                },
                {
                     "name": "valueVA",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Apparent power value from a power flow calculation on a given terminal.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueVA"
                },
                {
                     "name": "valueVAR",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Reactive power value from a power flow calculation on a given terminal.Load sign convention is used, i.e. positive sign means flow out from a TopologicalNode (bus) into the conducting equipment.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueVAR"
                },
                {
                     "name": "valueW",
-                    "type": ["null", "float"],
+                    "type": [ "null", "float" ],
                     "default": null,
                     "doc": "Active power value from a power flow calculation on a given terminal.Load sign convention is used, i.e. positive sign means flow out from a TopologicalNode (bus) into the conducting equipment.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueW"
@@ -207,14 +239,14 @@
                },
                {
                     "name": "OperationalLimit",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "The operational limit that has this limit violation. Note that the value of this field is the identifier (e.g. mRID) used to reference the OperationalLimit external to this profile.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.OperationalLimit"
                },
                {
                     "name": "ReportedByRegion",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "The region which reports this limit violation. Note that the value of this field is the identifier (e.g. mRID) used to reference the Region external to this profile.",
                     "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.ReportedByRegion"
@@ -257,7 +289,7 @@
                },
                {
                     "name": "StageForRemedialActionScheme",
-                    "type": ["null", "string"],
+                    "type": [ "null", "string" ],
                     "default": null,
                     "doc": "The stage of the remedial action scheme that is applied. Note that the value of this field is the identifier (e.g. mRID) used to reference the Stage external to this profile.",
                     "modelReference": "https://cim4.eu/ns/nc#RemedialActionApplied.StageForRemedialActionScheme"

@@ -271,64 +271,64 @@
 		"/>
 	</xsl:function>
 
-<!-- 
-    Function: fn:get-dependencies
-    Purpose: Gets all distinct @baseClass values from child elements, 
-             including inherited dependencies from SuperType hierarchy.
-             For Instance/Reference to abstract classes (ComplexType), includes union members.
-             Excludes a:SuperType itself and any types in the exclusion map.
-    Parameters: 
-        $element - The element to examine (CompoundType, Root, etc.)
-        $exclusion-map - Map where keys are baseClass values to exclude
-    Returns: xs:string* - Sequence of baseClass values (filtered)
--->
-<xsl:function name="fn:get-dependencies" as="xs:string*">
-    <xsl:param name="element" as="element()"/>
-    <xsl:param name="exclusion-map" as="map(xs:string, xs:boolean)"/>
-    
-    <xsl:sequence select="
-        distinct-values(
-            (
-                (: Dependencies from non-Instance/Reference/InverseInstance/InverseReference children. These we need to exclude. :)
-                $element/*[@baseClass][not(self::a:SuperType)][not(self::a:Instance)][not(self::a:Reference)][not(self::a:InverseInstance)][not(self::a:InverseReference)]/string(@baseClass)[not(map:contains($exclusion-map, .))],
-                
-                (: Dependencies from Instance/Reference children - handle unions :)
-                for $assoc in $element/(a:Instance|a:Reference)[@baseClass]
-                return
-                    let $assoc-baseClass := string($assoc/@baseClass),
-                        $referenced-element := root($element)/*/node()[@baseClass = $assoc-baseClass]
-                    return
-                        if ($referenced-element/self::a:ComplexType) then
-                            (: Abstract class - get union members (concrete subclasses) :)
-                            fn:get-union-dependencies($referenced-element)[not(map:contains($exclusion-map, .))]
-                        else if ($referenced-element/self::a:Root) then
-                            (: Concrete class - use directly :)
-                            if (not(map:contains($exclusion-map, $assoc-baseClass))) then
-                                $assoc-baseClass
-                            else
-                                ()
-                        else
-                            (: Referenced element not found or other type - include if not excluded :)
-                            if (not(map:contains($exclusion-map, $assoc-baseClass))) then
-                                $assoc-baseClass
-                            else
-                                (),
-                
-                (: If has SuperType, recursively get parent's dependencies :)
-                if ($element/a:SuperType) then
-                    let $supertype_baseClass := $element/a:SuperType/@baseClass,
-                        $parent := root($element)/*/node()[@baseClass = $supertype_baseClass]
-                    return
-                        if ($parent) then
-                            fn:get-dependencies($parent, $exclusion-map)
-                        else
-                            ()
-                else
-                    ()
-            )
-        )
-    "/>
-</xsl:function>
+	<!-- 
+		Function: fn:get-dependencies
+		Purpose: Gets all distinct @baseClass values from child elements, 
+				 including inherited dependencies from SuperType hierarchy.
+				 For Instance/Reference to abstract classes (ComplexType), includes union members.
+				 Excludes a:SuperType itself and any types in the exclusion map.
+		Parameters: 
+			$element - The element to examine (CompoundType, Root, etc.)
+			$exclusion-map - Map where keys are baseClass values to exclude
+		Returns: xs:string* - Sequence of baseClass values (filtered)
+	-->
+	<xsl:function name="fn:get-dependencies" as="xs:string*">
+		<xsl:param name="element" as="element()"/>
+		<xsl:param name="exclusion-map" as="map(xs:string, xs:boolean)"/>
+		
+		<xsl:sequence select="
+			distinct-values(
+				(
+					(: Dependencies from non-Instance/Reference/InverseInstance/InverseReference children. These we need to exclude. :)
+					$element/*[@baseClass][not(self::a:SuperType)][not(self::a:Instance)][not(self::a:Reference)][not(self::a:InverseInstance)][not(self::a:InverseReference)]/string(@baseClass)[not(map:contains($exclusion-map, .))],
+					
+					(: Dependencies from Instance/Reference children - handle unions :)
+					for $assoc in $element/(a:Instance|a:Reference)[@baseClass]
+					return
+						let $assoc-baseClass := string($assoc/@baseClass),
+							$referenced-element := root($element)/*/node()[@baseClass = $assoc-baseClass]
+						return
+							if ($referenced-element/self::a:ComplexType) then
+								(: Abstract class - get union members (concrete subclasses) :)
+								fn:get-union-dependencies($referenced-element)[not(map:contains($exclusion-map, .))]
+							else if ($referenced-element/self::a:Root) then
+								(: Concrete class - use directly :)
+								if (not(map:contains($exclusion-map, $assoc-baseClass))) then
+									$assoc-baseClass
+								else
+									()
+							else
+								(: Referenced element not found or other type - include if not excluded :)
+								if (not(map:contains($exclusion-map, $assoc-baseClass))) then
+									$assoc-baseClass
+								else
+									(),
+					
+					(: If has SuperType, recursively get parent's dependencies :)
+					if ($element/a:SuperType) then
+						let $supertype_baseClass := $element/a:SuperType/@baseClass,
+							$parent := root($element)/*/node()[@baseClass = $supertype_baseClass]
+						return
+							if ($parent) then
+								fn:get-dependencies($parent, $exclusion-map)
+							else
+								()
+					else
+						()
+				)
+			)
+		"/>
+	</xsl:function>
 
     <!-- 
         Function: fn:build-dependencies-map
@@ -567,6 +567,40 @@
 		<document>
 			<list begin="[" indent="     " delim="," end="]">
 			
+				<!-- Apache Avro instance data header definition. -->
+				<list begin="&quot;header&quot;: {{" indent="    " delim="," end="}}">
+					<list begin="{{" indent="     " delim="," end="}}">
+						<item>"name": "profProfile"</item>
+						<item>"type": "string"</item>
+						<item>"doc": "URI of the DX-PROF profile this dataset conforms to, e.g. https://ap.cim4.eu/StateVariables/3.0"</item>
+					</list>
+					<list begin="{{" indent="     " delim="," end="}}">
+						<item>"name": "identifier"</item>
+						<item>"type": "string"</item>
+						<item>"doc": "Dataset identifier, aligned with dcterms:identifier / dcat:Dataset.@about."</item>
+					</list>
+					<list begin="{{" indent="     " delim="," end="}}">
+						<item>"name": "isVersionOf"</item>
+						<item>"type": [ "null", "string" ]</item>
+						<item>"doc": "URI of the logical dataset or model this is a version of (dct:isVersionOf)."</item>
+					</list>
+					<list begin="{{" indent="     " delim="," end="}}">
+						<item>"name": "version"</item>
+						<item>"type": [ "null", "string" ]</item>
+						<item>"doc": "Version label for this dataset instance (aligned with dcat:version). Useful when multiple messages represent different versions of the same time slice."</item>
+					</list>
+					<list begin="{{" indent="     " delim="," end="}}">
+						<item>"name": "startDate"</item>
+						<item>"type": "string"</item>
+						<item>"doc": "Start of the validity interval for this dataset, aligned with dcat:startDate (ISO-8601). Typically the case time of the power system state."</item>
+					</list>
+					<list begin="{{" indent="     " delim="," end="}}">
+						<item>"name": "schemaRef"</item>
+						<item>"type": "string"</item>
+						<item>"doc": "Dereferenceable URI or Schema Registry URL for the Avro schema used to encode this dataset."</item>
+					</list>					
+				</list>
+			
 				<!-- Enumerations can be generated first as they should have no dependencies -->
 				<xsl:apply-templates select="a:EnumeratedType"/>
 				
@@ -713,7 +747,7 @@
 				<xsl:otherwise>
 					<xsl:choose>
 						<xsl:when test="@minOccurs = 0">
-							<item>"type": ["null", <xsl:value-of select="$type"/>]</item>
+							<item>"type": [ "null", <xsl:value-of select="$type"/> ]</item>
 							<item>"default": null</item>
 						</xsl:when>
 						<xsl:otherwise>
@@ -908,7 +942,7 @@
 						<xsl:otherwise>
 							<xsl:choose>
 								<xsl:when test="@minOccurs = 0">
-									<item>"type": ["null", "string"]</item>
+									<item>"type": [ "null", "string" ]</item>
 									<item>"default": null</item>
 								</xsl:when>
 								<xsl:otherwise>
