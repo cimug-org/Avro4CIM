@@ -7,7 +7,7 @@ The focus is on generating Avro schemas for data suitable for exchange on **Kafk
 The **Avro4CIM** project leverages **CIMTool (version 2.3.0-RC3)** to generate Avro schema definitions in alignment with the evolving CIM specification. This approach is intended to complement existing **CIM XML/XSD-based exchanges** by providing Avro as an additional serialization and integration option.
 
 ## CSA 2.4 Security Analysis Result 2.4 Case Study
-For the full case study and beta release of the CIMTool Apache Avro builder visit [Case Study Overview](./case_study_readme.md).
+For the full case study and beta release of the CIMTool Apache Avro builder visit [Case Study Overview](./case-study/case_study_readme.md).
 
 The **CIMTool** project for 
 
