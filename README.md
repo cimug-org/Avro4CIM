@@ -19,7 +19,7 @@ For latest details on development of the Avro schema builder reference implement
 - **To Download**: see [CIMTool-2.3.0-RC3](https://github.com/cimug-org/CIMTool/releases/download/2.2.0/CIMTool-2.3.0-RC3-win32.win32.x86_64.zip)
 - **Import the Avro builder**: use the "Import XSLT Transform Builder" wizard with the following settings:
   
-  <img width="50%" height="50%" alt="image" src="https://github.com/user-attachments/assets/8bf76618-e444-4f46-ab29-78c09f574efc" />
+  <img width="60%" height="60%" alt="image" src="https://github.com/user-attachments/assets/8bf76618-e444-4f46-ab29-78c09f574efc" />
 
 ## Avro Schema Builder Latest Release
 
