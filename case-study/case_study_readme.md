@@ -112,7 +112,7 @@ The following subsections describe the more signficant design decisions that wen
 
 **Decision: Single Schema File Approach**
 
-For this case study, all Avro type definitions are contained in a single `.avsc` file as a JSON array. This design choice was made to best meet the needs of IEC-style CIM profiles.
+For this case study, all Avro type definitions are contained in a single `.avsc` file as a JSON array.
 
 **Key Advantages:**
 - **Single source of truth** - All types defined together in one location
@@ -126,12 +126,12 @@ For this case study, all Avro type definitions are contained in a single `.avsc`
 The schema file contains an array of type definitions, ordered by dependency:
 ```json
 [
-  { "type": "enum", "name": "UnitMultiplier", ... },
-  { "type": "enum", "name": "UnitSymbol", ... },
-  { "type": "record", "name": "BaseCasePowerFlowResult", ... },
-  { "type": "record", "name": "ContingencyPowerFlowResult", ... },
-  { "type": "record", "name": "RemedialActionApplied", ... },
-  { "type": "record", "name": "SecurityAnalysisResult", ... }
+  { "type": "enum", "name": "UnitMultiplier", . . . },
+  { "type": "enum", "name": "UnitSymbol", . . . },
+  { "type": "record", "name": "BaseCasePowerFlowResult", . . . },
+  { "type": "record", "name": "ContingencyPowerFlowResult", . . . },
+  { "type": "record", "name": "RemedialActionApplied", . . . },
+  { "type": "record", "name": "SecurityAnalysisResult", . . . }
 ]
 ```
 
