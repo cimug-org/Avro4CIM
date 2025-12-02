@@ -2,6 +2,10 @@
 
 ## Table of Contents
 - [1. UML Profiles Overview](#1-uml-profiles-overview)
+  - [1.1. Validation Capabilities](#11-uml-diagram-of-the-csa-24-sar-profile)
+  - [1.2. Namespace Support](#12-sar-profile-generate-apache-avro-schema) 
+  - [1.3. Inheritance and Type Extension](#13-uml-diagram-of-the-csa-24-sar-extended-profile) 
+  - [1.4. Schema Modularity and Reuse](#14-extended-sar-profile-generate-apache-avro-schema)  
 - [2. CIMTool Workflow for Generating Artifacts](#2-cimtool-workflow-for-generating-artifacts)
 - [3. Overview of Apache Avro](#3-overview-of-apache-avro)
 - [4. The Purpose of an Apache Avro Schema (.avsc)](#4-the-purpose-of-an-apache-avro-schema-avsc)
@@ -349,7 +353,7 @@ For this CIM mapping to Apache Avro schema case study the CSA 2.4 Security Analy
 
 ### 1.4. EXTENDED SAR Profile Generate Apache Avro Schema
 
-The EXTENDED version includes additional classes for demonstration purposes (Location, OperationalLimit, OperationalLimitSet, OperationalLimitType with compound types). See [SecurityAnalysisResult_EXTENDED.avsc](SecurityAnalysisResult_EXTENDED.md).
+The EXTENDED version includes additional classes for demonstration purposes (Location, OperationalLimit, OperationalLimitSet, OperationalLimitType with compound types). See [SecurityAnalysisResult_EXTENDED.avsc](./case-study/example-schemas/SecurityAnalysisResult_EXTENDED.md).
 
 ## 2. CIMTool Workflow for Generating Artifacts
 
