@@ -1720,4 +1720,4 @@ Recommended tools:
 ## 14. License
 
 Generated schemas distributed under the **Apache 2.0 license**.  
-See [LICENSE](././LICENSE) for details.
+See [LICENSE](https://github.com/cimug-org/Avro4CIM/blob/main/LICENSE) for details.
