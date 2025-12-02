@@ -126,12 +126,12 @@ For this case study, all Avro type definitions are contained in a single `.avsc`
 The schema file contains an array of type definitions, ordered by dependency:
 ```json
 [
-  { "type": "enum", "name": "UnitMultiplier", . . . },
-  { "type": "enum", "name": "UnitSymbol", . . . },
-  { "type": "record", "name": "BaseCasePowerFlowResult", . . . },
-  { "type": "record", "name": "ContingencyPowerFlowResult", . . . },
-  { "type": "record", "name": "RemedialActionApplied", . . . },
-  { "type": "record", "name": "SecurityAnalysisResult", . . . }
+  { "type": "enum", "name": "UnitMultiplier", `...` },
+  { "type": "enum", "name": "UnitSymbol", `...` },
+  { "type": "record", "name": "BaseCasePowerFlowResult", `...` },
+  { "type": "record", "name": "ContingencyPowerFlowResult", `...` },
+  { "type": "record", "name": "RemedialActionApplied", `...` },
+  { "type": "record", "name": "SecurityAnalysisResult", `...`}
 ]
 ```
 
