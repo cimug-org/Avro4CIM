@@ -1719,4 +1719,5 @@ Recommended tools:
 
 ## 14. License
 
-Generated schemas are distributed under the Apache License 2.0 license.
+Generated schemas distributed under the **Apache 2.0 license**.  
+See [LICENSE](./LICENSE) for details.
