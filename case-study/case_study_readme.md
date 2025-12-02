@@ -1553,4 +1553,4 @@ Recommended tools:
 
 ## License
 
-Generated schemas follow the license of the source OWL file (Apache License 2.0).
+Generated schemas are distributed under the Apache License 2.0 license.
