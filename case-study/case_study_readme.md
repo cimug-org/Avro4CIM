@@ -126,12 +126,31 @@ For this case study, all Avro type definitions are contained in a single `.avsc`
 The schema file contains an array of type definitions, ordered by dependency:
 ```json
 [
-  { "type": "enum", "name": "UnitMultiplier", `...` },
-  { "type": "enum", "name": "UnitSymbol", `...` },
-  { "type": "record", "name": "BaseCasePowerFlowResult", `...` },
-  { "type": "record", "name": "ContingencyPowerFlowResult", `...` },
-  { "type": "record", "name": "RemedialActionApplied", `...` },
-  { "type": "record", "name": "SecurityAnalysisResult", `...`}
+  { 
+    "type": "enum", 
+    "name": "UnitMultiplier", 
+    // ...
+    },
+  { "type": "enum", 
+    "name": "UnitSymbol", 
+    // ...
+  },
+  { "type": "record", 
+    "name": "BaseCasePowerFlowResult", 
+    // ...
+  },
+  { "type": "record", 
+    "name": "ContingencyPowerFlowResult", 
+    // ...
+  },
+  { "type": "record", 
+    "name": "RemedialActionApplied", 
+    // ...
+  },
+  { "type": "record", 
+    "name": "SecurityAnalysisResult", 
+    // ...
+  }
 ]
 ```
 
@@ -223,7 +242,9 @@ The `modelReference` annotation appears at different levels within the Avro sche
   "name": "BaseCasePowerFlowResult",
   "namespace": "eu.cim4.ap_voc.securityanalysisresult.extsecurityanalysisresult",
   "modelReference": "https://cim4.eu/ns/nc#BaseCasePowerFlowResult",
-  "fields": [...]
+  "fields": [
+    // ...
+  ]
 }
 ```
 
@@ -300,9 +321,21 @@ The abstract parent (`PowerFlowResult`) is not defined as an Avro type. Instead,
   "name": "BaseCasePowerFlowResult",
   "namespace": "eu.cim4.ap_voc.securityanalysisresult.extsecurityanalysisresult",
   "fields": [
-    {"name": "absoluteValue", "type": ["null", "float"], ...},
-    {"name": "atTime", "type": {"type": "long", "logicalType": "timestamp-millis"}, ...},
-    {"name": "isViolation", "type": "boolean", ...},
+    {
+      "name": "absoluteValue", 
+      "type": ["null", "float"], 
+      // ...
+    },
+    {
+      "name": "atTime", 
+      "type": {"type": "long", "logicalType": "timestamp-millis"}, 
+      // ...
+    },
+    {
+      "name": "isViolation", 
+      "type": "boolean", 
+      // ...
+    },
     // ... all remaining PowerFlowResult fields duplicated here
   ]
 }
@@ -312,11 +345,27 @@ The abstract parent (`PowerFlowResult`) is not defined as an Avro type. Instead,
   "name": "ContingencyPowerFlowResult",
   "namespace": "eu.cim4.ap_voc.securityanalysisresult.extsecurityanalysisresult",
   "fields": [
-    {"name": "absoluteValue", "type": ["null", "float"], ...},
-    {"name": "atTime", "type": {"type": "long", "logicalType": "timestamp-millis"}, ...},
-    {"name": "isViolation", "type": "boolean", ...},
+   {
+      "name": "absoluteValue", 
+      "type": ["null", "float"], 
+      // ...
+    },
+    {
+      "name": "atTime", 
+      "type": {"type": "long", "logicalType": "timestamp-millis"}, 
+      // ...
+    },
+    {
+      "name": "isViolation", 
+      "type": "boolean", 
+      // ...
+    },
     // ... all remaining PowerFlowResult fields duplicated here
-    {"name": "Contingency", "type": "string", ...}  // Additional Association field
+    {
+      "name": "Contingency", 
+      "type": "string", 
+      // ...
+    }  // Additional Association field
   ]
 }
 ```
@@ -331,7 +380,11 @@ When another class (like `RemedialActionApplied`) has an association to the abst
   "name": "RemedialActionApplied",
   "namespace": "eu.cim4.ap_voc.securityanalysisresult.extsecurityanalysisresult",
   "fields": [
-    {"name": "mRID", "type": "string", ...},
+    {
+      "name": "mRID", 
+      "type": "string", 
+      // ...
+    },
     {
       "name": "PowerFlowResult",
       "type": [
