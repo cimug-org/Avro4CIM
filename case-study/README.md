@@ -1137,8 +1137,6 @@ The topological analysis approach provides a generic, scalable solution that wor
 
 ## 8. Example SAR Profile JSON Payloads
 
-Refer to the [Security Analysis Result Messages - Quick Reference Guide](quick_reference.md) for a high level understanding of all sample payloads provided.
-
 ### 8.1. SecurityAnalysisResult.avsc
 
 The following examples demonstrate valid JSON messages for the SecurityAnalysisResult schema. Complete examples with validation documentation are available in the [`/example-payloads`](https://github.com/cimug-org/Avro4CIM/tree/main/case-study/example-payloads) directory.
