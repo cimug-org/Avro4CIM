@@ -25,7 +25,7 @@ For latest details on development of the Avro schema builder reference implement
 
 - 1.0.0-beta
 - 
-  - The beta release is available here on GitHub at [CIMTool-2.2.0](./builder/apache-avro-schema.xsl).
+  - The beta release is available here on GitHub at [apache-avro-schema.xsl](./builder/apache-avro-schema.xsl).
     
 ## Contributing
 We welcome contributions. Please use the standard **fork → branch → pull request** workflow when proposing changes.
