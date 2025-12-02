@@ -280,7 +280,12 @@ The `modelReference` annotation appears at different levels within the Avro sche
 
 **Decision: Combined Flattening and Union Pattern**
 
-For this case study, CIM class inheritance is handled using a two-part strategy: (1) parent class fields are flattened by duplicating them into each concrete child record type, and (2) polymorphic associations to the abstract parent are represented using Avro union types. This approach addresses Avro's lack of native inheritance while preserving type distinctions for polymorphic relationships.
+For this case study, CIM class inheritance is handled using a two-part strategy: 
+
+1. parent class fields are flattened by duplicating them into each concrete child record type, and 
+2. polymorphic associations to the abstract parent are represented using Avro union types. 
+
+This approach addresses Avro's lack of native inheritance while preserving type distinctions for polymorphic relationships.
 
 **Key Advantages:**
 - **No Avro inheritance complexity** - Avoids Avro's lack of native inheritance support
