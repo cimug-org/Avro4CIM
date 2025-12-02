@@ -1431,39 +1431,71 @@ import org.apache.avro.io.DatumWriter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class WriteBaseCasePowerFlowResult {
+public class WriteSecurityAnalysisResult {
     public static void main(String[] args) throws IOException {
-        // Load schema
-        Schema schema = new Schema.Parser().parse(
-            new File("SecurityAnalysisResult.avsc")
-        );
+        // Load schema array
+        Schema.Parser parser = new Schema.Parser();
+        Schema[] schemas = parser.parse(new File("SecurityAnalysisResult.avsc"))
+            .getTypes().toArray(new Schema[0]);
+        
+        // Find the schemas we need
+        Schema containerSchema = null;
+        Schema baseCaseSchema = null;
+        Schema remedialActionSchema = null;
+        
+        for (Schema s : schemas) {
+            if (s.getName().equals("SecurityAnalysisResult")) {
+                containerSchema = s;
+            } else if (s.getName().equals("BaseCasePowerFlowResult")) {
+                baseCaseSchema = s;
+            } else if (s.getName().equals("RemedialActionApplied")) {
+                remedialActionSchema = s;
+            }
+        }
+        
+        // Create BaseCasePowerFlowResult record
+        GenericRecord powerFlowResult = new GenericData.Record(baseCaseSchema);
+        powerFlowResult.put("ACDCTerminal", "550e8400-e29b-41d4-a716-446655440000");
+        powerFlowResult.put("isViolation", false);
+        powerFlowResult.put("atTime", 1704067200000L);  // 2024-01-01T00:00:00Z
+        powerFlowResult.put("OperationalLimit", "123e4567-e89b-12d3-a456-426614174000");
+        powerFlowResult.put("ReportedByRegion", null);
+        powerFlowResult.put("valueW", 125500.0f);
+        powerFlowResult.put("valueVAR", 32100.0f);
+        powerFlowResult.put("valueVA", null);
+        powerFlowResult.put("valueV", 138000.0f);
+        powerFlowResult.put("valueAngle", -5.3f);
+        powerFlowResult.put("valueA", 940.2f);
+        powerFlowResult.put("value", 85.5f);
+        powerFlowResult.put("absoluteValue", 125500.0f);
+        
+        // Create RemedialActionApplied record
+        GenericRecord remedialAction = new GenericData.Record(remedialActionSchema);
+        remedialAction.put("mRID", "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d");
+        remedialAction.put("PowerFlowResult", powerFlowResult);  // Union type
+        remedialAction.put("RemedialAction", "c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f");
+        remedialAction.put("StageForRemedialActionScheme", null);
+        
+        // Create RemedialActionApplied array
+        List<GenericRecord> remedialActions = new ArrayList<>();
+        remedialActions.add(remedialAction);
+        
+        // Create container record
+        GenericRecord container = new GenericData.Record(containerSchema);
+        container.put("RemedialActionApplied", remedialActions);
         
         // Create writer
         File outputFile = new File("results.avro");
-        DatumWriter<GenericRecord> datumWriter = new GenericDatumWriter<>(schema);
+        DatumWriter<GenericRecord> datumWriter = new GenericDatumWriter<>(containerSchema);
         DataFileWriter<GenericRecord> dataFileWriter = 
             new DataFileWriter<>(datumWriter);
-        dataFileWriter.create(schema, outputFile);
+        dataFileWriter.create(containerSchema, outputFile);
         
-        // Create record
-        GenericRecord result = new GenericData.Record(schema);
-        result.put("ACDCTerminal", "550e8400-e29b-41d4-a716-446655440000");
-        result.put("isViolation", false);
-        result.put("atTime", 1704067200000L);  // 2024-01-01T00:00:00Z
-        result.put("OperationalLimit", "123e4567-e89b-12d3-a456-426614174000");
-        result.put("ReportedByRegion", null);
-        result.put("valueW", 125500.0f);
-        result.put("valueVAR", 32100.0f);
-        result.put("valueVA", null);
-        result.put("valueV", 138000.0f);
-        result.put("valueAngle", -5.3f);
-        result.put("valueA", 940.2f);
-        result.put("value", 85.5f);
-        result.put("absoluteValue", 125500.0f);
-        
-        // Write record
-        dataFileWriter.append(result);
+        // Write container record
+        dataFileWriter.append(container);
         dataFileWriter.close();
         
         System.out.println("Successfully wrote SecurityAnalysisResult");
@@ -1473,39 +1505,51 @@ public class WriteBaseCasePowerFlowResult {
 
 **Python Example:**
 ```python
-from avro.datafile import DataFileWriter
-from avro.io import DatumWriter
-import avro.schema
+from fastavro import writer, parse_schema
+import json
 
-# Load schema
-schema = avro.schema.parse(open("SecurityAnalysisResult.avsc").read())
+# Load and parse schema
+with open("SecurityAnalysisResult.avsc") as f:
+    schema_json = json.load(f)
 
-# Create writer
-writer = DataFileWriter(
-    open("results.avro", "wb"),
-    DatumWriter(),
-    schema
-)
+# fastavro can handle the array directly
+parsed_schema = parse_schema(schema_json)
 
-# Write result
-writer.append({
-    "ACDCTerminal": "550e8400-e29b-41d4-a716-446655440000",
-    "isViolation": False,
-    "atTime": 1704067200000,  # 2024-01-01T00:00:00Z
-    "OperationalLimit": "123e4567-e89b-12d3-a456-426614174000",
-    "ReportedByRegion": None,
-    "valueW": 125500.0,
-    "valueVAR": 32100.0,
-    "valueVA": None,
-    "valueV": 138000.0,
-    "valueAngle": -5.3,
-    "valueA": 940.2,
-    "value": 85.5,
-    "absoluteValue": 125500.0
-})
+# Write message
+records = [
+    {
+        "RemedialActionApplied": [
+            {
+                "mRID": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+                "PowerFlowResult": {
+                    "ACDCTerminal": "550e8400-e29b-41d4-a716-446655440000",
+                    "isViolation": False,
+                    "atTime": 1704067200000,
+                    "valueW": 125500.0,
+                    "valueVAR": 32100.0,
+                    "valueVA": None,
+                    "valueV": 138000.0,
+                    "valueAngle": -5.3,
+                    "valueA": 940.2,
+                    "value": 85.5,
+                    "absoluteValue": 125500.0,
+                    "OperationalLimit": "123e4567-e89b-12d3-a456-426614174000",
+                    "ReportedByRegion": None
+                },
+                "RemedialAction": "c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f",
+                "StageForRemedialActionScheme": None
+            }
+        ]
+    }
+]
 
-writer.close()
+with open("results.avro", "wb") as out:
+    writer(out, parsed_schema, records)
+
+print("Successfully wrote SecurityAnalysisResult")
 ```
+
+Note: **fastavro** automatically handles union types more intuitively - you don't need to wrap with the fully qualified type name in the dict structure.
 
 ### 9.3. Reading Messages
 
@@ -1515,11 +1559,11 @@ import org.apache.avro.file.DataFileReader;
 import org.apache.avro.generic.GenericDatumReader;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.DatumReader;
-
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
-public class ReadBaseCasePowerFlowResult {
+public class ReadSecurityAnalysisResult {
     public static void main(String[] args) throws IOException {
         // Create reader
         File inputFile = new File("results.avro");
@@ -1527,22 +1571,47 @@ public class ReadBaseCasePowerFlowResult {
         DataFileReader<GenericRecord> dataFileReader = 
             new DataFileReader<>(inputFile, datumReader);
         
-        // Read results
+        // Read container records
         while (dataFileReader.hasNext()) {
-            GenericRecord result = dataFileReader.next();
+            GenericRecord container = dataFileReader.next();
             
-            System.out.println("Terminal: " + result.get("ACDCTerminal"));
-            System.out.println("Violation: " + result.get("isViolation"));
-            System.out.println("Power: " + result.get("valueW") + " W");
-            System.out.println("Time: " + result.get("atTime"));
+            // Get RemedialActionApplied array
+            List<GenericRecord> remedialActions = 
+                (List<GenericRecord>) container.get("RemedialActionApplied");
             
-            // Check for optional fields
-            Object operationalLimit = result.get("OperationalLimit");
-            if (operationalLimit != null) {
-                System.out.println("Limit: " + operationalLimit);
+            for (GenericRecord remedialAction : remedialActions) {
+                System.out.println("Remedial Action mRID: " + remedialAction.get("mRID"));
+                System.out.println("Remedial Action: " + remedialAction.get("RemedialAction"));
+                
+                // Get PowerFlowResult (union type)
+                GenericRecord powerFlowResult = 
+                    (GenericRecord) remedialAction.get("PowerFlowResult");
+                
+                // Access fields from the power flow result
+                System.out.println("Terminal: " + powerFlowResult.get("ACDCTerminal"));
+                System.out.println("Violation: " + powerFlowResult.get("isViolation"));
+                System.out.println("Time: " + powerFlowResult.get("atTime"));
+                
+                // Check for optional power value
+                Object valueW = powerFlowResult.get("valueW");
+                if (valueW != null) {
+                    System.out.println("Power: " + valueW + " W");
+                }
+                
+                // Check for optional operational limit
+                Object operationalLimit = powerFlowResult.get("OperationalLimit");
+                if (operationalLimit != null) {
+                    System.out.println("Limit: " + operationalLimit);
+                }
+                
+                // Check if this is a contingency result
+                Object contingency = powerFlowResult.get("Contingency");
+                if (contingency != null) {
+                    System.out.println("Contingency: " + contingency);
+                }
+                
+                System.out.println("---");
             }
-            
-            System.out.println("---");
         }
         
         dataFileReader.close();
@@ -1554,21 +1623,51 @@ public class ReadBaseCasePowerFlowResult {
 ```python
 from avro.datafile import DataFileReader
 from avro.io import DatumReader
+from datetime import datetime
 
 # Read results
 reader = DataFileReader(open("results.avro", "rb"), DatumReader())
 
-for result in reader:
-    print(f"Terminal: {result['ACDCTerminal']}")
-    print(f"Violation: {result['isViolation']}")
-    print(f"Power: {result['valueW']} W")
-    print(f"Time: {result['atTime']}")
+for container in reader:
+    # Get RemedialActionApplied array
+    remedial_actions = container['RemedialActionApplied']
     
-    # Check for optional fields
-    if result['OperationalLimit'] is not None:
-        print(f"Limit: {result['OperationalLimit']}")
-    
-    print("---")
+    for remedial_action in remedial_actions:
+        print(f"Remedial Action mRID: {remedial_action['mRID']}")
+        print(f"Remedial Action: {remedial_action['RemedialAction']}")
+        
+        # Get PowerFlowResult (union type - will be dict with type name as key)
+        power_flow_result = remedial_action['PowerFlowResult']
+        
+        # For union types, Avro wraps in dict with type name as key
+        # Get the actual result data (first value in the union dict)
+        if isinstance(power_flow_result, dict):
+            # The key is the fully qualified type name
+            result_data = list(power_flow_result.values())[0]
+        else:
+            result_data = power_flow_result
+        
+        print(f"Terminal: {result_data['ACDCTerminal']}")
+        print(f"Violation: {result_data['isViolation']}")
+        
+        # Convert timestamp to readable format
+        timestamp_ms = result_data['atTime']
+        timestamp = datetime.fromtimestamp(timestamp_ms / 1000.0)
+        print(f"Time: {timestamp}")
+        
+        # Check for optional power value
+        if result_data['valueW'] is not None:
+            print(f"Power: {result_data['valueW']} W")
+        
+        # Check for optional operational limit
+        if result_data['OperationalLimit'] is not None:
+            print(f"Limit: {result_data['OperationalLimit']}")
+        
+        # Check if this is a contingency result
+        if 'Contingency' in result_data and result_data['Contingency'] is not None:
+            print(f"Contingency: {result_data['Contingency']}")
+        
+        print("---")
 
 reader.close()
 ```

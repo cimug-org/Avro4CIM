@@ -2,6 +2,8 @@
 
 This directory contains example JSON payloads for the SecurityAnalysisResult Apache Avro schema based on the updated schema structure where only `RemedialActionApplied` appears at the container level.
 
+Refer to the [Security Analysis Result Messages - Quick Reference Guide](quick_reference.md) for a fuller understanding of the sample payloads provided.
+
 ## Schema Structure Changes
 
 The updated schema reflects the topological analysis results:
