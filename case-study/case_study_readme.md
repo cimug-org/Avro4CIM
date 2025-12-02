@@ -4,7 +4,6 @@
 - [UML Profiles Overview](#uml-profiles-overview)
 - [CIMTool Workflow for Generating Artifacts](#cimtool-workflow-for-generating-artifacts)
 - [Overview of Apache Avro](#overview-of-apache-avro)
-- [Avro Schema Builder Latest Release](#avro-schema-builder-latest-release)
 - [The Purpose of an Apache Avro Schema (.avsc)](#the-purpose-of-an-apache-avro-schema-avsc)
 - [Apache Avro Schema Limitations -vs- JSON and XSD Schema Specifications](#apache-avro-schema-limitations--vs--json-and-xsd-schema-specifications)
 - [Mapping CIM Profiles  to Apache Avro Schema: Impacts to Formal Mapping Specifications](#mapping-cim-profiles--to-apache-avro-schema-impacts-to-formal-mapping-specifications)
@@ -64,10 +63,6 @@ The standard workflow for generating artifacts used by **CIMTool** appears below
 - For this case study the desired generated artifact is an Apache Avro schema i.e. an `.avsc` file that is a JSON representation of the profile.
 
 CIMTool utilizes what is known as "builders" to generate these various artifacts based on the OWL profile definition. As highlighted above, one flavor of supported builder it an XSLT builder. XSLT (Extensible Stylesheet Language Transformations) is an XML-based language used to transform the structure and content of an XML document into another format, such as HTML, JSON, PlantUML, plain text, PDF, etc. XSLT operates on the principle of transforming an input document's structure into a new result structure. For further detail refer to CIMTool's [CIMTool Builders Library](https://cimtool-builders.ucaiug.io/) companion website.
-
-## Avro Schema Builder Latest Release
-
-  - The beta release is available here on GitHub at [CIMTool-2.2.0](../builder/apache-avro-schema.xsl).
 
 ## CIMTool Workflow for Generating Artifacts
 
