@@ -129,27 +129,27 @@ The schema file contains an array of type definitions, ordered by dependency:
   { 
     "type": "enum", 
     "name": "UnitMultiplier", 
-    // ...
+    // additional definition here
     },
   { "type": "enum", 
     "name": "UnitSymbol", 
-    // ...
+    // additional definition here
   },
   { "type": "record", 
     "name": "BaseCasePowerFlowResult", 
-    // ...
+    // additional definition here
   },
   { "type": "record", 
     "name": "ContingencyPowerFlowResult", 
-    // ...
+    // additional definition here
   },
   { "type": "record", 
     "name": "RemedialActionApplied", 
-    // ...
+    // additional definition here
   },
   { "type": "record", 
     "name": "SecurityAnalysisResult", 
-    // ...
+    // additional definition here
   }
 ]
 ```
@@ -243,7 +243,7 @@ The `modelReference` annotation appears at different levels within the Avro sche
   "namespace": "eu.cim4.ap_voc.securityanalysisresult.extsecurityanalysisresult",
   "modelReference": "https://cim4.eu/ns/nc#BaseCasePowerFlowResult",
   "fields": [
-    // ...
+    // additional definition here
   ]
 }
 ```
@@ -324,19 +324,19 @@ The abstract parent (`PowerFlowResult`) is not defined as an Avro type. Instead,
     {
       "name": "absoluteValue", 
       "type": ["null", "float"], 
-      // ...
+      // additional definition here
     },
     {
       "name": "atTime", 
       "type": {"type": "long", "logicalType": "timestamp-millis"}, 
-      // ...
+      // additional definition here
     },
     {
       "name": "isViolation", 
       "type": "boolean", 
-      // ...
+      // additional definition here
     },
-    // ... all remaining PowerFlowResult fields duplicated here
+    // all remaining PowerFlowResult fields duplicated here
   ]
 }
 
@@ -348,23 +348,23 @@ The abstract parent (`PowerFlowResult`) is not defined as an Avro type. Instead,
    {
       "name": "absoluteValue", 
       "type": ["null", "float"], 
-      // ...
+      // additional definition here
     },
     {
       "name": "atTime", 
       "type": {"type": "long", "logicalType": "timestamp-millis"}, 
-      // ...
+      // additional definition here
     },
     {
       "name": "isViolation", 
       "type": "boolean", 
-      // ...
+      // additional definition here
     },
-    // ... all remaining PowerFlowResult fields duplicated here
+    // additional definition here all remaining PowerFlowResult fields duplicated here
     {
       "name": "Contingency", 
       "type": "string", 
-      // ...
+      // additional definition here
     }  // Additional Association field
   ]
 }
@@ -383,7 +383,7 @@ When another class (like `RemedialActionApplied`) has an association to the abst
     {
       "name": "mRID", 
       "type": "string", 
-      // ...
+      // additional definition here
     },
     {
       "name": "PowerFlowResult",
@@ -726,7 +726,7 @@ The logical type enables proper type generation in target languages:
 public class BaseCasePowerFlowResult {
     private java.time.Instant atTime;  // Not long!
     private boolean isViolation;
-    // ...
+    // additional definition here
 }
 ```
 
