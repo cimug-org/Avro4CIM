@@ -47,13 +47,309 @@
 
 For this CIM mapping to Apache Avro schema case study the CSA 2.4 Security Analysis Result Profile was targeted. It does not comprehensively represent all CIM types that can be included in a profile. For example Compound data types defined within the CIM are not defined as part of the SAR profile. Despite this, the initial Avro schema builder outlined here includes support for all types that are currently identified as potentially relevant in an Avro schema. A special extended variant of the profile was used to proof out and test the generation of a more complex profile definition that included Compound types and additional edge cases.
 
-**UML Diagram of the SAR 2.4 Profile**
+### 1.1. UML Diagram of the CSA 2.4 SAR Profile
 
 ![](https://img.plantuml.biz/plantuml/svg/hLVRJkD847ttLxJ8mqYB4W84jA08ZUF4cf56B4eG-x3QXyQk92tQRgkx3PCT-FUjQZl1bpWxZDOMYbrrwjIrA-6piLpRF96ULHcpYZqgQrN2Og4XiaAbdlU9gOoUs4hpM41gsIEFdbPQvMbC5aOakUGMsCndfvU3xsZB4PeOppo9DEFuo2OxYq19fLaldD3TxqqlfsV1Z9ny4J6mI79Zc8XKQhor4mWTIIYU8SdiXYLWroesP7A_5eQHoZ2x1iQjrU8nnqWAWdVtZjRVgh-YTY7-0JQiG7ojrKiPtEXYT3cwg2ZDciVgHQGhPdKEv9fqAGcMQ90g2rLtzCv-U8nzQkMz7DADghOcMluEvwHHEWPT3uMnKAMsb9sxgvJTyWGmUC5bAN2PdPxjYB18qLCAMDPJb2tgcRnvpIgvkDljceL1UFNQ2wzcqndnx8fPYUl27mr7GJtMeRkseTcD19mm6LCa5ZGekybW7_mBS8pziAP6jxzg-qf0VIdhCFjk8JKqsovtd2FZE6DOYbIuyMyLOpnksDxSiDuifFkr9yLgRN7uDri__gEncaVsGmvuQKJCeRjAvWr8gLwstBCqJq1pOlavNdWtS45VXU7iuhKt7OP-SEaLd7WCjFbGj40cPQZd8VA5OJ0C9jKv68zdMz2kZ-q9QgFUwAYviryhYjcDZbSgjp5KDDw-0_cJKpAug1scKVc6G3ThxR5ympZzE6QyS6NL2zTniPNoB0FD92nn1fHEyLajdQ9Savwpu8Oj8Cgri1i_vN9ZX9c3oQMz9MsZ--nEgwMGSDrXGn3Q2oRZ4OBMrcRc-kI4P_rd5GqYaOm6a9_ijpqv6unw7k1gfxYe_dum3Uv19m9n7g_DSqt7watwGTr3ymat4E3VdNh1Oui957wOIDU0xWrRQlo-QMYzWhxBTZo-3T15uQEbVEttkomfe02xXmiGqcZJJAUYwiYcWlYLX0wO_tTEtSRU0TwZumFAuM3msn7hzs_gC7PwLAl5THaTLU2Fh5mXN7uJYR3D6ZRr7OLiPj1WwQXEWmhd_BZKe5n9t2OFNEQ00QCjj-mlJF3qxnhEtek405FyoKAFLQKm3q995pqY9af9u6aLy5oot-4IeLz2RNw7y14Iv5eZX7BeXAKhIMpkSmeh3RXoEx0FY7jGql8LT4B8hP_XoaE_he3To3b2vu1r5Czm4FedSRPXUsRqwFZGTDKs1OvNRQjyZAerOHJIKNlmTbFRfdU0zrvNsUUGAMqXdcpci2gLo5w-L4z28MfERWdSFx35xCyX0Tp-qYz-ORS8gjeF467hfO3OsqTJwYfRfjBePFvrYfajy0ivNH7rVbkgpJvvjNhDKcFbcg9T2N_TIwD4hZqroV_WOq57BLIwZbn4QtmlPy91QYFX9Cs65h3EFdx6Brlw1ypx5m00)
 
-**UML Diagram of the SAR 2.4 EXTENDED Profile**
+### 1.2. SAR Profile Generate Apache Avro Schema
+
+```JSON
+[
+     {
+          "type": "enum",
+          "name": "UnitMultiplier",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.domain",
+          "doc": "The unit multipliers defined for the CIM. When applied to unit symbols, the unit symbol is treated as a derived unit. Regardless of the contents of the unit symbol text, the unit symbol shall be treated as if it were a single-character unit symbol. Unit symbols should not contain multipliers, and it should be left to the multiplier to define the multiple for an entire data type.For example, if a unit symbol is "m2Pers" and the multiplier is "k", then the value is k(m**2/s), and the multiplier applies to the entire final value, not to any individual part of the value. This can be conceptualized by substituting a derived unit symbol for the unit type. If one imagines that the symbol "�" represents the derived unit "m2Pers", then applying the multiplier "k" can be conceptualized simply as "k�".For example, the SI unit for mass is "kg" and not "g". If the unit symbol is defined as "kg", then the multiplier is applied to "kg" as a whole and does not replace the "k" in front of the "g". In this case, the multiplier of "m" would be used with the unit symbol of "kg" to represent one gram. As a text string, this violates the instructions in IEC 80000-1. However, because the unit symbol in CIM is treated as a derived unit instead of as an SI unit, it makes more sense to conceptualize the "kg" as if it were replaced by one of the proposed replacements for the SI mass symbol. If one imagines that the "kg" were replaced by a symbol "�", then it is easier to conceptualize the multiplier "m" as creating the proper unit "m�", and not the forbidden unit "mkg".",
+          "modelReference": "http://iec.ch/TC57/CIM100#UnitMultiplier",
+          "symbols": [
+               "k",
+               "m",
+               "none"
+          ]
+     },
+     {
+          "type": "enum",
+          "name": "UnitSymbol",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.domain",
+          "doc": "The derived units defined for usage in the CIM. In some cases, the derived unit is equal to an SI unit. Whenever possible, the standard derived symbol is used instead of the formula for the derived unit. For example, the unit symbol Farad is defined as "F" instead of "CPerV". In cases where a standard symbol does not exist for a derived unit, the formula for the unit is used as the unit symbol. For example, density does not have a standard symbol and so it is represented as "kgPerm3". With the exception of the "kg", which is an SI unit, the unit symbols do not contain multipliers and therefore represent the base derived unit to which a multiplier can be applied as a whole.Every unit symbol is treated as an unparseable text as if it were a single-letter symbol. The meaning of each unit symbol is defined by the accompanying descriptive text and not by the text contents of the unit symbol.To allow the widest possible range of serializations without requiring special character handling, several substitutions are made which deviate from the format described in IEC 80000-1. The division symbol "/" is replaced by the letters "Per". Exponents are written in plain text after the unit as "m3" instead of being formatted as "m" with a superscript of 3 or introducing a symbol as in "m^3". The degree symbol "�" is replaced with the letters "deg". Any clarification of the meaning for a substitution is included in the description for the unit symbol.Non-SI units are included in list of unit symbols to allow sources of data to be correctly labelled with their non-SI units (for example, a GPS sensor that is reporting numbers that represent feet instead of meters). This allows software to use the unit symbol information correctly convert and scale the raw data of those sources into SI-based units.The integer values are used for harmonization with IEC 61850.",
+          "modelReference": "http://iec.ch/TC57/CIM100#UnitSymbol",
+          "symbols": [
+               "A",
+               "V",
+               "VA",
+               "VAr",
+               "W",
+               "deg",
+               "none"
+          ]
+     },
+     {
+          "type": "record",
+          "name": "BaseCasePowerFlowResult",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.extsecurityanalysisresult",
+          "doc": "Base case power flow result for a given terminal.",
+          "modelReference": "https://cim4.eu/ns/nc#BaseCasePowerFlowResult",
+          "fields": [
+               {
+                    "name": "absoluteValue",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Absolute value from a power flow calculation on a given terminal related to a given operational limit. For instance, if the operational limit is 1000 A and the current flow is 1100 A the absoluteValue is reported as 1100 A.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.absoluteValue"
+               },
+               {
+                    "name": "atTime",
+                    "type": {"type": "long", "logicalType": "timestamp-millis"},
+                    "doc": "The date and time of the scenario time that was studied and at which the limit violation occurred.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.atTime"
+               },
+               {
+                    "name": "isViolation",
+                    "type": "boolean",
+                    "doc": "True if the power flow result is violating the associated operational limit. False if it is not violating the associated operational limits.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.isViolation"
+               },
+               {
+                    "name": "value",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "The value of the limit violation in percent related to the value of the operational limit that is violated. For instance, if the operational limit is 1000 A and the current flow is 1100 A the value is reported as 110 %.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.value"
+               },
+               {
+                    "name": "valueA",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Current from a power flow calculation on a given terminal. The value shall be a positive value or zero.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueA"
+               },
+               {
+                    "name": "valueAngle",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Voltage angle value from a power flow calculation on a given terminal.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueAngle"
+               },
+               {
+                    "name": "valueV",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Voltage value from a power flow calculation on a given terminal. The attribute shall be a positive value.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueV"
+               },
+               {
+                    "name": "valueVA",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Apparent power value from a power flow calculation on a given terminal.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueVA"
+               },
+               {
+                    "name": "valueVAR",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Reactive power value from a power flow calculation on a given terminal.Load sign convention is used, i.e. positive sign means flow out from a TopologicalNode (bus) into the conducting equipment.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueVAR"
+               },
+               {
+                    "name": "valueW",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Active power value from a power flow calculation on a given terminal.Load sign convention is used, i.e. positive sign means flow out from a TopologicalNode (bus) into the conducting equipment.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueW"
+               },
+               {
+                    "name": "ACDCTerminal",
+                    "type": "string",
+                    "doc": "ACDC terminal where the powerflow result is located. Note that the value of this field is the identifier (e.g. mRID) used to reference the ACDCTerminal external to this profile.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.ACDCTerminal"
+               },
+               {
+                    "name": "OperationalLimit",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "The operational limit that has this limit violation. Note that the value of this field is the identifier (e.g. mRID) used to reference the OperationalLimit external to this profile.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.OperationalLimit"
+               },
+               {
+                    "name": "ReportedByRegion",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "The region which reports this limit violation. Note that the value of this field is the identifier (e.g. mRID) used to reference the Region external to this profile.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.ReportedByRegion"
+               }
+          ]
+     },
+     {
+          "type": "record",
+          "name": "ContingencyPowerFlowResult",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.extsecurityanalysisresult",
+          "doc": "Contingency power flow result on a given terminal for a given contingency.",
+          "modelReference": "https://cim4.eu/ns/nc#ContingencyPowerFlowResult",
+          "fields": [
+               {
+                    "name": "absoluteValue",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Absolute value from a power flow calculation on a given terminal related to a given operational limit. For instance, if the operational limit is 1000 A and the current flow is 1100 A the absoluteValue is reported as 1100 A.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.absoluteValue"
+               },
+               {
+                    "name": "atTime",
+                    "type": {"type": "long", "logicalType": "timestamp-millis"},
+                    "doc": "The date and time of the scenario time that was studied and at which the limit violation occurred.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.atTime"
+               },
+               {
+                    "name": "isViolation",
+                    "type": "boolean",
+                    "doc": "True if the power flow result is violating the associated operational limit. False if it is not violating the associated operational limits.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.isViolation"
+               },
+               {
+                    "name": "value",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "The value of the limit violation in percent related to the value of the operational limit that is violated. For instance, if the operational limit is 1000 A and the current flow is 1100 A the value is reported as 110 %.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.value"
+               },
+               {
+                    "name": "valueA",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Current from a power flow calculation on a given terminal. The value shall be a positive value or zero.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueA"
+               },
+               {
+                    "name": "valueAngle",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Voltage angle value from a power flow calculation on a given terminal.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueAngle"
+               },
+               {
+                    "name": "valueV",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Voltage value from a power flow calculation on a given terminal. The attribute shall be a positive value.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueV"
+               },
+               {
+                    "name": "valueVA",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Apparent power value from a power flow calculation on a given terminal.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueVA"
+               },
+               {
+                    "name": "valueVAR",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Reactive power value from a power flow calculation on a given terminal.Load sign convention is used, i.e. positive sign means flow out from a TopologicalNode (bus) into the conducting equipment.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueVAR"
+               },
+               {
+                    "name": "valueW",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Active power value from a power flow calculation on a given terminal.Load sign convention is used, i.e. positive sign means flow out from a TopologicalNode (bus) into the conducting equipment.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueW"
+               },
+               {
+                    "name": "ACDCTerminal",
+                    "type": "string",
+                    "doc": "ACDC terminal where the powerflow result is located. Note that the value of this field is the identifier (e.g. mRID) used to reference the ACDCTerminal external to this profile.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.ACDCTerminal"
+               },
+               {
+                    "name": "OperationalLimit",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "The operational limit that has this limit violation. Note that the value of this field is the identifier (e.g. mRID) used to reference the OperationalLimit external to this profile.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.OperationalLimit"
+               },
+               {
+                    "name": "ReportedByRegion",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "The region which reports this limit violation. Note that the value of this field is the identifier (e.g. mRID) used to reference the Region external to this profile.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.ReportedByRegion"
+               },
+               {
+                    "name": "Contingency",
+                    "type": "string",
+                    "doc": "The contingency that has this power flow result. Note that the value of this field is the identifier (e.g. mRID) used to reference the Contingency external to this profile.",
+                    "modelReference": "https://cim4.eu/ns/nc#ContingencyPowerFlowResult.Contingency"
+               }
+          ]
+     },
+     {
+          "type": "record",
+          "name": "RemedialActionApplied",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.extsecurityanalysisresult",
+          "doc": "Remedial Action or Remedial Action Stage that has been applied to the power flow case which has the associated power flow result.",
+          "modelReference": "https://cim4.eu/ns/nc#RemedialActionApplied",
+          "fields": [
+               {
+                    "name": "mRID",
+                    "type": "string",
+                    "doc": "Master resource identifier issued by a model authority. The mRID is unique within an exchange context. Global uniqueness is easily achieved by using a UUID, as specified in RFC 4122, for the mRID. The use of UUID is strongly recommended.For CIMXML data files in RDF syntax conforming to IEC 61970-552, the mRID is mapped to rdf:ID or rdf:about attributes that identify CIM object elements.",
+                    "modelReference": "https://cim4.eu/ns/nc#RemedialActionApplied.mRID"
+               },
+               {
+                    "name": "PowerFlowResult",
+                    "type": [
+                         "eu.cim4.ap_voc.securityanalysisresult.extsecurityanalysisresult.BaseCasePowerFlowResult",
+                         "eu.cim4.ap_voc.securityanalysisresult.extsecurityanalysisresult.ContingencyPowerFlowResult"
+                    ],
+                    "doc": "Power flow result that is obtained when the remedial action is applied.",
+                    "modelReference": "https://cim4.eu/ns/nc#RemedialActionApplied.PowerFlowResult"
+               },
+               {
+                    "name": "RemedialAction",
+                    "type": "string",
+                    "doc": "Remedial action that is applied. Note that the value of this field is the identifier (e.g. mRID) used to reference the RemedialAction external to this profile.",
+                    "modelReference": "https://cim4.eu/ns/nc#RemedialActionApplied.RemedialAction"
+               },
+               {
+                    "name": "StageForRemedialActionScheme",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "The stage of the remedial action scheme that is applied. Note that the value of this field is the identifier (e.g. mRID) used to reference the Stage external to this profile.",
+                    "modelReference": "https://cim4.eu/ns/nc#RemedialActionApplied.StageForRemedialActionScheme"
+               }
+          ]
+     },
+     {
+          "copyright": "Copyright 2025 UCAIug SPDX-License-Identifier: Apache-2.0",
+          "type": "record",
+          "name": "SecurityAnalysisResult",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult",
+          "doc": "The Security Analysis Result (SAR) profile is a profile to exchange a security analysis result.The security analysis result includes each limit violation detected for each assessed element and for a given contingency. The limit violation has a direct association to operational limit and contingency. The association to the operational limit provides information on the following:- The terminal (the end of the equipment) where the limit is defined- The equipment to which the limit is related- The type of the limit e.g. PATL, TATL, etc including the relevant time phase and other conditionsThe association to the contingency provides information which contingency was simulated when this limit violation was detected.This profile is not intended to replace the Topology (TP) and State Variables (SV) profiles. Its intention is to exchange a power flow result that is relevant for security optimization, either through violation or through a loading threshold. Systems should not use this profile for dumping a full database. The modeling is optimized to have the minimum size in addition to a well defined value definition (e.g. active power, apparent power, etc.).Recommendation: If the terminals are connected with zero impedance, it is recommended to include only one terminal with a voltage (e.g. the terminal of a BusbarSection). The connection between Contingency and Remedial Action is given by the Remedial Action Profile. The connection between AssessedElement and PowerFlowResult is given by the OperationalLimit.",
+          "fields": [
+               {
+                    "name": "RemedialActionApplied",
+                    "type": {
+                        "type": "array",
+                        "items": "eu.cim4.ap_voc.securityanalysisresult.extsecurityanalysisresult.RemedialActionApplied"
+                    },
+                    "doc": "Remedial Action or Remedial Action Stage that has been applied to the power flow case which has the associated power flow result.",
+                    "minCardDoc": "[min cardinality = 1] Application level validation will be required to ensure the array contains at least 1 item."
+               }
+          ]
+     }
+]
+
+```
+
+
+### 1.3. UML Diagram of the CSA 2.4 SAR EXTENDED Profile
 
 ![](https://img.plantuml.biz/plantuml/svg/hHdRRjiuzbrVGIGF0soGD6cJOXi4HHrVPeBff4MSoJmize6MQ9iRYjIIL59lst-VSoXA5YNATOgDKTdakT_8SzGFnb9jormaLXN4Ah9GrggSP5opr78ba-GNeWhyHLQQPfn9InOqVLnfLSeCAGpFIq4j8zCHENjxyWLeAQ3c9Z6FN1OKVfBhXcAiXDBaS7QDd-F3oTl9w_4KXVp6CqPIGOqXF5NI96ktmNKgMFMRvONTa9pPjSeCajolkI48CiIk6Q7MQhueGPEAmLQyOpkgmJS0dVF_CNBQGXbfhPwzSkSNvs_FBrf0iwQPUkPoHQmk6Of6cCID9H18PLbR7Ax9ruIGNtfsBq_n0w0-95t-axr1YD8Pqw4gXCoKj7xlZVlpUxSqPw0yfy9lEClENZUCm4dfesJWrZFOcuUMV4-wNd9wzyCrdOrdxxuTpjvD9rFaqpYpfTV5wFpqV1pgUkh-QjNiHZ38C96X9fPffkocO37qtnW5tNT30dPnhyLSW77nVfX-iKmQp6rdE-IHSJmpjkIIk_JlEUFggaFx_ZqvdCxmy-rGyDNQGl9lQZcZXR6QflP50gWdGiupz-SvRvWGwhdcFPLbpZH5BllnPLi2f_IxsMnwyUrmSZeRZTyc5Kye0srUf2r34g_gcndmcyt6f-FhTXvSNKrhf2QE_GpgOtt7KdEr7pZ5DAcJx0Ei5Mn1abYrxfb29nT1fPtx5I2wHEpdx7SmOfHbX5QYh7gcEgkEhB8ec2Q2BI51b9RmMoqTm9-XYQEWXinPMcfkDoD9nSPmSyTCAUmjGZkfGJvhjUI2NGxG80eU6gQWAI2jhItCvQjNj3X-Kkb9olFp4rQ-YjE-UdroVfWmEFTHBmpEQ3mPtpETSy1BQ93i0Oo4GVgAeGNoQshO6FvzLizGqs109OTmkMOWtf2bXike0qqgzaEqLrUtOn1HoUW1lnqV3r4wXJIZZn26ZW8Qp4qjo-RFtARhMW6FMuiAaRoe2WTPZvNCIhXJvMhwtv8NETwaePXcl-l966d4eLkWansXydf8lDkV8BotAcEmjfJBlj7edVa6gYO7_wXIfooYrm2hY7OHVesUSIvUMxI0oNGJaLw31jAhXV4p6RQ3_CT9DaoSxE1xSBG3U7foyey3SdpyFaGZPmU1BowzTiu3PTVK88KHJDpXHuu4aokxdW5ENRHdmEgZsoN_0jbd_qPZszaDv2XamatgOoXNO-ZOIcxZXLINGoLz5vrtRRrqudRWXsgehjp0w03FosbRrOOZtw5otQD0XiiLFSxbdEad3dLm2RU74epAsj48bahdL8ZDpJ3Qhh8AYhvP35NxS14EcRIps8TFXb2thPW8tuEZo2OQVa1KLGKDtFZY28p-rRKf-wP513kI77qib7IJWKY-v2pxjFWFx7QTreL7qo6_kvb0YEVG5ycLFy5QFHxvo7DkV-SoIx2Hsov9jxEh-551TVwWXAKhXkirj0cj9HmhhPKgF3aLVjUnHr11hQY_tGQCZ0ik8B2ui1vgq-hfCA31mU6evk_Qk8yghSm8Gz3pNEMm1hi-dPg1TEiXvpD82kYjD7Pc3i2OzMiKs_ExYs7D7DNwj3NSMRoVUZqgdobnULtif4T-SDJTUg2YPCs9ho8OSsPzCKGW-uW8xfCky1xQv07szww33dEpYpEfmxNDrvqeGpcyC4h0ZE2yKIUnpzughM9U-QaG8k6BeXZpCZ8PZ5JZwwOf1kS63NJ47XU7dpB8KTRbGzEK5L2tWarA7p8t842BQDftJhlCTWUiHSJDZNGJOfjvv4A30Q_KSD9G3F0ZChbidMBRAsq__zTfsEskEaVlGESMENyz9CWvq11egGtDgF3iFSyHOK8jmvzj83SFN8cEBze8JvxxPvWuiJ_eytSO8q0Pbre32jemY2PN0hcvxmbRmJ5eXd0V0C-Vp8CeA7PKm7mCSfq3Xp7l0FMEKRphsKxKlv1d7otIFnySxUfyWx6oMq4lOnKx4IC7thQZxhEl3kicrctkTwnG6kR1wyqTMtaWSFUBTfSUw-5-KFEnBEzmYBHbySgADRAeLMUWZVPENJqwDB4wMs3BZXqyBMWARKIOujs6gpjxWs9tB1NAx3cbDyYxnlGQgUAEyUaQvgCMFpsgNksEvIpZL8og5-Sz1cte2nX17Ge8M19Zus6jSRHLTRr-CawBYHhRRwTof8WWaxkxJKh_lA2Ebrov13l_1nbpFFfcIeUOytGDQs-PGmbArErqOrgXxGebODZI90qwB01nhF82nuYc939_XNHl4wWKqsrvDSkfVWptwjiac1t2RhXMeRKNqqHGkIehuojcxUEyKDVgom04fW8nXaal2ZQLvPUr2m8GQZHXCDw9feMlbWvkrRDieFVRnVRwQ4prL6rBFNB4K5hvu5S6GoKLKQr3bDTxuBo9uYnABZBOS_zN4qD8X_os54hf-j1EcxwjXoU7E4DFlO2pBneopPOy7arJBeT1qERT3dF5r-jH09osQounWExADD6N6HZASe7PqfyK8-yCVAIt5AJp8hJpsc6BwIJ5hhNOIzDkrGzVRTKh6-WV1ZfWDGY1XeDb_XeSxlaqS-PaKUV5tX9NPZStvxP-lEzQ1HMfaS6yJ07DwitBSj5q1lZk0S4-QRYSdxXC-_Jzjo5_mhpn1zmw70zuNOsOuTx0JFc8ZnmVKad_SgBBUBx95qficLRh0OOZV3ouH_LpfF7hBtnaRDMMb7nW4ACS9hs_0G00)
+
+### 1.4. EXTENDED SAR Profile Generate Apache Avro Schema
+
+The EXTENDED version includes additional classes for demonstration purposes (Location, OperationalLimit, OperationalLimitSet, OperationalLimitType with compound types). See [SecurityAnalysisResult_EXTENDED.avsc](SecurityAnalysisResult_EXTENDED.md).
 
 ## 2. CIMTool Workflow for Generating Artifacts
 
@@ -1137,7 +1433,7 @@ The topological analysis approach provides a generic, scalable solution that wor
 
 ## 8. Example SAR Profile JSON Payloads
 
-### 8.1. SecurityAnalysisResult.avsc
+### 8.1. SecurityAnalysisResult JSON
 
 The following examples demonstrate valid JSON messages for the SecurityAnalysisResult schema. Complete examples with validation documentation are available in the [`/example-payloads`](https://github.com/cimug-org/Avro4CIM/tree/main/case-study/example-payloads) directory.
 
@@ -1148,7 +1444,7 @@ The following examples demonstrate valid JSON messages for the SecurityAnalysisR
 }
 ```
 
-**Example 2: Complete Security Analysis**
+**Example 2: Complete Security Analysis Payload**
 ```json
 {
   "RemedialActionApplied": [
@@ -1254,7 +1550,7 @@ The following examples demonstrate valid JSON messages for the SecurityAnalysisR
 - All arrays can be empty but cannot be omitted
 - Additional examples available in `/examples` directory with comprehensive field documentation
 
-### 8.2. SecurityAnalysisResult_EXTENDED.avsc
+### 8.2. SecurityAnalysisResult_EXTENDED JSON
 
 The EXTENDED version includes additional classes for demonstration purposes (Location, OperationalLimit, OperationalLimitSet, OperationalLimitType with compound types). Example payloads for the EXTENDED schema demonstrate compound type nesting and additional cardinality patterns. See [SecurityAnalysisResult Example Payloads README](example-payloads/README.md) for complete documentation.
 
