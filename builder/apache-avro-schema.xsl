@@ -568,37 +568,42 @@
 			<list begin="[" indent="     " delim="," end="]">
 			
 				<!-- Apache Avro instance data header definition. -->
-				<list begin="&quot;header&quot;: {{" indent="    " delim="," end="}}">
-					<list begin="{{" indent="     " delim="," end="}}">
-						<item>"name": "profProfile"</item>
-						<item>"type": "string"</item>
-						<item>"doc": "URI of the DX-PROF profile this dataset conforms to, e.g. https://ap.cim4.eu/StateVariables/3.0"</item>
+				<list begin="{{" indent="     " delim="," end="}}">
+					<item>"type": "record"</item>
+					<item>"name": "Header"</item>
+					<item>"namespace": "<xsl:value-of select="$package_prefix"/>"</item>
+					<list begin="&quot;fields&quot;: [" indent="     " delim="," end="]">
+						<list begin="{{" indent="     " delim="," end="}}">
+							<item>"name": "profProfile"</item>
+							<item>"type": "string"</item>
+							<item>"doc": "URI of the DX-PROF profile this dataset conforms to, e.g. https://ap.cim4.eu/StateVariables/3.0"</item>
+						</list>
+						<list begin="{{" indent="     " delim="," end="}}">
+							<item>"name": "identifier"</item>
+							<item>"type": "string"</item>
+							<item>"doc": "Dataset identifier, aligned with dcterms:identifier / dcat:Dataset.@about."</item>
+						</list>
+						<list begin="{{" indent="     " delim="," end="}}">
+							<item>"name": "isVersionOf"</item>
+							<item>"type": [ "null", "string" ]</item>
+							<item>"doc": "URI of the logical dataset or model this is a version of (dct:isVersionOf)."</item>
+						</list>
+						<list begin="{{" indent="     " delim="," end="}}">
+							<item>"name": "version"</item>
+							<item>"type": [ "null", "string" ]</item>
+							<item>"doc": "Version label for this dataset instance (aligned with dcat:version). Useful when multiple messages represent different versions of the same time slice."</item>
+						</list>
+						<list begin="{{" indent="     " delim="," end="}}">
+							<item>"name": "startDate"</item>
+							<item>"type": "string"</item>
+							<item>"doc": "Start of the validity interval for this dataset, aligned with dcat:startDate (ISO-8601). Typically the case time of the power system state."</item>
+						</list>
+						<list begin="{{" indent="     " delim="," end="}}">
+							<item>"name": "schemaRef"</item>
+							<item>"type": "string"</item>
+							<item>"doc": "Dereferenceable URI or Schema Registry URL for the Avro schema used to encode this dataset."</item>
+						</list>					
 					</list>
-					<list begin="{{" indent="     " delim="," end="}}">
-						<item>"name": "identifier"</item>
-						<item>"type": "string"</item>
-						<item>"doc": "Dataset identifier, aligned with dcterms:identifier / dcat:Dataset.@about."</item>
-					</list>
-					<list begin="{{" indent="     " delim="," end="}}">
-						<item>"name": "isVersionOf"</item>
-						<item>"type": [ "null", "string" ]</item>
-						<item>"doc": "URI of the logical dataset or model this is a version of (dct:isVersionOf)."</item>
-					</list>
-					<list begin="{{" indent="     " delim="," end="}}">
-						<item>"name": "version"</item>
-						<item>"type": [ "null", "string" ]</item>
-						<item>"doc": "Version label for this dataset instance (aligned with dcat:version). Useful when multiple messages represent different versions of the same time slice."</item>
-					</list>
-					<list begin="{{" indent="     " delim="," end="}}">
-						<item>"name": "startDate"</item>
-						<item>"type": "string"</item>
-						<item>"doc": "Start of the validity interval for this dataset, aligned with dcat:startDate (ISO-8601). Typically the case time of the power system state."</item>
-					</list>
-					<list begin="{{" indent="     " delim="," end="}}">
-						<item>"name": "schemaRef"</item>
-						<item>"type": "string"</item>
-						<item>"doc": "Dereferenceable URI or Schema Registry URL for the Avro schema used to encode this dataset."</item>
-					</list>					
 				</list>
 			
 				<!-- Enumerations can be generated first as they should have no dependencies -->
@@ -672,7 +677,7 @@
 											<item>"minCardDoc": "[min cardinality = <xsl:value-of select="@minOccurs"/>] Application level validation will be required to ensure the array contains at least <xsl:value-of select="@minOccurs"/> <xsl:choose><xsl:when test="@minOccurs = 1"> item.</xsl:when><xsl:otherwise> items.</xsl:otherwise></xsl:choose>"</item>
 										</xsl:if>
 										<xsl:if test="not(@maxOccurs = 'unbounded')">
-											<item>"maxCardDoc": "[max cardinality = <xsl:value-of select="@maxOccurs"/>] Application level validation will be required to ensure the array contains at most <xsl:value-of select="@maxOccurs"/> items.</item>
+											<item>"maxCardDoc": "[max cardinality = <xsl:value-of select="@maxOccurs"/>] Application level validation will be required to ensure the array contains at most <xsl:value-of select="@maxOccurs"/> items."</item>
 										</xsl:if>
 									</xsl:if>	
 								</list>
@@ -763,7 +768,7 @@
 					<item>"minCardDoc": "[min cardinality = <xsl:value-of select="@minOccurs"/>] Application level validation will be required to ensure the array contains at least <xsl:value-of select="@minOccurs"/> <xsl:choose><xsl:when test="@minOccurs = 1"> item.</xsl:when><xsl:otherwise> items.</xsl:otherwise></xsl:choose>"</item>
 				</xsl:if>
 				<xsl:if test="not(@maxOccurs = 'unbounded')">
-					<item>"maxCardDoc": "[max cardinality = <xsl:value-of select="@maxOccurs"/>] Application level validation will be required to ensure the array contains at most <xsl:value-of select="@maxOccurs"/> items.</item>
+					<item>"maxCardDoc": "[max cardinality = <xsl:value-of select="@maxOccurs"/>] Application level validation will be required to ensure the array contains at most <xsl:value-of select="@maxOccurs"/> items."</item>
 				</xsl:if>
 			</xsl:if>	
 		</list>
@@ -804,7 +809,7 @@
 					<item>"minCardDoc": "[min cardinality = <xsl:value-of select="@minOccurs"/>] Application level validation will be required to ensure the array contains at least <xsl:value-of select="@minOccurs"/> <xsl:choose><xsl:when test="@minOccurs = 1"> item.</xsl:when><xsl:otherwise> items.</xsl:otherwise></xsl:choose>"</item>
 				</xsl:if>
 				<xsl:if test="not(@maxOccurs = 'unbounded')">
-					<item>"maxCardDoc": "[max cardinality = <xsl:value-of select="@maxOccurs"/>] Application level validation will be required to ensure the array contains at most <xsl:value-of select="@maxOccurs"/> items.</item>
+					<item>"maxCardDoc": "[max cardinality = <xsl:value-of select="@maxOccurs"/>] Application level validation will be required to ensure the array contains at most <xsl:value-of select="@maxOccurs"/> items."</item>
 				</xsl:if>
 			</xsl:if>	
 		</list>
@@ -923,7 +928,7 @@
 							<item>"minCardDoc": "[min cardinality = <xsl:value-of select="@minOccurs"/>] Application level validation will be required to ensure the array contains at least <xsl:value-of select="@minOccurs"/> <xsl:choose><xsl:when test="@minOccurs = 1"> item.</xsl:when><xsl:otherwise> items.</xsl:otherwise></xsl:choose>"</item>
 						</xsl:if>
 						<xsl:if test="not(@maxOccurs = 'unbounded')">
-							<item>"maxCardDoc": "[max cardinality = <xsl:value-of select="@maxOccurs"/>] Application level validation will be required to ensure the array contains at most <xsl:value-of select="@maxOccurs"/> items.</item>
+							<item>"maxCardDoc": "[max cardinality = <xsl:value-of select="@maxOccurs"/>] Application level validation will be required to ensure the array contains at most <xsl:value-of select="@maxOccurs"/> items."</item>
 						</xsl:if>
 					</xsl:if>
 				</xsl:when>
@@ -958,7 +963,7 @@
 							<item>"minCardDoc": "[min cardinality = <xsl:value-of select="@minOccurs"/>] Application level validation will be required to ensure the array contains at least <xsl:value-of select="@minOccurs"/> <xsl:choose><xsl:when test="@minOccurs = 1"> item.</xsl:when><xsl:otherwise> items.</xsl:otherwise></xsl:choose>"</item>
 						</xsl:if>
 						<xsl:if test="not(@maxOccurs = 'unbounded')">
-							<item>"maxCardDoc": "[max cardinality = <xsl:value-of select="@maxOccurs"/>] Application level validation will be required to ensure the array contains at most <xsl:value-of select="@maxOccurs"/> items.</item>
+							<item>"maxCardDoc": "[max cardinality = <xsl:value-of select="@maxOccurs"/>] Application level validation will be required to ensure the array contains at most <xsl:value-of select="@maxOccurs"/> items."</item>
 						</xsl:if>
 					</xsl:if>
 				</xsl:otherwise>
@@ -971,8 +976,8 @@
 	</xsl:template>
 	
 	<xsl:template match="a:Comment|a:Note" mode="annotate">
-		<!-- generate human readable annotation -->
-		<xsl:value-of select="."/>
+		<!-- Remove double quotes to eliminate broken comments, etc. -->
+		<xsl:value-of select="translate(., '&quot;', '')"/>
 	</xsl:template>
 	
 	<xsl:template match="text()">
