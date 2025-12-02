@@ -1261,7 +1261,7 @@ The EXTENDED version includes additional classes for demonstration purposes (Loc
 
 ### 8.3. Profile Constraint Rules
 
-Next is an example of some of the additional complex validation constraints defined in the [ENTSO-E's Security Analysis Result Profile Specification 2.4.0](https://eepublicdownloads.entsoe.eu/clean-documents/CIM_documents/Grid_Model_CIM/NC/2.4/SecurityAnalysisResults_Profile_Specification_2-4-0.pdf). They require additional considerations for how/where they are to be applied when working with Apache Avro and streaming data:
+Next is an example of some of the additional complex validation constraints defined in Clause 2.3 of the [ENTSO-E's Security Analysis Result Profile Specification - 2025-09-11](https://eepublicdownloads.entsoe.eu/clean-documents/CIM_documents/Grid_Model_CIM/NC/2.4/SecurityAnalysisResults_Profile_Specification_2-4-0.pdf). They require additional considerations for how/where they are to be applied when working with Apache Avro and streaming data:
 
 **R:NC:ALL:Region:reference**
 The reference to the Region is normally a reference to the capacity calculation region, which is identified by "Y" EIC code of the capacity calculation region. ENTSO-E EIC region codes follow the format "10Y-XX--" where XX represents the country code (e.g., 10Y-DE-- for Germany, 10Y-FR-- for France, 10Y-PL-- for Poland, 10Y-BG-- for Bulgaria). These codes are the first part of the full 16-character EIC code and identify the country or area.
