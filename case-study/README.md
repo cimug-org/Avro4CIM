@@ -1140,7 +1140,7 @@ The topological analysis approach provides a generic, scalable solution that wor
 
 ### 8.1. SecurityAnalysisResult.avsc
 
-The following examples demonstrate valid JSON messages for the SecurityAnalysisResult schema. Complete examples with validation documentation are available in the `/examples` directory.
+The following examples demonstrate valid JSON messages for the SecurityAnalysisResult schema. Complete examples with validation documentation are available in the [`/example-payloads`](https://github.com/cimug-org/Avro4CIM/tree/main/case-study/example-payloads) directory.
 
 **Example 1: Minimal Valid Message**
 ```json
@@ -1600,7 +1600,7 @@ To validate a message against a schema:
 ```bash
 # Using avro-tools
 java -jar avro-tools.jar validate \
-  BaseCasePowerFlowResult.avsc \
+  SecurityAnalysisResult.avsc \
   result_message.avro
 ```
 
