@@ -1,0 +1,387 @@
+@startuml
+top to bottom direction
+hide empty methods
+
+' Here we adjust the horizontal spacing for better spatial rendering (the PlantUML default is ~20)
+skinparam nodesep 100
+' Here we adjust the vertical spacing for better spatial rendering (the PlantUML default is ~30)
+skinparam ranksep 100
+
+skinparam BackgroundColor #FFFFFF
+skinparam shadowing false
+skinparam RoundCorner 5
+skinparam BorderColor #454645
+skinparam ArrowColor #454645
+skinparam FontColor #000000
+
+skinparam class {
+  ' Concrete classes style definition
+  BackgroundColor #FFFFE0
+  FontColor #000000
+  AttributeFontColor #000000
+  StereotypeFontColor #000000
+  HeaderFontColor #000000
+  BorderColor #454645
+  BorderThickness 1
+  
+  ' Abstract classes style definition
+  BackgroundColor<<abstract>> #D3D3D3
+  FontColor<<abstract>> #000000
+  AttributeFontColor<<abstract>> #000000
+  StereotypeFontColor<<abstract>> #000000
+  HeaderFontColor<<abstract>> #000000
+  BorderColor<<abstract>> #454645
+  BorderThickness<<abstract>> 1
+  
+  ' Enumerations style definition
+  BackgroundColor<<enumeration>> #90EE90
+  FontColor<<enumeration>> #000000
+  AttributeFontColor<<enumeration>> #000000
+  StereotypeFontColor<<enumeration>> #000000
+  HeaderFontColor <<enumeration>> #000000
+  BorderColor<<enumeration>> #454645
+  BorderThickness<<enumeration>> 1
+  
+  ' CIMDatatypes style definition
+  BackgroundColor<<CIMDatatype>> #FFEBCD
+  FontColor<<CIMDatatype>> #000000
+  AttributeFontColor<<CIMDatatype>> #000000
+  StereotypeFontColor<<CIMDatatype>> #000000
+  HeaderFontColor<<CIMDatatype>> #000000
+  BorderColor<<CIMDatatype>> #454645
+  BorderThickness<<CIMDatatype>> 1
+  
+  ' Compound classes style definition
+  BackgroundColor<<Compound>> #FFEBCD
+  FontColor<<Compound>> #000000
+  AttributeFontColor<<Compound>> #000000
+  StereotypeFontColor<<Compound>> #000000
+  HeaderFontColor<<Compound>> #000000
+  BorderColor<<Compound>> #454645
+  BorderThickness<<Compound>> 1
+  
+  ' Primitive classes style definition
+  BackgroundColor<<Primitive>> #E6E6FF
+  FontColor<<Primitive>> #000000
+  AttributeFontColor<<Primitive>> #000000
+  StereotypeFontColor<<Primitive>> #000000
+  HeaderFontColor<<Primitive>> #000000
+  BorderColor<<Primitive>> #454645
+  BorderThickness<<Primitive>> 1
+  
+  ' Errors classes style definition
+  BackgroundColor<<error>> #FFC0CB
+  FontColor<<error>> #000000
+  AttributeFontColor<<error>> #000000
+  StereotypeFontColor<<error>> #000000
+  HeaderFontColor<<error>> #000000
+  BorderColor<<error>> #454645
+  BorderThickness<<error>> 1
+}
+skinparam shadowing true
+
+hide <<abstract>> stereotype
+hide <<error>> stereotype
+
+
+skinparam note {
+  BorderColor #454645
+  BorderThickness 1.5
+  FontSize 14
+  Font Bold
+  FontColor #000000
+}
+' Add a note towards the upper left corner of the diagram
+note as AvailabilityScheduleNote #lightyellow
+   Profile: AvailabilitySchedule
+   Namespace: http://entsoe.eu/ns/CIM/AvailabilitySchedule-EU#
+end note
+
+' AssessedElement inherits from IdentifiedObject
+abstract class AssessedElement <<error>> <<NC>> <<abstract>> {
+}
+
+IdentifiedObject <|-- AssessedElement
+
+
+note as ErrorAssessedElement
+Class AssessedElement is 'abstract' and has no child classes.
+It should either be removed, declared as 'concrete', have a child
+class that is declared as 'concrete', or if it is intended to serve
+as a reference to an external object then it should not inherit from
+a parent class.
+end note
+
+ErrorAssessedElement ..> AssessedElement #red
+
+' AvailabilityContainer inherits from AvailabilityPowerSystemFunction
+class AvailabilityContainer <<NC>>  {
+}
+
+AvailabilityPowerSystemFunction <|-- AvailabilityContainer
+AvailabilityContainer "+AvailabilityContainer 0..*" --> "+EquipmentContainer 1" EquipmentContainer : <<NC>>
+
+' AvailabilityEnabled inherits from AvailabilityPowerSystemFunction
+class AvailabilityEnabled <<NC>>  {
+   +<<NC>> enabled : Boolean
+}
+
+AvailabilityPowerSystemFunction <|-- AvailabilityEnabled
+AvailabilityEnabled "+AvailabilityEnabled 0..*" --> "+AssessedElement 0..1" AssessedElement : <<NC>>
+AvailabilityEnabled "+AvailabilityEnabled 0..*" --> "+GridStateAlteration 0..1" GridStateAlteration : <<NC>>
+
+' AvailabilityEquipment inherits from AvailabilityPowerSystemFunction
+class AvailabilityEquipment <<NC>>  {
+}
+
+AvailabilityPowerSystemFunction <|-- AvailabilityEquipment
+AvailabilityEquipment "+AvailabilityEquipment 0..*" --> "+Equipment 1" Equipment : <<NC>>
+
+' AvailabilityExceptionalLimit inherits from AvailabilityPowerSystemFunction
+class AvailabilityExceptionalLimit <<NC>>  {
+   +<<NC>> value : Float
+}
+
+AvailabilityPowerSystemFunction <|-- AvailabilityExceptionalLimit
+AvailabilityExceptionalLimit "+AvailabilityExceptionalLimit 0..*" --> "+OperationalLimit 1" OperationalLimit : <<NC>>
+
+' Enumeration AvailabilityFunctionKind
+enum AvailabilityFunctionKind <<enumeration>>  {
+   inService
+   outOfService
+   underTesting
+}
+
+' AvailabilityGroup inherits from IdentifiedObject
+class AvailabilityGroup <<NC>>  {
+}
+
+IdentifiedObject <|-- AvailabilityGroup
+
+' AvailabilityPowerSystemFunction inherits from IdentifiedObject
+abstract class AvailabilityPowerSystemFunction <<NC>> <<abstract>> {
+   +<<NC>> kind : AvailabilityFunctionKind
+}
+
+IdentifiedObject <|-- AvailabilityPowerSystemFunction
+AvailabilityPowerSystemFunction "+AvailabilityPowerSystemFunction 0..*" --> "+AvailabilityGroup 0..1" AvailabilityGroup : <<NC>>
+AvailabilityPowerSystemFunction "+AvailabilityPowerSystemFunction 0..*" --> "+AvailabilitySchedule 1" AvailabilitySchedule : <<NC>>
+
+' AvailabilityRemedialAction inherits from IdentifiedObject
+abstract class AvailabilityRemedialAction <<error>> <<NC>> <<abstract>> {
+}
+
+IdentifiedObject <|-- AvailabilityRemedialAction
+
+
+note as ErrorAvailabilityRemedialAction
+Class AvailabilityRemedialAction is 'abstract' and has no child classes.
+It should either be removed, declared as 'concrete', have a child
+class that is declared as 'concrete', or if it is intended to serve
+as a reference to an external object then it should not inherit from
+a parent class.
+end note
+
+ErrorAvailabilityRemedialAction ..> AvailabilityRemedialAction #red
+
+' AvailabilityRemedialActionScheme inherits from AvailabilityPowerSystemFunction
+class AvailabilityRemedialActionScheme <<NC>>  {
+}
+
+AvailabilityPowerSystemFunction <|-- AvailabilityRemedialActionScheme
+AvailabilityRemedialActionScheme "+AvailabilityRemedialActionScheme 0..*" --> "+RemedialActionScheme 1" RemedialActionScheme : <<NC>>
+
+' AvailabilitySchedule inherits from IdentifiedObject
+class AvailabilitySchedule <<NC>>  {
+   +<<NC>> cancelledDateTime : DateTime [0..1]
+   +<<NC>> causeDescription : String [0..1]
+   +<<NC>> causeKind : AvailabilityScheduleCauseKind
+   +<<NC>> maxRestitutionDuration : Duration [0..1]
+   +<<NC>> priority : Integer
+}
+
+IdentifiedObject <|-- AvailabilitySchedule
+AvailabilitySchedule "+ActualAvailabilitySchedule 0..1" --> "+ActualSchedule 0..1" EventSchedule : <<NC>>
+AvailabilitySchedule "+AvailabilitySchedule 0..*" --> "+DependentOnSchedule 0..1" AvailabilitySchedule : <<NC>>
+AvailabilitySchedule "+AvailabilitySchedule 0..*" --> "+GridStateAlterationCollection 0..1" GridStateAlterationCollection : <<NC>>
+AvailabilitySchedule "+PlannedAvailabilitySchedule 0..1" --> "+PlannedSchedule 0..1" EventSchedule : <<NC>>
+AvailabilitySchedule "+AlternativeSchedule 0..*" --> "+PrioritySchedule 0..1" AvailabilitySchedule : <<NC>>
+AvailabilitySchedule "+AvailabilitySchedule 0..*" --> "+RemedialAction 0..1" AvailabilityRemedialAction : <<NC>>
+
+' Enumeration AvailabilityScheduleCauseKind
+enum AvailabilityScheduleCauseKind <<NC>><<enumeration>><<Attribute>>  {
+   commissioning
+   decommissioning
+   environmentalCondition
+   functionalControl
+   maintenance
+   other
+   refurbishment
+   worksInProximity
+}
+
+' BaseIrregularTimeSeries inherits from BaseTimeSeries
+abstract class BaseIrregularTimeSeries <<NC>> <<abstract>> {
+}
+
+BaseTimeSeries <|-- BaseIrregularTimeSeries
+
+' BaseTimeSeries inherits from IdentifiedObject
+abstract class BaseTimeSeries <<NC>> <<abstract>> {
+   +<<NC>> interpolationKind : TimeSeriesInterpolationKind
+   +<<NC>> kind : BaseTimeSeriesKind
+}
+
+IdentifiedObject <|-- BaseTimeSeries
+
+' Enumeration BaseTimeSeriesKind
+enum BaseTimeSeriesKind <<NC>><<enumeration>><<Attribute>>  {
+   actual
+   schedule
+}
+
+' Equipment inherits from IdentifiedObject
+abstract class Equipment <<error>>  <<abstract>> {
+}
+
+IdentifiedObject <|-- Equipment
+
+
+note as ErrorEquipment
+Class Equipment is 'abstract' and has no child classes.
+It should either be removed, declared as 'concrete', have a child
+class that is declared as 'concrete', or if it is intended to serve
+as a reference to an external object then it should not inherit from
+a parent class.
+end note
+
+ErrorEquipment ..> Equipment #red
+
+' EquipmentContainer inherits from IdentifiedObject
+abstract class EquipmentContainer <<error>>  <<abstract>> {
+}
+
+IdentifiedObject <|-- EquipmentContainer
+
+
+note as ErrorEquipmentContainer
+Class EquipmentContainer is 'abstract' and has no child classes.
+It should either be removed, declared as 'concrete', have a child
+class that is declared as 'concrete', or if it is intended to serve
+as a reference to an external object then it should not inherit from
+a parent class.
+end note
+
+ErrorEquipmentContainer ..> EquipmentContainer #red
+
+' EventSchedule inherits from BaseIrregularTimeSeries
+class EventSchedule <<OfAggregate>><<NC>>  {
+}
+
+BaseIrregularTimeSeries <|-- EventSchedule
+
+' EventTimePoint
+class EventTimePoint <<NC>>  {
+   +<<NC>> atTime : DateTime
+   +<<NC>> isActive : Boolean
+}
+
+EventTimePoint "+EventTimePoint 0..*" --o "+EventSchedule 1" EventSchedule : <<NC>>
+
+' GridStateAlteration inherits from IdentifiedObject
+abstract class GridStateAlteration <<error>> <<NC>> <<abstract>> {
+}
+
+IdentifiedObject <|-- GridStateAlteration
+
+
+note as ErrorGridStateAlteration
+Class GridStateAlteration is 'abstract' and has no child classes.
+It should either be removed, declared as 'concrete', have a child
+class that is declared as 'concrete', or if it is intended to serve
+as a reference to an external object then it should not inherit from
+a parent class.
+end note
+
+ErrorGridStateAlteration ..> GridStateAlteration #red
+
+' GridStateAlterationCollection inherits from IdentifiedObject
+abstract class GridStateAlterationCollection <<error>> <<NC>> <<abstract>> {
+}
+
+IdentifiedObject <|-- GridStateAlterationCollection
+
+
+note as ErrorGridStateAlterationCollection
+Class GridStateAlterationCollection is 'abstract' and has no child classes.
+It should either be removed, declared as 'concrete', have a child
+class that is declared as 'concrete', or if it is intended to serve
+as a reference to an external object then it should not inherit from
+a parent class.
+end note
+
+ErrorGridStateAlterationCollection ..> GridStateAlterationCollection #red
+
+' IdentifiedObject
+abstract class IdentifiedObject  <<abstract>> {
+   +mRID : String
+   +description : String [0..1]
+}
+
+IdentifiedObject "+IdentifiedObject 0..1" --> "+name 0..*" Name : <<NC>>
+
+' Name
+abstract class Name <<Attribute>> <<abstract>> {
+}
+
+
+' OperationalLimit inherits from IdentifiedObject
+abstract class OperationalLimit <<error>>  <<abstract>> {
+}
+
+IdentifiedObject <|-- OperationalLimit
+
+
+note as ErrorOperationalLimit
+Class OperationalLimit is 'abstract' and has no child classes.
+It should either be removed, declared as 'concrete', have a child
+class that is declared as 'concrete', or if it is intended to serve
+as a reference to an external object then it should not inherit from
+a parent class.
+end note
+
+ErrorOperationalLimit ..> OperationalLimit #red
+
+' RemedialActionScheme inherits from IdentifiedObject
+abstract class RemedialActionScheme <<error>> <<NC>> <<abstract>> {
+}
+
+IdentifiedObject <|-- RemedialActionScheme
+
+
+note as ErrorRemedialActionScheme
+Class RemedialActionScheme is 'abstract' and has no child classes.
+It should either be removed, declared as 'concrete', have a child
+class that is declared as 'concrete', or if it is intended to serve
+as a reference to an external object then it should not inherit from
+a parent class.
+end note
+
+ErrorRemedialActionScheme ..> RemedialActionScheme #red
+
+' Enumeration TimeSeriesInterpolationKind
+enum TimeSeriesInterpolationKind <<NC>><<enumeration>><<Attribute>>  {
+   previous
+}
+
+' Enumeration UnitMultiplier
+enum UnitMultiplier <<enumeration>>  {
+   none
+}
+
+' Enumeration UnitSymbol
+enum UnitSymbol <<enumeration>>  {
+   s
+}
+
+@enduml

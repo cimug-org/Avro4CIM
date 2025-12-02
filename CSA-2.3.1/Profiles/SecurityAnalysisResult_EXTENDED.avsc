@@ -1,0 +1,1206 @@
+[
+     {
+          "type": "enum",
+          "name": "LimitKind",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.exteuoperationallimits",
+          "doc": "Limit kinds.",
+          "modelReference": "http://iec.ch/TC57/CIM100#LimitKind",
+          "symbols": [
+               "alarmVoltage",
+               "highVoltage",
+               "lowVoltage",
+               "operationalVoltageLimit",
+               "patl",
+               "patlt",
+               "stability",
+               "tatl",
+               "tc",
+               "tct",
+               "warningVoltage"
+          ]
+     },
+     {
+          "type": "enum",
+          "name": "OperationalLimitDirectionKind",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.operationallimits",
+          "doc": "The direction attribute describes the side of a limit that is a violation.",
+          "modelReference": "http://iec.ch/TC57/CIM100#OperationalLimitDirectionKind",
+          "symbols": [
+               "absoluteValue",
+               "high",
+               "low"
+          ]
+     },
+     {
+          "type": "enum",
+          "name": "UnitMultiplier",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.domain",
+          "doc": "The unit multipliers defined for the CIM. When applied to unit symbols, the unit symbol is treated as a derived unit. Regardless of the contents of the unit symbol text, the unit symbol shall be treated as if it were a single-character unit symbol. Unit symbols should not contain multipliers, and it should be left to the multiplier to define the multiple for an entire data type.For example, if a unit symbol is "m2Pers" and the multiplier is "k", then the value is k(m**2/s), and the multiplier applies to the entire final value, not to any individual part of the value. This can be conceptualized by substituting a derived unit symbol for the unit type. If one imagines that the symbol "�" represents the derived unit "m2Pers", then applying the multiplier "k" can be conceptualized simply as "k�".For example, the SI unit for mass is "kg" and not "g". If the unit symbol is defined as "kg", then the multiplier is applied to "kg" as a whole and does not replace the "k" in front of the "g". In this case, the multiplier of "m" would be used with the unit symbol of "kg" to represent one gram. As a text string, this violates the instructions in IEC 80000-1. However, because the unit symbol in CIM is treated as a derived unit instead of as an SI unit, it makes more sense to conceptualize the "kg" as if it were replaced by one of the proposed replacements for the SI mass symbol. If one imagines that the "kg" were replaced by a symbol "�", then it is easier to conceptualize the multiplier "m" as creating the proper unit "m�", and not the forbidden unit "mkg".",
+          "modelReference": "http://iec.ch/TC57/CIM100#UnitMultiplier",
+          "symbols": [
+               "k",
+               "m",
+               "none"
+          ]
+     },
+     {
+          "type": "enum",
+          "name": "UnitSymbol",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.domain",
+          "doc": "The derived units defined for usage in the CIM. In some cases, the derived unit is equal to an SI unit. Whenever possible, the standard derived symbol is used instead of the formula for the derived unit. For example, the unit symbol Farad is defined as "F" instead of "CPerV". In cases where a standard symbol does not exist for a derived unit, the formula for the unit is used as the unit symbol. For example, density does not have a standard symbol and so it is represented as "kgPerm3". With the exception of the "kg", which is an SI unit, the unit symbols do not contain multipliers and therefore represent the base derived unit to which a multiplier can be applied as a whole.Every unit symbol is treated as an unparseable text as if it were a single-letter symbol. The meaning of each unit symbol is defined by the accompanying descriptive text and not by the text contents of the unit symbol.To allow the widest possible range of serializations without requiring special character handling, several substitutions are made which deviate from the format described in IEC 80000-1. The division symbol "/" is replaced by the letters "Per". Exponents are written in plain text after the unit as "m3" instead of being formatted as "m" with a superscript of 3 or introducing a symbol as in "m^3". The degree symbol "�" is replaced with the letters "deg". Any clarification of the meaning for a substitution is included in the description for the unit symbol.Non-SI units are included in list of unit symbols to allow sources of data to be correctly labelled with their non-SI units (for example, a GPS sensor that is reporting numbers that represent feet instead of meters). This allows software to use the unit symbol information correctly convert and scale the raw data of those sources into SI-based units.The integer values are used for harmonization with IEC 61850.",
+          "modelReference": "http://iec.ch/TC57/CIM100#UnitSymbol",
+          "symbols": [
+               "A",
+               "V",
+               "VA",
+               "VAr",
+               "W",
+               "deg",
+               "none"
+          ]
+     },
+     {
+          "type": "record",
+          "name": "Status",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.common",
+          "doc": "Current status information relevant to an entity.",
+          "modelReference": "http://iec.ch/TC57/CIM100#Status",
+          "fields": [
+               {
+                    "name": "dateTime",
+                    "type": {"type": "long", "logicalType": "timestamp-millis"},
+                    "doc": "Date and time for which status 'value' applies.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Status.dateTime"
+               },
+               {
+                    "name": "reason",
+                    "type": "string",
+                    "doc": "Reason code or explanation for why an object went to the current status 'value'.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Status.reason"
+               },
+               {
+                    "name": "remark",
+                    "type": "string",
+                    "doc": "Pertinent information regarding the current 'value', as free form text.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Status.remark"
+               },
+               {
+                    "name": "value",
+                    "type": "string",
+                    "doc": "Status value at 'dateTime'; prior status changes may have been kept in instances of activity records associated with the object to which this status applies.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Status.value"
+               }
+          ]
+     },
+     {
+          "type": "record",
+          "name": "StreetDetail",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.common",
+          "doc": "Street details, in the context of address.",
+          "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail",
+          "fields": [
+               {
+                    "name": "addressGeneral",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "First line of a free form address or some additional address information (for example a mail stop).",
+                    "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.addressGeneral"
+               },
+               {
+                    "name": "addressGeneral2",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "(if applicable) Second line of a free form address.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.addressGeneral2"
+               },
+               {
+                    "name": "addressGeneral3",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "(if applicable) Third line of a free form address.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.addressGeneral3"
+               },
+               {
+                    "name": "buildingName",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "(if applicable) In certain cases the physical location of the place of interest does not have a direct point of entry from the street, but may be located inside a larger structure such as a building, complex, office block, apartment, etc.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.buildingName"
+               },
+               {
+                    "name": "code",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "(if applicable) Utilities often make use of external reference systems, such as those of the town-planner's department or surveyor general's mapping system, that allocate global reference codes to streets.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.code"
+               },
+               {
+                    "name": "floorIdentification",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "The identification by name or number, expressed as text, of the floor in the building as part of this address.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.floorIdentification"
+               },
+               {
+                    "name": "name",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "Name of the street.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.name"
+               },
+               {
+                    "name": "number",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "Designator of the specific location on the street.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.number"
+               },
+               {
+                    "name": "prefix",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "Prefix to the street name. For example: North, South, East, West.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.prefix"
+               },
+               {
+                    "name": "suffix",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "Suffix to the street name. For example: North, South, East, West.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.suffix"
+               },
+               {
+                    "name": "suiteNumber",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "Number of the apartment or suite.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.suiteNumber"
+               },
+               {
+                    "name": "type",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "Type of street. Examples include: street, circle, boulevard, avenue, road, drive, etc.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.type"
+               },
+               {
+                    "name": "withinTownLimits",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "True if this street is within the legal geographical boundaries of the specified town (default).",
+                    "modelReference": "http://iec.ch/TC57/CIM100#StreetDetail.withinTownLimits"
+               }
+          ]
+     },
+     {
+          "type": "record",
+          "name": "TownDetail",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.common",
+          "doc": "Town details, in the context of address.",
+          "modelReference": "http://iec.ch/TC57/CIM100#TownDetail",
+          "fields": [
+               {
+                    "name": "code",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "Town code.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#TownDetail.code"
+               },
+               {
+                    "name": "country",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "Name of the country.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#TownDetail.country"
+               },
+               {
+                    "name": "name",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "Town name.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#TownDetail.name"
+               },
+               {
+                    "name": "section",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "Town section. For example, it is common for there to be 36 sections per township.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#TownDetail.section"
+               },
+               {
+                    "name": "stateOrProvince",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "Name of the state or province.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#TownDetail.stateOrProvince"
+               }
+          ]
+     },
+     {
+          "type": "record",
+          "name": "StreetAddress",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.common",
+          "doc": "General purpose street and postal address information.",
+          "modelReference": "http://iec.ch/TC57/CIM100#StreetAddress",
+          "fields": [
+               {
+                    "name": "language",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "The language in which the address is specified, using ISO 639-1 two digit language code.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#StreetAddress.language"
+               },
+               {
+                    "name": "poBox",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "Post office box.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#StreetAddress.poBox"
+               },
+               {
+                    "name": "postalCode",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "Postal code for the address.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#StreetAddress.postalCode"
+               },
+               {
+                    "name": "status",
+                    "type": [
+                         "null",
+                         "eu.cim4.ap_voc.securityanalysisresult.Status"
+                    ],
+                    "default": null,
+                    "doc": "Status of this address.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#StreetAddress.status"
+               },
+               {
+                    "name": "streetDetail",
+                    "type": "eu.cim4.ap_voc.securityanalysisresult.StreetDetail",
+                    "doc": "Street detail.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#StreetAddress.streetDetail"
+               },
+               {
+                    "name": "townDetail",
+                    "type": [
+                         "null",
+                         "eu.cim4.ap_voc.securityanalysisresult.TownDetail"
+                    ],
+                    "default": null,
+                    "doc": "Town detail.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#StreetAddress.townDetail"
+               }
+          ]
+     },
+     {
+          "type": "record",
+          "name": "Breaker",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.wires",
+          "doc": "A mechanical switching device capable of making, carrying, and breaking currents under normal circuit conditions and also making, carrying for a specified time, and breaking currents under specified abnormal circuit conditions e.g. those of short circuit.",
+          "modelReference": "http://iec.ch/TC57/CIM100#Breaker",
+          "fields": [
+               {
+                    "name": "mRID",
+                    "type": "string",
+                    "doc": "Master resource identifier issued by a model authority. The mRID is unique within an exchange context. Global uniqueness is easily achieved by using a UUID, as specified in RFC 4122, for the mRID. The use of UUID is strongly recommended.For CIMXML data files in RDF syntax conforming to IEC 61970-552, the mRID is mapped to rdf:ID or rdf:about attributes that identify CIM object elements.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#IdentifiedObject.mRID"
+               },
+               {
+                    "name": "inService",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "Specifies the availability of the equipment. True means the equipment is available for topology processing, which determines if the equipment is energized or not. False means that the equipment is treated by network applications as if it is not in the model.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Equipment.inService"
+               },
+               {
+                    "name": "normallyInService",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "Specifies the availability of the equipment under normal operating conditions. True means the equipment is available for topology processing, which determines if the equipment is energized or not. False means that the equipment is treated by network applications as if it is not in the model.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Equipment.normallyInService"
+               },
+               {
+                    "name": "normalOpen",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "The attribute is used in cases when no Measurement for the status value is present. If the Switch has a status measurement the Discrete.normalValue is expected to match with the Switch.normalOpen.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Switch.normalOpen"
+               },
+               {
+                    "name": "open",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "The attribute tells if the switch is considered open when used as input to topology processing.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Switch.open"
+               },
+               {
+                    "name": "ratedCurrent",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "The maximum continuous current carrying capacity in amps governed by the device material and construction.The attribute shall be a positive value.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Switch.ratedCurrent"
+               },
+               {
+                    "name": "retained",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "Branch is retained in the topological solution. The flow through retained switches will normally be calculated in power flow.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Switch.retained"
+               },
+               {
+                    "name": "breakingCapacity",
+                    "type": "float",
+                    "doc": "The maximum fault current a breaking device can break safely under prescribed conditions of use.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#ProtectedSwitch.breakingCapacity"
+               }
+          ]
+     },
+     {
+          "type": "record",
+          "name": "Cut",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.wires",
+          "doc": "A cut separates a line segment into two parts. The cut appears as a switch inserted between these two parts and connects them together. As the cut is normally open there is no galvanic connection between the two line segment parts. But it is possible to close the cut to get galvanic connection.The cut terminals are oriented towards the line segment terminals with the same sequence number. Hence the cut terminal with sequence number equal to 1 is oriented to the line segment's terminal with sequence number equal to 1.The cut terminals also act as connection points for jumpers and other equipment, e.g. a mobile generator. To enable this, connectivity nodes are placed at the cut terminals. Once the connectivity nodes are in place any conducting equipment can be connected at them.",
+          "modelReference": "http://iec.ch/TC57/CIM100#Cut",
+          "fields": [
+               {
+                    "name": "mRID",
+                    "type": "string",
+                    "doc": "Master resource identifier issued by a model authority. The mRID is unique within an exchange context. Global uniqueness is easily achieved by using a UUID, as specified in RFC 4122, for the mRID. The use of UUID is strongly recommended.For CIMXML data files in RDF syntax conforming to IEC 61970-552, the mRID is mapped to rdf:ID or rdf:about attributes that identify CIM object elements.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#IdentifiedObject.mRID"
+               },
+               {
+                    "name": "inService",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "Specifies the availability of the equipment. True means the equipment is available for topology processing, which determines if the equipment is energized or not. False means that the equipment is treated by network applications as if it is not in the model.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Equipment.inService"
+               },
+               {
+                    "name": "normallyInService",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "Specifies the availability of the equipment under normal operating conditions. True means the equipment is available for topology processing, which determines if the equipment is energized or not. False means that the equipment is treated by network applications as if it is not in the model.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Equipment.normallyInService"
+               },
+               {
+                    "name": "normalOpen",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "The attribute is used in cases when no Measurement for the status value is present. If the Switch has a status measurement the Discrete.normalValue is expected to match with the Switch.normalOpen.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Switch.normalOpen"
+               },
+               {
+                    "name": "open",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "The attribute tells if the switch is considered open when used as input to topology processing.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Switch.open"
+               },
+               {
+                    "name": "ratedCurrent",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "The maximum continuous current carrying capacity in amps governed by the device material and construction.The attribute shall be a positive value.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Switch.ratedCurrent"
+               },
+               {
+                    "name": "retained",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "Branch is retained in the topological solution. The flow through retained switches will normally be calculated in power flow.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Switch.retained"
+               },
+               {
+                    "name": "lengthFromTerminal1",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "The length to the place where the cut is located starting from side one of the cut line segment, i.e. the line segment Terminal with sequenceNumber equal to 1.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Cut.lengthFromTerminal1"
+               }
+          ]
+     },
+     {
+          "type": "record",
+          "name": "DisconnectingCircuitBreaker",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.wires",
+          "doc": "A circuit breaking device including disconnecting function, eliminating the need for separate disconnectors.",
+          "modelReference": "http://iec.ch/TC57/CIM100#DisconnectingCircuitBreaker",
+          "fields": [
+               {
+                    "name": "mRID",
+                    "type": "string",
+                    "doc": "Master resource identifier issued by a model authority. The mRID is unique within an exchange context. Global uniqueness is easily achieved by using a UUID, as specified in RFC 4122, for the mRID. The use of UUID is strongly recommended.For CIMXML data files in RDF syntax conforming to IEC 61970-552, the mRID is mapped to rdf:ID or rdf:about attributes that identify CIM object elements.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#IdentifiedObject.mRID"
+               },
+               {
+                    "name": "inService",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "Specifies the availability of the equipment. True means the equipment is available for topology processing, which determines if the equipment is energized or not. False means that the equipment is treated by network applications as if it is not in the model.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Equipment.inService"
+               },
+               {
+                    "name": "normallyInService",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "Specifies the availability of the equipment under normal operating conditions. True means the equipment is available for topology processing, which determines if the equipment is energized or not. False means that the equipment is treated by network applications as if it is not in the model.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Equipment.normallyInService"
+               },
+               {
+                    "name": "normalOpen",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "The attribute is used in cases when no Measurement for the status value is present. If the Switch has a status measurement the Discrete.normalValue is expected to match with the Switch.normalOpen.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Switch.normalOpen"
+               },
+               {
+                    "name": "open",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "The attribute tells if the switch is considered open when used as input to topology processing.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Switch.open"
+               },
+               {
+                    "name": "ratedCurrent",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "The maximum continuous current carrying capacity in amps governed by the device material and construction.The attribute shall be a positive value.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Switch.ratedCurrent"
+               },
+               {
+                    "name": "retained",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "Branch is retained in the topological solution. The flow through retained switches will normally be calculated in power flow.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Switch.retained"
+               },
+               {
+                    "name": "breakingCapacity",
+                    "type": "float",
+                    "doc": "The maximum fault current a breaking device can break safely under prescribed conditions of use.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#ProtectedSwitch.breakingCapacity"
+               }
+          ]
+     },
+     {
+          "type": "record",
+          "name": "Disconnector",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.wires",
+          "doc": "A manually operated or motor operated mechanical switching device used for changing the connections in a circuit, or for isolating a circuit or equipment from a source of power. It is required to open or close circuits when negligible current is broken or made.",
+          "modelReference": "http://iec.ch/TC57/CIM100#Disconnector",
+          "fields": [
+               {
+                    "name": "mRID",
+                    "type": "string",
+                    "doc": "Master resource identifier issued by a model authority. The mRID is unique within an exchange context. Global uniqueness is easily achieved by using a UUID, as specified in RFC 4122, for the mRID. The use of UUID is strongly recommended.For CIMXML data files in RDF syntax conforming to IEC 61970-552, the mRID is mapped to rdf:ID or rdf:about attributes that identify CIM object elements.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#IdentifiedObject.mRID"
+               },
+               {
+                    "name": "inService",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "Specifies the availability of the equipment. True means the equipment is available for topology processing, which determines if the equipment is energized or not. False means that the equipment is treated by network applications as if it is not in the model.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Equipment.inService"
+               },
+               {
+                    "name": "normallyInService",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "Specifies the availability of the equipment under normal operating conditions. True means the equipment is available for topology processing, which determines if the equipment is energized or not. False means that the equipment is treated by network applications as if it is not in the model.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Equipment.normallyInService"
+               },
+               {
+                    "name": "normalOpen",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "The attribute is used in cases when no Measurement for the status value is present. If the Switch has a status measurement the Discrete.normalValue is expected to match with the Switch.normalOpen.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Switch.normalOpen"
+               },
+               {
+                    "name": "open",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "The attribute tells if the switch is considered open when used as input to topology processing.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Switch.open"
+               },
+               {
+                    "name": "ratedCurrent",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "The maximum continuous current carrying capacity in amps governed by the device material and construction.The attribute shall be a positive value.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Switch.ratedCurrent"
+               },
+               {
+                    "name": "retained",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "Branch is retained in the topological solution. The flow through retained switches will normally be calculated in power flow.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Switch.retained"
+               }
+          ]
+     },
+     {
+          "type": "record",
+          "name": "GroundDisconnector",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.wires",
+          "doc": "A manually operated or motor operated mechanical switching device used for isolating a circuit or equipment from ground.",
+          "modelReference": "http://iec.ch/TC57/CIM100#GroundDisconnector",
+          "fields": [
+               {
+                    "name": "mRID",
+                    "type": "string",
+                    "doc": "Master resource identifier issued by a model authority. The mRID is unique within an exchange context. Global uniqueness is easily achieved by using a UUID, as specified in RFC 4122, for the mRID. The use of UUID is strongly recommended.For CIMXML data files in RDF syntax conforming to IEC 61970-552, the mRID is mapped to rdf:ID or rdf:about attributes that identify CIM object elements.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#IdentifiedObject.mRID"
+               },
+               {
+                    "name": "inService",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "Specifies the availability of the equipment. True means the equipment is available for topology processing, which determines if the equipment is energized or not. False means that the equipment is treated by network applications as if it is not in the model.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Equipment.inService"
+               },
+               {
+                    "name": "normallyInService",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "Specifies the availability of the equipment under normal operating conditions. True means the equipment is available for topology processing, which determines if the equipment is energized or not. False means that the equipment is treated by network applications as if it is not in the model.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Equipment.normallyInService"
+               },
+               {
+                    "name": "normalOpen",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "The attribute is used in cases when no Measurement for the status value is present. If the Switch has a status measurement the Discrete.normalValue is expected to match with the Switch.normalOpen.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Switch.normalOpen"
+               },
+               {
+                    "name": "open",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "The attribute tells if the switch is considered open when used as input to topology processing.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Switch.open"
+               },
+               {
+                    "name": "ratedCurrent",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "The maximum continuous current carrying capacity in amps governed by the device material and construction.The attribute shall be a positive value.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Switch.ratedCurrent"
+               },
+               {
+                    "name": "retained",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "Branch is retained in the topological solution. The flow through retained switches will normally be calculated in power flow.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Switch.retained"
+               }
+          ]
+     },
+     {
+          "type": "record",
+          "name": "Location",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.common",
+          "doc": "The place, scene, or point of something where someone or something has been, is, and/or will be at a given moment in time. It can be defined with one or more position points (coordinates) in a given coordinate system.",
+          "modelReference": "http://iec.ch/TC57/CIM100#Location",
+          "fields": [
+               {
+                    "name": "mRID",
+                    "type": "string",
+                    "doc": "Master resource identifier issued by a model authority. The mRID is unique within an exchange context. Global uniqueness is easily achieved by using a UUID, as specified in RFC 4122, for the mRID. The use of UUID is strongly recommended.For CIMXML data files in RDF syntax conforming to IEC 61970-552, the mRID is mapped to rdf:ID or rdf:about attributes that identify CIM object elements.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#IdentifiedObject.mRID"
+               },
+               {
+                    "name": "direction",
+                    "type": "string",
+                    "doc": "(if applicable) Direction that allows field crews to quickly find a given asset. For a given location, such as a street address, this is the relative direction in which to find the asset. For example, a streetlight may be located at the 'NW' (northwest) corner of the customer's site, or a usage point may be located on the second floor of an apartment building.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Location.direction"
+               },
+               {
+                    "name": "mainAddress",
+                    "type": "eu.cim4.ap_voc.securityanalysisresult.MainAddress",
+                    "doc": "Main address of the location.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Location.mainAddress"
+               }
+          ]
+     },
+     {
+          "type": "record",
+          "name": "OperationalLimitSet",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.operationallimits",
+          "doc": "A set of limits associated with equipment. Sets of limits might apply to a specific temperature, or season for example. A set of limits may contain different severities of limit levels that would apply to the same equipment. The set may contain limits of different types such as apparent power and current limits or high and low voltage limits that are logically applied together as a set.",
+          "modelReference": "http://iec.ch/TC57/CIM100#OperationalLimitSet",
+          "fields": [
+               {
+                    "name": "mRID",
+                    "type": "string",
+                    "doc": "Master resource identifier issued by a model authority. The mRID is unique within an exchange context. Global uniqueness is easily achieved by using a UUID, as specified in RFC 4122, for the mRID. The use of UUID is strongly recommended.For CIMXML data files in RDF syntax conforming to IEC 61970-552, the mRID is mapped to rdf:ID or rdf:about attributes that identify CIM object elements.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#IdentifiedObject.mRID"
+               },
+               {
+                    "name": "Terminal",
+                    "type": "string",
+                    "doc": "The terminal where the operational limit set apply. Note that the value of this field is the identifier (e.g. mRID) used to reference the ACDCTerminal external to this profile.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#OperationalLimitSet.Terminal"
+               }
+          ]
+     },
+     {
+          "type": "record",
+          "name": "OperationalLimitType",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.operationallimits",
+          "doc": "The operational meaning of a category of limits.",
+          "modelReference": "http://iec.ch/TC57/CIM100#OperationalLimitType",
+          "fields": [
+               {
+                    "name": "mRID",
+                    "type": "string",
+                    "doc": "Master resource identifier issued by a model authority. The mRID is unique within an exchange context. Global uniqueness is easily achieved by using a UUID, as specified in RFC 4122, for the mRID. The use of UUID is strongly recommended.For CIMXML data files in RDF syntax conforming to IEC 61970-552, the mRID is mapped to rdf:ID or rdf:about attributes that identify CIM object elements.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#IdentifiedObject.mRID"
+               },
+               {
+                    "name": "acceptableDuration",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "The nominal acceptable duration of the limit. Limits are commonly expressed in terms of the time limit for which the limit is normally acceptable. The actual acceptable duration of a specific limit may depend on other local factors such as temperature or wind speed. The attribute has meaning only if the flag isInfiniteDuration is set to false, hence it shall not be exchanged when isInfiniteDuration is set to true.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#OperationalLimitType.acceptableDuration"
+               },
+               {
+                    "name": "direction",
+                    "type": [
+                         "null",
+                         "eu.cim4.ap_voc.securityanalysisresult.Direction"
+                    ],
+                    "default": null,
+                    "doc": "The direction of the limit.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#OperationalLimitType.direction"
+               },
+               {
+                    "name": "isInfiniteDuration",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "Defines if the operational limit type has infinite duration. If true, the limit has infinite duration. If false, the limit has definite duration which is defined by the attribute acceptableDuration.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#OperationalLimitType.isInfiniteDuration"
+               },
+               {
+                    "name": "kind",
+                    "type": [
+                         "null",
+                         "eu.cim4.ap_voc.securityanalysisresult.Kind"
+                    ],
+                    "default": null,
+                    "doc": "Types of limits defined in the ENTSO-E Operational Handbook Policy 3.",
+                    "modelReference": "http://iec.ch/TC57/CIM100-European#OperationalLimitType.kind"
+               }
+          ]
+     },
+     {
+          "type": "record",
+          "name": "Recloser",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.wires",
+          "doc": "Pole-mounted fault interrupter with built-in phase and ground relays, current transformer (CT), and supplemental controls.",
+          "modelReference": "http://iec.ch/TC57/CIM100#Recloser",
+          "fields": [
+               {
+                    "name": "mRID",
+                    "type": "string",
+                    "doc": "Master resource identifier issued by a model authority. The mRID is unique within an exchange context. Global uniqueness is easily achieved by using a UUID, as specified in RFC 4122, for the mRID. The use of UUID is strongly recommended.For CIMXML data files in RDF syntax conforming to IEC 61970-552, the mRID is mapped to rdf:ID or rdf:about attributes that identify CIM object elements.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#IdentifiedObject.mRID"
+               },
+               {
+                    "name": "inService",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "Specifies the availability of the equipment. True means the equipment is available for topology processing, which determines if the equipment is energized or not. False means that the equipment is treated by network applications as if it is not in the model.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Equipment.inService"
+               },
+               {
+                    "name": "normallyInService",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "Specifies the availability of the equipment under normal operating conditions. True means the equipment is available for topology processing, which determines if the equipment is energized or not. False means that the equipment is treated by network applications as if it is not in the model.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Equipment.normallyInService"
+               },
+               {
+                    "name": "normalOpen",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "The attribute is used in cases when no Measurement for the status value is present. If the Switch has a status measurement the Discrete.normalValue is expected to match with the Switch.normalOpen.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Switch.normalOpen"
+               },
+               {
+                    "name": "open",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "The attribute tells if the switch is considered open when used as input to topology processing.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Switch.open"
+               },
+               {
+                    "name": "ratedCurrent",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "The maximum continuous current carrying capacity in amps governed by the device material and construction.The attribute shall be a positive value.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Switch.ratedCurrent"
+               },
+               {
+                    "name": "retained",
+                    "type": ["null", "boolean"],
+                    "default": null,
+                    "doc": "Branch is retained in the topological solution. The flow through retained switches will normally be calculated in power flow.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#Switch.retained"
+               },
+               {
+                    "name": "breakingCapacity",
+                    "type": "float",
+                    "doc": "The maximum fault current a breaking device can break safely under prescribed conditions of use.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#ProtectedSwitch.breakingCapacity"
+               }
+          ]
+     },
+     {
+          "type": "record",
+          "name": "Substation",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.core",
+          "doc": "A collection of equipment for purposes other than generation or utilization, through which electric energy in bulk is passed for the purposes of switching or modifying its characteristics.",
+          "modelReference": "http://iec.ch/TC57/CIM100#Substation",
+          "fields": [
+               {
+                    "name": "mRID",
+                    "type": "string",
+                    "doc": "Master resource identifier issued by a model authority. The mRID is unique within an exchange context. Global uniqueness is easily achieved by using a UUID, as specified in RFC 4122, for the mRID. The use of UUID is strongly recommended.For CIMXML data files in RDF syntax conforming to IEC 61970-552, the mRID is mapped to rdf:ID or rdf:about attributes that identify CIM object elements.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#IdentifiedObject.mRID"
+               },
+               {
+                    "name": "Equipments",
+                    "type": {
+                        "type": "array",
+                        "items": [
+                             "eu.cim4.ap_voc.securityanalysisresult.wires.Breaker",
+                             "eu.cim4.ap_voc.securityanalysisresult.wires.Cut",
+                             "eu.cim4.ap_voc.securityanalysisresult.wires.DisconnectingCircuitBreaker",
+                             "eu.cim4.ap_voc.securityanalysisresult.wires.Disconnector",
+                             "eu.cim4.ap_voc.securityanalysisresult.wires.GroundDisconnector",
+                             "eu.cim4.ap_voc.securityanalysisresult.wires.Recloser"
+                        ]
+                    },
+                    "default": [],
+                    "doc": "Contained equipment.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#EquipmentContainer.Equipments"
+               }
+          ]
+     },
+     {
+          "type": "record",
+          "name": "BaseCasePowerFlowResult",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.extsecurityanalysisresult",
+          "doc": "Base case power flow result for a given terminal.",
+          "modelReference": "https://cim4.eu/ns/nc#BaseCasePowerFlowResult",
+          "fields": [
+               {
+                    "name": "absoluteValue",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Absolute value from a power flow calculation on a given terminal related to a given operational limit. For instance, if the operational limit is 1000 A and the current flow is 1100 A the absoluteValue is reported as 1100 A.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.absoluteValue"
+               },
+               {
+                    "name": "atTime",
+                    "type": {"type": "long", "logicalType": "timestamp-millis"},
+                    "doc": "The date and time of the scenario time that was studied and at which the limit violation occurred.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.atTime"
+               },
+               {
+                    "name": "isViolation",
+                    "type": "boolean",
+                    "doc": "True if the power flow result is violating the associated operational limit. False if it is not violating the associated operational limits.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.isViolation"
+               },
+               {
+                    "name": "value",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "The value of the limit violation in percent related to the value of the operational limit that is violated. For instance, if the operational limit is 1000 A and the current flow is 1100 A the value is reported as 110 %.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.value"
+               },
+               {
+                    "name": "valueA",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Current from a power flow calculation on a given terminal. The value shall be a positive value or zero.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueA"
+               },
+               {
+                    "name": "valueAngle",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Voltage angle value from a power flow calculation on a given terminal.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueAngle"
+               },
+               {
+                    "name": "valueV",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Voltage value from a power flow calculation on a given terminal. The attribute shall be a positive value.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueV"
+               },
+               {
+                    "name": "valueVA",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Apparent power value from a power flow calculation on a given terminal.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueVA"
+               },
+               {
+                    "name": "valueVAR",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Reactive power value from a power flow calculation on a given terminal.Load sign convention is used, i.e. positive sign means flow out from a TopologicalNode (bus) into the conducting equipment.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueVAR"
+               },
+               {
+                    "name": "valueW",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Active power value from a power flow calculation on a given terminal.Load sign convention is used, i.e. positive sign means flow out from a TopologicalNode (bus) into the conducting equipment.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueW"
+               },
+               {
+                    "name": "ACDCTerminal",
+                    "type": "string",
+                    "doc": "ACDC terminal where the powerflow result is located. Note that the value of this field is the identifier (e.g. mRID) used to reference the ACDCTerminal external to this profile.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.ACDCTerminal"
+               },
+               {
+                    "name": "OperationalLimit",
+                    "type": [
+                         "null", "eu.cim4.ap_voc.securityanalysisresult.operationallimits.OperationalLimit"
+                    ],
+                    "default": null,
+                    "doc": "The operational limit that has this limit violation.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.OperationalLimit"
+               },
+               {
+                    "name": "ReportedByRegion",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "The region which reports this limit violation. Note that the value of this field is the identifier (e.g. mRID) used to reference the Region external to this profile.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.ReportedByRegion"
+               }
+          ]
+     },
+     {
+          "type": "record",
+          "name": "ContingencyPowerFlowResult",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.extsecurityanalysisresult",
+          "doc": "Contingency power flow result on a given terminal for a given contingency.",
+          "modelReference": "https://cim4.eu/ns/nc#ContingencyPowerFlowResult",
+          "fields": [
+               {
+                    "name": "absoluteValue",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Absolute value from a power flow calculation on a given terminal related to a given operational limit. For instance, if the operational limit is 1000 A and the current flow is 1100 A the absoluteValue is reported as 1100 A.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.absoluteValue"
+               },
+               {
+                    "name": "atTime",
+                    "type": {"type": "long", "logicalType": "timestamp-millis"},
+                    "doc": "The date and time of the scenario time that was studied and at which the limit violation occurred.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.atTime"
+               },
+               {
+                    "name": "isViolation",
+                    "type": "boolean",
+                    "doc": "True if the power flow result is violating the associated operational limit. False if it is not violating the associated operational limits.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.isViolation"
+               },
+               {
+                    "name": "value",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "The value of the limit violation in percent related to the value of the operational limit that is violated. For instance, if the operational limit is 1000 A and the current flow is 1100 A the value is reported as 110 %.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.value"
+               },
+               {
+                    "name": "valueA",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Current from a power flow calculation on a given terminal. The value shall be a positive value or zero.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueA"
+               },
+               {
+                    "name": "valueAngle",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Voltage angle value from a power flow calculation on a given terminal.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueAngle"
+               },
+               {
+                    "name": "valueV",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Voltage value from a power flow calculation on a given terminal. The attribute shall be a positive value.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueV"
+               },
+               {
+                    "name": "valueVA",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Apparent power value from a power flow calculation on a given terminal.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueVA"
+               },
+               {
+                    "name": "valueVAR",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Reactive power value from a power flow calculation on a given terminal.Load sign convention is used, i.e. positive sign means flow out from a TopologicalNode (bus) into the conducting equipment.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueVAR"
+               },
+               {
+                    "name": "valueW",
+                    "type": ["null", "float"],
+                    "default": null,
+                    "doc": "Active power value from a power flow calculation on a given terminal.Load sign convention is used, i.e. positive sign means flow out from a TopologicalNode (bus) into the conducting equipment.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.valueW"
+               },
+               {
+                    "name": "ACDCTerminal",
+                    "type": "string",
+                    "doc": "ACDC terminal where the powerflow result is located. Note that the value of this field is the identifier (e.g. mRID) used to reference the ACDCTerminal external to this profile.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.ACDCTerminal"
+               },
+               {
+                    "name": "OperationalLimit",
+                    "type": [
+                         "null", "eu.cim4.ap_voc.securityanalysisresult.operationallimits.OperationalLimit"
+                    ],
+                    "default": null,
+                    "doc": "The operational limit that has this limit violation.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.OperationalLimit"
+               },
+               {
+                    "name": "ReportedByRegion",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "The region which reports this limit violation. Note that the value of this field is the identifier (e.g. mRID) used to reference the Region external to this profile.",
+                    "modelReference": "https://cim4.eu/ns/nc#PowerFlowResult.ReportedByRegion"
+               },
+               {
+                    "name": "Contingency",
+                    "type": "string",
+                    "doc": "The contingency that has this power flow result. Note that the value of this field is the identifier (e.g. mRID) used to reference the Contingency external to this profile.",
+                    "modelReference": "https://cim4.eu/ns/nc#ContingencyPowerFlowResult.Contingency"
+               }
+          ]
+     },
+     {
+          "type": "record",
+          "name": "OperationalLimit",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.operationallimits",
+          "doc": "A value and normal value associated with a specific kind of limit.The sub class value and normalValue attributes vary inversely to the associated OperationalLimitType.acceptableDuration (acceptableDuration for short).If a particular piece of equipment has multiple operational limits of the same kind (apparent power, current, etc.), the limit with the greatest acceptableDuration shall have the smallest limit value and the limit with the smallest acceptableDuration shall have the largest limit value. Note: A large current can only be allowed to flow through a piece of equipment for a short duration without causing damage, but a lesser current can be allowed to flow for a longer duration.",
+          "modelReference": "http://iec.ch/TC57/CIM100#OperationalLimit",
+          "fields": [
+               {
+                    "name": "mRID",
+                    "type": "string",
+                    "doc": "Master resource identifier issued by a model authority. The mRID is unique within an exchange context. Global uniqueness is easily achieved by using a UUID, as specified in RFC 4122, for the mRID. The use of UUID is strongly recommended.For CIMXML data files in RDF syntax conforming to IEC 61970-552, the mRID is mapped to rdf:ID or rdf:about attributes that identify CIM object elements.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#IdentifiedObject.mRID"
+               },
+               {
+                    "name": "OperationalLimitSet",
+                    "type": [
+                         "null", "eu.cim4.ap_voc.securityanalysisresult.operationallimits.OperationalLimitSet"
+                    ],
+                    "default": null,
+                    "doc": "The limit set to which the limit values belong.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#OperationalLimit.OperationalLimitSet"
+               },
+               {
+                    "name": "OperationalLimitType",
+                    "type": [
+                         "null", "eu.cim4.ap_voc.securityanalysisresult.operationallimits.OperationalLimitType"
+                    ],
+                    "default": null,
+                    "doc": "The limit type associated with this limit.",
+                    "modelReference": "http://iec.ch/TC57/CIM100#OperationalLimit.OperationalLimitType"
+               },
+               {
+                    "name": "PowerFlowResult",
+                    "type": {
+                        "type": "array",
+                        "items": [
+                             "eu.cim4.ap_voc.securityanalysisresult.extsecurityanalysisresult.BaseCasePowerFlowResult",
+                             "eu.cim4.ap_voc.securityanalysisresult.extsecurityanalysisresult.ContingencyPowerFlowResult"
+                        ]
+                    },
+                    "default": [],
+                    "doc": "The limit violation associated with an operational limit.",
+                    "modelReference": "https://cim4.eu/ns/nc#OperationalLimit.PowerFlowResult"
+               }
+          ]
+     },
+     {
+          "type": "record",
+          "name": "RemedialActionApplied",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult.extsecurityanalysisresult",
+          "doc": "Remedial Action or Remedial Action Stage that has been applied to the power flow case which has the associated power flow result.",
+          "modelReference": "https://cim4.eu/ns/nc#RemedialActionApplied",
+          "fields": [
+               {
+                    "name": "mRID",
+                    "type": "string",
+                    "doc": "Master resource identifier issued by a model authority. The mRID is unique within an exchange context. Global uniqueness is easily achieved by using a UUID, as specified in RFC 4122, for the mRID. The use of UUID is strongly recommended.For CIMXML data files in RDF syntax conforming to IEC 61970-552, the mRID is mapped to rdf:ID or rdf:about attributes that identify CIM object elements.",
+                    "modelReference": "https://cim4.eu/ns/nc#RemedialActionApplied.mRID"
+               },
+               {
+                    "name": "PowerFlowResult",
+                    "type": [
+                         "eu.cim4.ap_voc.securityanalysisresult.extsecurityanalysisresult.BaseCasePowerFlowResult",
+                         "eu.cim4.ap_voc.securityanalysisresult.extsecurityanalysisresult.ContingencyPowerFlowResult"
+                    ],
+                    "default": null,
+                    "doc": "Power flow result that is obtained when the remedial action is applied.",
+                    "modelReference": "https://cim4.eu/ns/nc#RemedialActionApplied.PowerFlowResult"
+               },
+               {
+                    "name": "RemedialAction",
+                    "type": "string",
+                    "doc": "Remedial action that is applied. Note that the value of this field is the identifier (e.g. mRID) used to reference the RemedialAction external to this profile.",
+                    "modelReference": "https://cim4.eu/ns/nc#RemedialActionApplied.RemedialAction"
+               },
+               {
+                    "name": "StageForRemedialActionScheme",
+                    "type": ["null", "string"],
+                    "default": null,
+                    "doc": "The stage of the remedial action scheme that is applied. Note that the value of this field is the identifier (e.g. mRID) used to reference the Stage external to this profile.",
+                    "modelReference": "https://cim4.eu/ns/nc#RemedialActionApplied.StageForRemedialActionScheme"
+               }
+          ]
+     },
+     {
+          "copyright": "Copyright 2025 UCAIug SPDX-License-Identifier: Apache-2.0",
+          "type": "record",
+          "name": "SecurityAnalysisResult",
+          "namespace": "eu.cim4.ap_voc.securityanalysisresult",
+          "doc": "The Security Analysis Result (SAR) profile is a profile to exchange a security analysis result.The security analysis result includes each limit violation detected for each assessed element and for a given contingency. The limit violation has a direct association to operational limit and contingency. The association to the operational limit provides information on the following:- The terminal (the end of the equipment) where the limit is defined- The equipment to which the limit is related- The type of the limit e.g. PATL, TATL, etc including the relevant time phase and other conditionsThe association to the contingency provides information which contingency was simulated when this limit violation was detected.This profile is not intended to replace the Topology (TP) and State Variables (SV) profiles. Its intention is to exchange a power flow result that is relevant for security optimization, either through violation or through a loading threshold. Systems should not use this profile for dumping a full database. The modeling is optimized to have the minimum size in addition to a well defined value definition (e.g. active power, apparent power, etc.).Recommendation: If the terminals are connected with zero impedance, it is recommended to include only one terminal with a voltage (e.g. the terminal of a BusbarSection). The connection between Contingency and Remedial Action is given by the Remedial Action Profile. The connection between AssessedElement and PowerFlowResult is given by the OperationalLimit.",
+          "fields": [
+               {
+                    "name": "BaseCasePowerFlowResult",
+                    "type": {
+                        "type": "array",
+                        "items": "eu.cim4.ap_voc.securityanalysisresult.extsecurityanalysisresult.BaseCasePowerFlowResult"
+                    },
+                    "default": [],
+                    "doc": "Base case power flow result for a given terminal."
+               },
+               {
+                    "name": "Breaker",
+                    "type": {
+                        "type": "array",
+                        "items": "eu.cim4.ap_voc.securityanalysisresult.wires.Breaker"
+                    },
+                    "default": [],
+                    "doc": "A mechanical switching device capable of making, carrying, and breaking currents under normal circuit conditions and also making, carrying for a specified time, and breaking currents under specified abnormal circuit conditions e.g. those of short circuit."
+               },
+               {
+                    "name": "ContingencyPowerFlowResult",
+                    "type": {
+                        "type": "array",
+                        "items": "eu.cim4.ap_voc.securityanalysisresult.extsecurityanalysisresult.ContingencyPowerFlowResult"
+                    },
+                    "default": [],
+                    "doc": "Contingency power flow result on a given terminal for a given contingency."
+               },
+               {
+                    "name": "Cut",
+                    "type": {
+                        "type": "array",
+                        "items": "eu.cim4.ap_voc.securityanalysisresult.wires.Cut"
+                    },
+                    "default": [],
+                    "doc": "A cut separates a line segment into two parts. The cut appears as a switch inserted between these two parts and connects them together. As the cut is normally open there is no galvanic connection between the two line segment parts. But it is possible to close the cut to get galvanic connection.The cut terminals are oriented towards the line segment terminals with the same sequence number. Hence the cut terminal with sequence number equal to 1 is oriented to the line segment's terminal with sequence number equal to 1.The cut terminals also act as connection points for jumpers and other equipment, e.g. a mobile generator. To enable this, connectivity nodes are placed at the cut terminals. Once the connectivity nodes are in place any conducting equipment can be connected at them."
+               },
+               {
+                    "name": "DisconnectingCircuitBreaker",
+                    "type": {
+                        "type": "array",
+                        "items": "eu.cim4.ap_voc.securityanalysisresult.wires.DisconnectingCircuitBreaker"
+                    },
+                    "default": [],
+                    "doc": "A circuit breaking device including disconnecting function, eliminating the need for separate disconnectors."
+               },
+               {
+                    "name": "Disconnector",
+                    "type": {
+                        "type": "array",
+                        "items": "eu.cim4.ap_voc.securityanalysisresult.wires.Disconnector"
+                    },
+                    "default": [],
+                    "doc": "A manually operated or motor operated mechanical switching device used for changing the connections in a circuit, or for isolating a circuit or equipment from a source of power. It is required to open or close circuits when negligible current is broken or made."
+               },
+               {
+                    "name": "GroundDisconnector",
+                    "type": {
+                        "type": "array",
+                        "items": "eu.cim4.ap_voc.securityanalysisresult.wires.GroundDisconnector"
+                    },
+                    "default": [],
+                    "doc": "A manually operated or motor operated mechanical switching device used for isolating a circuit or equipment from ground."
+               },
+               {
+                    "name": "Location",
+                    "type": {
+                        "type": "array",
+                        "items": "eu.cim4.ap_voc.securityanalysisresult.common.Location"
+                    },
+                    "cardinalityComments": "[min cardinality = 1] Application level validation will be required to ensure the array contains at least 1 item."/>",
+                    "doc": "The place, scene, or point of something where someone or something has been, is, and/or will be at a given moment in time. It can be defined with one or more position points (coordinates) in a given coordinate system."
+               },
+               {
+                    "name": "OperationalLimit",
+                    "type": {
+                        "type": "array",
+                        "items": "eu.cim4.ap_voc.securityanalysisresult.operationallimits.OperationalLimit"
+                    },
+                    "default": [],
+                    "doc": "A value and normal value associated with a specific kind of limit.The sub class value and normalValue attributes vary inversely to the associated OperationalLimitType.acceptableDuration (acceptableDuration for short).If a particular piece of equipment has multiple operational limits of the same kind (apparent power, current, etc.), the limit with the greatest acceptableDuration shall have the smallest limit value and the limit with the smallest acceptableDuration shall have the largest limit value. Note: A large current can only be allowed to flow through a piece of equipment for a short duration without causing damage, but a lesser current can be allowed to flow for a longer duration."
+               },
+               {
+                    "name": "OperationalLimitSet",
+                    "type": {
+                        "type": "array",
+                        "items": "eu.cim4.ap_voc.securityanalysisresult.operationallimits.OperationalLimitSet"
+                    },
+                    "default": [],
+                    "doc": "A set of limits associated with equipment. Sets of limits might apply to a specific temperature, or season for example. A set of limits may contain different severities of limit levels that would apply to the same equipment. The set may contain limits of different types such as apparent power and current limits or high and low voltage limits that are logically applied together as a set."
+               },
+               {
+                    "name": "OperationalLimitType",
+                    "type": {
+                        "type": "array",
+                        "items": "eu.cim4.ap_voc.securityanalysisresult.operationallimits.OperationalLimitType"
+                    },
+                    "default": [],
+                    "doc": "The operational meaning of a category of limits."
+               },
+               {
+                    "name": "Recloser",
+                    "type": {
+                        "type": "array",
+                        "items": "eu.cim4.ap_voc.securityanalysisresult.wires.Recloser"
+                    },
+                    "default": [],
+                    "doc": "Pole-mounted fault interrupter with built-in phase and ground relays, current transformer (CT), and supplemental controls."
+               },
+               {
+                    "name": "RemedialActionApplied",
+                    "type": "eu.cim4.ap_voc.securityanalysisresult.extsecurityanalysisresult.RemedialActionApplied",
+                    "doc": "Remedial Action or Remedial Action Stage that has been applied to the power flow case which has the associated power flow result."
+               },
+               {
+                    "name": "Substation",
+                    "type": "eu.cim4.ap_voc.securityanalysisresult.core.Substation",
+                    "doc": "A collection of equipment for purposes other than generation or utilization, through which electric energy in bulk is passed for the purposes of switching or modifying its characteristics."
+               }
+          ]
+     }
+]

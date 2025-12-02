@@ -9,6 +9,8 @@ The **Avro4CIM** project leverages **CIMTool (version 2.3.0-RC3)** to generate A
 ---
 
 ## License
+
+## License
 Distributed under the **Apache 2.0 license**.  
 See [LICENSE](./LICENSE) for details.
 

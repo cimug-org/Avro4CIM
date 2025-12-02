@@ -1,0 +1,49 @@
+{
+  "RemedialActionApplied": [
+    {
+      "mRID": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "PowerFlowResult": {
+        "eu.cim4.ap_voc.securityanalysisresult.extsecurityanalysisresult.BaseCasePowerFlowResult": {
+          "absoluteValue": 1850.0,
+          "atTime": 1704085200000,
+          "isViolation": false,
+          "value": 74.0,
+          "valueA": null,
+          "valueAngle": null,
+          "valueV": null,
+          "valueVA": null,
+          "valueVAR": null,
+          "valueW": 1850.0,
+          "ACDCTerminal": "f1e2d3c4-b5a6-4978-8967-5a4b3c2d1e0f",
+          "OperationalLimit": "b2c3d4e5-f6a7-4b89-9c0d-1e2f3a4b5c6d",
+          "ReportedByRegion": "10Y-FR-ENTSOE-1"
+        }
+      },
+      "RemedialAction": "c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f",
+      "StageForRemedialActionScheme": null
+    },
+    {
+      "mRID": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a",
+      "PowerFlowResult": {
+        "eu.cim4.ap_voc.securityanalysisresult.extsecurityanalysisresult.ContingencyPowerFlowResult": {
+          "absoluteValue": 2400.0,
+          "atTime": 1704085200000,
+          "isViolation": false,
+          "value": 96.0,
+          "valueA": null,
+          "valueAngle": null,
+          "valueV": null,
+          "valueVA": null,
+          "valueVAR": null,
+          "valueW": 2400.0,
+          "ACDCTerminal": "e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b",
+          "OperationalLimit": "f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f8a9b0c",
+          "ReportedByRegion": "10Y-DE-ENTSOE-1",
+          "Contingency": "a7b8c9d0-e1f2-4a3b-4c5d-6e7f8a9b0c1d"
+        }
+      },
+      "RemedialAction": "b8c9d0e1-f2a3-4b4c-5d6e-7f8a9b0c1d2e",
+      "StageForRemedialActionScheme": "c9d0e1f2-a3b4-4c5d-6e7f-8a9b0c1d2e3f"
+    }
+  ]
+}
