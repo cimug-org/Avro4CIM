@@ -1,47 +1,47 @@
 # Case Study: CSA 2.4 Security Analysis Result (SAR) Profile
 
 ## Table of Contents
-- [UML Profiles Overview](#uml-profiles-overview)
-- [CIMTool Workflow for Generating Artifacts](#cimtool-workflow-for-generating-artifacts)
-- [Overview of Apache Avro](#overview-of-apache-avro)
-- [The Purpose of an Apache Avro Schema (.avsc)](#the-purpose-of-an-apache-avro-schema-avsc)
-- [Apache Avro Schema Limitations -vs- JSON and XSD Schema Specifications](#apache-avro-schema-limitations--vs--json-and-xsd-schema-specifications)
-- [Mapping CIM Profiles  to Apache Avro Schema: Impacts to Formal Mapping Specifications](#mapping-cim-profiles--to-apache-avro-schema-impacts-to-formal-mapping-specifications)
-- [Design Decisions](#design-decisions)
-  - [1. Single or Multiple Avro Schemas](#1-single-or-multiple-avro-schemas)
-  - [2. Namespacing](#2-namespacing)
-  - [3. Canonical Model Traceability Within Avro Schemas](#3-canonical-model-traceability-within-avro-schemas)
-  - [4. Class Inheritance: Flattened Record Structure](#4-class-inheritance-flattened-record-structure)
-  - [5. Cross Profile Associations: Reference Strategy](#5-cross-profile-associations-reference-strategy)
-  - [6. Mapping CIM Compound Types](#6-mapping-cim-compound-types)
-  - [7. Date Datatypes and Apache Avro Logical Types](#7-date-datatypes-and-apache-avro-logical-types)
-  - [8. Cardinality Mapping](#8-cardinality-mapping)
-  - [9. Document Element Root Fields](#9-document-element-root-fields)
-- [Example SAR Profile JSON Payloads](#example-sar-profile-json-payloads)
-  - [SecurityAnalysisResult.avsc](#securityanalysisresultavsc)
-  - [SecurityAnalysisResult_EXTENDED.avsc](#securityanalysisresult_extendedavsc)
-  - [Profile Constraint Rules](#profile-constraint-rules)
-  - [Complex Constraint Validation](#complex-constraint-validation)
-  - [Notes on Example Payloads](#notes-on-example-payloads)
-- [SecurityAnalysisResult.avsc Usage](#securityanalysisresultavsc-usage)
-  - [Code Generation](#code-generation)
-  - [Writing Messages](#writing-messages)
-  - [Reading Messages](#reading-messages)
-- [Schema Evolution](#schema-evolution)
-  - [Backward Compatible Changes](#backward-compatible-changes)
-  - [Breaking Changes](#breaking-changes)
-  - [Best Practices](#best-practices)
-- [Validation](#validation)
-- [Tools](#tools)
-- [References](#references)
-- [License](#license)
+- [1. UML Profiles Overview](#uml-profiles-overview)
+- [2. CIMTool Workflow for Generating Artifacts](#cimtool-workflow-for-generating-artifacts)
+- [3. Overview of Apache Avro](#overview-of-apache-avro)
+- [4. The Purpose of an Apache Avro Schema (.avsc)](#the-purpose-of-an-apache-avro-schema-avsc)
+- [5. Apache Avro Schema Limitations -vs- JSON and XSD Schema Specifications](#apache-avro-schema-limitations--vs--json-and-xsd-schema-specifications)
+- [6.Mapping CIM Profiles  to Apache Avro Schema: Impacts to Formal Mapping Specifications](#mapping-cim-profiles--to-apache-avro-schema-impacts-to-formal-mapping-specifications)
+- [7.Design Decisions](#design-decisions)
+  - [7.1. Single or Multiple Avro Schemas](#1-single-or-multiple-avro-schemas)
+  - [7.2. Namespacing](#2-namespacing)
+  - [7.3. Canonical Model Traceability Within Avro Schemas](#3-canonical-model-traceability-within-avro-schemas)
+  - [7.4. Class Inheritance: Flattened Record Structure](#4-class-inheritance-flattened-record-structure)
+  - [7.5. Cross Profile Associations: Reference Strategy](#5-cross-profile-associations-reference-strategy)
+  - [7.6. Mapping CIM Compound Types](#6-mapping-cim-compound-types)
+  - [7.7. Date Datatypes and Apache Avro Logical Types](#7-date-datatypes-and-apache-avro-logical-types)
+  - [7.8. Cardinality Mapping](#8-cardinality-mapping)
+  - [7.9. Document Element Root Fields](#9-document-element-root-fields)
+- [8. Example SAR Profile JSON Payloads](#example-sar-profile-json-payloads)
+  - [8.1. SecurityAnalysisResult.avsc](#securityanalysisresultavsc)
+  - [8.2. SecurityAnalysisResult_EXTENDED.avsc](#securityanalysisresult_extendedavsc)
+  - [8.3. Profile Constraint Rules](#profile-constraint-rules)
+  - [8.4. Complex Constraint Validation](#complex-constraint-validation)
+  - [8.5. Notes on Example Payloads](#notes-on-example-payloads)
+- [9. SecurityAnalysisResult.avsc Usage](#securityanalysisresultavsc-usage)
+  - [9.1. Code Generation](#code-generation)
+  - [9.2. Writing Messages](#writing-messages)
+  - [9.3. Reading Messages](#reading-messages)
+- [10. Schema Evolution](#schema-evolution)
+  - [10.1. Backward Compatible Changes](#backward-compatible-changes)
+  - [10.2. Breaking Changes](#breaking-changes)
+  - [10.3. Best Practices](#best-practices)
+- [11. Validation](#validation)
+- [12. Tools](#tools)
+- [13. References](#references)
+- [14. License](#license)
 
 
-## UML Profiles Overview
+## 1. UML Profiles Overview
 
 For this CIM mapping to Apache Avro schema case study the CSA 2.4 Security Analysis Result Profile was targeted. It does not comprehensively represent all CIM types that can be included in a profile. For example Compound data types defined within the CIM are not defined as part of the SAR profile. Despite this, the initial Avro schema builder outlined here includes support for all types that are currently identified as potentially relevant in an Avro schema. A special extended variant of the profile was used to proof out and test the generation of a more complex profile definition that included Compound types and additional edge cases.
 
-**UML Diagram of the SAR 2.4 Profile**
+** UML Diagram of the SAR 2.4 Profile**
 
 ![](https://img.plantuml.biz/plantuml/svg/hLVRJkD847ttLxJ8mqYB4W84jA08ZUF4cf56B4eG-x3QXyQk92tQRgkx3PCT-FUjQZl1bpWxZDOMYbrrwjIrA-6piLpRF96ULHcpYZqgQrN2Og4XiaAbdlU9gOoUs4hpM41gsIEFdbPQvMbC5aOakUGMsCndfvU3xsZB4PeOppo9DEFuo2OxYq19fLaldD3TxqqlfsV1Z9ny4J6mI79Zc8XKQhor4mWTIIYU8SdiXYLWroesP7A_5eQHoZ2x1iQjrU8nnqWAWdVtZjRVgh-YTY7-0JQiG7ojrKiPtEXYT3cwg2ZDciVgHQGhPdKEv9fqAGcMQ90g2rLtzCv-U8nzQkMz7DADghOcMluEvwHHEWPT3uMnKAMsb9sxgvJTyWGmUC5bAN2PdPxjYB18qLCAMDPJb2tgcRnvpIgvkDljceL1UFNQ2wzcqndnx8fPYUl27mr7GJtMeRkseTcD19mm6LCa5ZGekybW7_mBS8pziAP6jxzg-qf0VIdhCFjk8JKqsovtd2FZE6DOYbIuyMyLOpnksDxSiDuifFkr9yLgRN7uDri__gEncaVsGmvuQKJCeRjAvWr8gLwstBCqJq1pOlavNdWtS45VXU7iuhKt7OP-SEaLd7WCjFbGj40cPQZd8VA5OJ0C9jKv68zdMz2kZ-q9QgFUwAYviryhYjcDZbSgjp5KDDw-0_cJKpAug1scKVc6G3ThxR5ympZzE6QyS6NL2zTniPNoB0FD92nn1fHEyLajdQ9Savwpu8Oj8Cgri1i_vN9ZX9c3oQMz9MsZ--nEgwMGSDrXGn3Q2oRZ4OBMrcRc-kI4P_rd5GqYaOm6a9_ijpqv6unw7k1gfxYe_dum3Uv19m9n7g_DSqt7watwGTr3ymat4E3VdNh1Oui957wOIDU0xWrRQlo-QMYzWhxBTZo-3T15uQEbVEttkomfe02xXmiGqcZJJAUYwiYcWlYLX0wO_tTEtSRU0TwZumFAuM3msn7hzs_gC7PwLAl5THaTLU2Fh5mXN7uJYR3D6ZRr7OLiPj1WwQXEWmhd_BZKe5n9t2OFNEQ00QCjj-mlJF3qxnhEtek405FyoKAFLQKm3q995pqY9af9u6aLy5oot-4IeLz2RNw7y14Iv5eZX7BeXAKhIMpkSmeh3RXoEx0FY7jGql8LT4B8hP_XoaE_he3To3b2vu1r5Czm4FedSRPXUsRqwFZGTDKs1OvNRQjyZAerOHJIKNlmTbFRfdU0zrvNsUUGAMqXdcpci2gLo5w-L4z28MfERWdSFx35xCyX0Tp-qYz-ORS8gjeF467hfO3OsqTJwYfRfjBePFvrYfajy0ivNH7rVbkgpJvvjNhDKcFbcg9T2N_TIwD4hZqroV_WOq57BLIwZbn4QtmlPy91QYFX9Cs65h3EFdx6Brlw1ypx5m00)
 
@@ -49,7 +49,7 @@ For this CIM mapping to Apache Avro schema case study the CSA 2.4 Security Analy
 
 ![](https://img.plantuml.biz/plantuml/svg/hHdRRjiuzbrVGIGF0soGD6cJOXi4HHrVPeBff4MSoJmize6MQ9iRYjIIL59lst-VSoXA5YNATOgDKTdakT_8SzGFnb9jormaLXN4Ah9GrggSP5opr78ba-GNeWhyHLQQPfn9InOqVLnfLSeCAGpFIq4j8zCHENjxyWLeAQ3c9Z6FN1OKVfBhXcAiXDBaS7QDd-F3oTl9w_4KXVp6CqPIGOqXF5NI96ktmNKgMFMRvONTa9pPjSeCajolkI48CiIk6Q7MQhueGPEAmLQyOpkgmJS0dVF_CNBQGXbfhPwzSkSNvs_FBrf0iwQPUkPoHQmk6Of6cCID9H18PLbR7Ax9ruIGNtfsBq_n0w0-95t-axr1YD8Pqw4gXCoKj7xlZVlpUxSqPw0yfy9lEClENZUCm4dfesJWrZFOcuUMV4-wNd9wzyCrdOrdxxuTpjvD9rFaqpYpfTV5wFpqV1pgUkh-QjNiHZ38C96X9fPffkocO37qtnW5tNT30dPnhyLSW77nVfX-iKmQp6rdE-IHSJmpjkIIk_JlEUFggaFx_ZqvdCxmy-rGyDNQGl9lQZcZXR6QflP50gWdGiupz-SvRvWGwhdcFPLbpZH5BllnPLi2f_IxsMnwyUrmSZeRZTyc5Kye0srUf2r34g_gcndmcyt6f-FhTXvSNKrhf2QE_GpgOtt7KdEr7pZ5DAcJx0Ei5Mn1abYrxfb29nT1fPtx5I2wHEpdx7SmOfHbX5QYh7gcEgkEhB8ec2Q2BI51b9RmMoqTm9-XYQEWXinPMcfkDoD9nSPmSyTCAUmjGZkfGJvhjUI2NGxG80eU6gQWAI2jhItCvQjNj3X-Kkb9olFp4rQ-YjE-UdroVfWmEFTHBmpEQ3mPtpETSy1BQ93i0Oo4GVgAeGNoQshO6FvzLizGqs109OTmkMOWtf2bXike0qqgzaEqLrUtOn1HoUW1lnqV3r4wXJIZZn26ZW8Qp4qjo-RFtARhMW6FMuiAaRoe2WTPZvNCIhXJvMhwtv8NETwaePXcl-l966d4eLkWansXydf8lDkV8BotAcEmjfJBlj7edVa6gYO7_wXIfooYrm2hY7OHVesUSIvUMxI0oNGJaLw31jAhXV4p6RQ3_CT9DaoSxE1xSBG3U7foyey3SdpyFaGZPmU1BowzTiu3PTVK88KHJDpXHuu4aokxdW5ENRHdmEgZsoN_0jbd_qPZszaDv2XamatgOoXNO-ZOIcxZXLINGoLz5vrtRRrqudRWXsgehjp0w03FosbRrOOZtw5otQD0XiiLFSxbdEad3dLm2RU74epAsj48bahdL8ZDpJ3Qhh8AYhvP35NxS14EcRIps8TFXb2thPW8tuEZo2OQVa1KLGKDtFZY28p-rRKf-wP513kI77qib7IJWKY-v2pxjFWFx7QTreL7qo6_kvb0YEVG5ycLFy5QFHxvo7DkV-SoIx2Hsov9jxEh-551TVwWXAKhXkirj0cj9HmhhPKgF3aLVjUnHr11hQY_tGQCZ0ik8B2ui1vgq-hfCA31mU6evk_Qk8yghSm8Gz3pNEMm1hi-dPg1TEiXvpD82kYjD7Pc3i2OzMiKs_ExYs7D7DNwj3NSMRoVUZqgdobnULtif4T-SDJTUg2YPCs9ho8OSsPzCKGW-uW8xfCky1xQv07szww33dEpYpEfmxNDrvqeGpcyC4h0ZE2yKIUnpzughM9U-QaG8k6BeXZpCZ8PZ5JZwwOf1kS63NJ47XU7dpB8KTRbGzEK5L2tWarA7p8t842BQDftJhlCTWUiHSJDZNGJOfjvv4A30Q_KSD9G3F0ZChbidMBRAsq__zTfsEskEaVlGESMENyz9CWvq11egGtDgF3iFSyHOK8jmvzj83SFN8cEBze8JvxxPvWuiJ_eytSO8q0Pbre32jemY2PN0hcvxmbRmJ5eXd0V0C-Vp8CeA7PKm7mCSfq3Xp7l0FMEKRphsKxKlv1d7otIFnySxUfyWx6oMq4lOnKx4IC7thQZxhEl3kicrctkTwnG6kR1wyqTMtaWSFUBTfSUw-5-KFEnBEzmYBHbySgADRAeLMUWZVPENJqwDB4wMs3BZXqyBMWARKIOujs6gpjxWs9tB1NAx3cbDyYxnlGQgUAEyUaQvgCMFpsgNksEvIpZL8og5-Sz1cte2nX17Ge8M19Zus6jSRHLTRr-CawBYHhRRwTof8WWaxkxJKh_lA2Ebrov13l_1nbpFFfcIeUOytGDQs-PGmbArErqOrgXxGebODZI90qwB01nhF82nuYc939_XNHl4wWKqsrvDSkfVWptwjiac1t2RhXMeRKNqqHGkIehuojcxUEyKDVgom04fW8nXaal2ZQLvPUr2m8GQZHXCDw9feMlbWvkrRDieFVRnVRwQ4prL6rBFNB4K5hvu5S6GoKLKQr3bDTxuBo9uYnABZBOS_zN4qD8X_os54hf-j1EcxwjXoU7E4DFlO2pBneopPOy7arJBeT1qERT3dF5r-jH09osQounWExADD6N6HZASe7PqfyK8-yCVAIt5AJp8hJpsc6BwIJ5hhNOIzDkrGzVRTKh6-WV1ZfWDGY1XeDb_XeSxlaqS-PaKUV5tX9NPZStvxP-lEzQ1HMfaS6yJ07DwitBSj5q1lZk0S4-QRYSdxXC-_Jzjo5_mhpn1zmw70zuNOsOuTx0JFc8ZnmVKad_SgBBUBx95qficLRh0OOZV3ouH_LpfF7hBtnaRDMMb7nW4ACS9hs_0G00)
 
-## CIMTool Workflow for Generating Artifacts
+## 2. CIMTool Workflow for Generating Artifacts
 
 The standard workflow for generating artifacts used by **CIMTool** appears below. This reflects those that appear as part of the CIMTool project in this GitHub repository:
 
@@ -62,13 +62,13 @@ The standard workflow for generating artifacts used by **CIMTool** appears below
 
 CIMTool utilizes what is known as "builders" to generate these various artifacts based on the OWL profile definition. As highlighted above, one flavor of supported builder it an XSLT builder. XSLT (Extensible Stylesheet Language Transformations) is an XML-based language used to transform the structure and content of an XML document into another format, such as HTML, JSON, PlantUML, plain text, PDF, etc. XSLT operates on the principle of transforming an input document's structure into a new result structure. For further detail refer to CIMTool's [CIMTool Builders Library](https://cimtool-builders.ucaiug.io/) companion website.
 
-## Overview of Apache Avro
+## 3. Overview of Apache Avro
 
 **Apache Avro** is a binary data serialization system designed for efficient, compact data exchange and long-term storage in big data environments. Created by Doug Cutting (creator of Hadoop) in 2009, Avro's primary purpose is to serialize structured data into a compact binary format that is significantly smaller and faster to process than text-based formats like JSON or XML. It is the de facto standard for data serialization in Apache Kafka, Hadoop, and Spark ecosystems, where millions or billions of records need to be stored, transmitted, and processed efficiently.
 
 Avro's key distinguishing feature is **schema evolution** - the ability to read old data with new schemas and vice versa. This makes it ideal for long-term data archival and systems that evolve over time, as you can add or remove fields without breaking existing readers or writers. Avro also supports RPC (remote procedure calls) and generates type-safe code in multiple programming languages (Java, Python, C++, etc.), making it suitable for both data storage and inter-service communication.
 
-## The Purpose of an Apache Avro Schema (.avsc)
+## 4. The Purpose of an Apache Avro Schema (.avsc)
 
 An **Avro schema** (`.avsc` file) is a JSON document that defines the structure, types, and metadata of your data. Its primary purposes are: 
 
@@ -79,7 +79,7 @@ An **Avro schema** (`.avsc` file) is a JSON document that defines the structure,
 
 Unlike XML Schema or JSON Schema which focus primarily on validation, Avro schemas are tightly integrated with the binary serialization format itself. The schema can be embedded directly into Avro data files (making them self-describing) or registered in a Schema Registry for efficient reference by ID. This design enables Avro's compact binary format - field names don't need to be stored in the data because the schema provides the structure, resulting in significant space savings compared to self-describing formats like JSON or XML.
 
-## Apache Avro Schema Limitations -vs- JSON and XSD Schema Specifications
+## 5. Apache Avro Schema Limitations -vs- JSON and XSD Schema Specifications
 
 In view of the primary objectives and purposes just outlined, Apache Avro schemas do not entirely align with more traditional schema specifications and therefore do not support the full breadth of features one might be accustomed to. The following outlines specific limitations:
 
@@ -95,17 +95,17 @@ In view of the primary objectives and purposes just outlined, Apache Avro schema
 
 **Type System Compared to JSON Schema:** While both Avro and JSON Schema use JSON syntax for schema definition, their type systems differ significantly. Avro has a richer set of primitive types (int, long, float, double, bytes, fixed) compared to JSON Schema's simpler number and integer types, making Avro more precise for numeric data representation. However, JSON Schema excels at validation with built-in format validators (email, uri, date-time, ipv4, etc.) and pattern matching via regular expressions, features that Avro completely lacks. Avro compensates somewhat with "logical types" (decimal, date, timestamp-millis, uuid) that add semantic meaning to primitive types and enable proper code generation (e.g., generating `java.time.Instant` instead of `long`), but these provide type interpretation rather than validation. JSON Schema also supports conditional schemas (if/then/else), dependencies between properties, and the `additionalProperties` constraint, giving it more flexibility for validation scenarios, while Avro's strength lies in its integration with binary serialization and schema evolution rather than runtime validation.
 
-## Mapping CIM Profiles  to Apache Avro Schema: Impacts to Formal Mapping Specifications
+## 6. Mapping CIM Profiles  to Apache Avro Schema: Impacts to Formal Mapping Specifications
 
 It is normal protocol to develop IEC standards-based mapping specifications for specific syntactical formats (e.g. XSD Schema, JSON schema, etc). Such specifications provide directives on how to precisely map classes, attributes, associations, cardinalities and constructs such as unions and XOR, to specific syntactical mappings. The **IEC 62361-100** and **IEC 62361-104** are examples of such specifications. It is a long term goal of this case study to produce a corresponding IEC specification for mapping to Apache Avro schema for use in developing profiling tools that generate IEC compliant Avro schemas derived from the CIM.
 
 For the purposes of defining such a specification for Apache Avro, the limitations outlined in the previous section highlight areas requiring alternative aproaches and/or work arounds. Such limitations were taken into consideration as part of this case study.   
 
-## Design Decisions
+## 7. Design Decisions
 
 The following subsections describe the more signficant design decisions that went into the implementation of the **CIMTool** Avro schema builder including solution approaches addressing some of the previously mentioned limitations.
 
-### 1. Single or Multiple Avro Schemas
+### 7.1. Single or Multiple Avro Schemas
 
 **Decision: Single Schema File Approach**
 
@@ -154,7 +154,7 @@ The schema file contains an array of type definitions, ordered by dependency:
 **Alternative Approach:**
 Multiple files (one type per file) offer better modularity for reusable type libraries across projects, but add complexity in dependency management and deployment. For CIM profiles where types are derived as unique subsets specific to each profile, the single-file approach provides the optimal balance of simplicity and functionality. For IEC-style CIM profiles where each profile is a self-contained message definition, the single-file approach is the recommended pattern.
 
-### 2. Namespacing
+### 7.2. Namespacing
 
 **Decision: Hierarchical Namespace Structure with Sub-packages**
 
@@ -209,7 +209,7 @@ eu.cim4.ap_voc.securityanalysisresult.SecurityAnalysisResult
 **Alternative Approach:**
 A flat namespace (all types in `eu.cim4.ap_voc.securityanalysisresult`) would be simpler but loses the organizational benefits of sub-packages. For profiles with multiple type categories (domain types, extensions, compound types), the hierarchical approach provides better structure and maintainability. Avro's limitation of type-level namespaces (not field-level like XML) means that field origins must be documented through the custom `modelReference` annotation described next rather than field-level namespace prefixes.
 
-### 3. Canonical Model Traceability Within Avro Schemas
+### 7.3. Canonical Model Traceability Within Avro Schemas
 
 Traceability back to the canonical CIM is essential in Apache Avro schema mappings. The IEC 62361-100 "CIM profile to XML Schema mapping" specification addresses this through W3C semantic annotations, which provide extension attributes for WSDL and XSD schemas; however, no comparable mechanism exists for Avro schemas.
 
@@ -276,7 +276,7 @@ The `modelReference` annotation appears at different levels within the Avro sche
 }
 ```
 
-### 4. Class Inheritance: Flattened Record Structure
+### 7.4. Class Inheritance: Flattened Record Structure
 
 **Decision: Combined Flattening and Union Pattern**
 
@@ -414,7 +414,7 @@ The flattening strategy alone would not support polymorphic associations - there
 
 This pattern is the standard approach for CIM to Avro mappings and is consistent with how other schema-based serialization formats (like Protocol Buffers with `oneof`) handle inheritance and polymorphism.
 
-### 5. Cross Profile Associations: Reference Strategy
+### 7.5. Cross Profile Associations: Reference Strategy
 
 **Decision: String-Based Identifiers Reference Pattern**
 
@@ -512,7 +512,7 @@ Embedding complete nested objects would provide self-contained messages but at s
 
 The string reference pattern is universally used in CIM exchange profiles (XML, RDF, JSON-LD) and is the appropriate choice for Avro mappings. External systems resolve references by correlating mRIDs across message types or querying a network model repository.
 
-### 6. Mapping CIM Compound Types
+### 7.6. Mapping CIM Compound Types
 
 In the UML, compound types appear as follows:
 
@@ -651,7 +651,7 @@ Compound types are defined as separate named record types, then embedded by refe
 
 Inline anonymous record types could be used instead of named types, but this prevents reusability and increases schema verbosity. By defining compound types as named records, they can be referenced by multiple parent classes if needed, maintaining DRY principles. This approach is demonstrated in the EXTENDED profile to validate the XSLT transformation's capability to handle compound types when they appear in future CIM to Avro profile mappings.
 
-### 7. Date Datatypes and Apache Avro Logical Types
+### 7.7. Date Datatypes and Apache Avro Logical Types
 
 **Decision: timestamp-millis Logical Type**
 
@@ -772,7 +772,7 @@ However, for binary streaming protocols like Kafka where efficiency matters, the
 
 For detailed information on all Avro logical types, see the [Apache Avro Logical Types - Complete Guide](apache_avro_logical_types_guide.md).
 
-### 8. Cardinality Mapping
+### 7.8. Cardinality Mapping
 
 **Decision: Union-Based Optional Fields**
 
@@ -1090,7 +1090,7 @@ All fields could be made optional by default (always using unions with null), bu
 
 Some serialization formats (like Protocol Buffers v3) make all fields implicitly optional, but Avro's union-based approach provides explicit control while maintaining schema evolution compatibility.
 
-### 9. Document Element Root Fields
+### 7.9. Document Element Root Fields
 
 **Decision: Topological Analysis to Identify True Message Roots**
 
@@ -1123,9 +1123,9 @@ Container structure:
 
 The topological analysis approach provides a generic, scalable solution that works correctly for any CIM profile structure without requiring manual intervention or profile-specific customization. The algorithm automatically adapts to changes in the profile as classes and associations are added or removed.
 
-## Example SAR Profile JSON Payloads
+## 8. Example SAR Profile JSON Payloads
 
-### SecurityAnalysisResult.avsc
+### 8.1. SecurityAnalysisResult.avsc
 
 The following examples demonstrate valid JSON messages for the SecurityAnalysisResult schema. Complete examples with validation documentation are available in the `/examples` directory.
 
@@ -1242,11 +1242,11 @@ The following examples demonstrate valid JSON messages for the SecurityAnalysisR
 - All arrays can be empty but cannot be omitted
 - Additional examples available in `/examples` directory with comprehensive field documentation
 
-### SecurityAnalysisResult_EXTENDED.avsc
+### 8.2. SecurityAnalysisResult_EXTENDED.avsc
 
 The EXTENDED version includes additional classes for demonstration purposes (Location, OperationalLimit, OperationalLimitSet, OperationalLimitType with compound types). Example payloads for the EXTENDED schema demonstrate compound type nesting and additional cardinality patterns. See [SecurityAnalysisResult Example Payloads README](example-payloads/README.md) for complete documentation.
 
-### Profile Constraint Rules
+### 8.3. Profile Constraint Rules
 
 Next is an example of some of the additional complex validation constraints defined in the [ENTSO-E's Security Analysis Result Profile Specification 2.4.0](https://eepublicdownloads.entsoe.eu/clean-documents/CIM_documents/Grid_Model_CIM/NC/2.4/SecurityAnalysisResults_Profile_Specification_2-4-0.pdf). They require additional considerations for how/where they are to be applied when working with Apache Avro and streaming data:
 
@@ -1289,7 +1289,7 @@ PowerFlowResult shall be associated with either ACDCTerminal, TopologicalNode or
 **C:NC:SAR:PowerFlowResult:topologicalNode**
 PowerFlowResult.valueW, PowerFlowResult.valueVA, PowerFlowResult.valueVAR and PowerFlowResult.valueA shall not appear in the profile if PowerFlowResult is associated with TopologicalNode.
 
-### Complex Constraint Validation
+### 8.4. Complex Constraint Validation
 
 The Security Analysis Result profile constraints fall into three categories based on their validation approach:
 
@@ -1383,7 +1383,7 @@ These constraints define expected formats for reference fields. For example:
 
 5. **Consider JSON Schema** for additional validation if needed, though it requires maintaining parallel schemas
 
-### Notes on Example Payloads
+### 8.5. Notes on Example Payloads
 
 The example JSON payloads in this case study demonstrate valid messages but use simplified string references for readability. Production implementations should:
 
@@ -1392,9 +1392,9 @@ The example JSON payloads in this case study demonstrate valid messages but use 
 - Implement validation logic for all application-level constraints
 - Consider adding metadata or type hints if needed for validation efficiency
 
-## SecurityAnalysisResult.avsc Usage
+## 9. SecurityAnalysisResult.avsc Usage
 
-### Code Generation
+### 9.1. Code Generation
 
 Generate Java classes from schemas:
 ```bash
@@ -1406,7 +1406,7 @@ Generate Python classes:
 avrogen SecurityAnalysisResult.avsc ./output/
 ```
 
-### Writing Messages
+### 9.2. Writing Messages
 
 **Java Example:**
 ```java
@@ -1495,7 +1495,7 @@ writer.append({
 writer.close()
 ```
 
-### Reading Messages
+### 9.3. Reading Messages
 
 **Java Example:**
 ```java
@@ -1561,26 +1561,26 @@ for result in reader:
 reader.close()
 ```
 
-## Schema Evolution
+## 10. Schema Evolution
 
-### Backward Compatible Changes:
+### 10.1. Backward Compatible Changes:
 - Adding optional fields (with defaults)
 - Adding enum values (if consumers handle unknown gracefully)
 
-### Breaking Changes:
+### 10.2. Breaking Changes:
 - Removing fields
 - Changing field types
 - Removing enum values
 - Changing required/optional status
 
-### Best Practices:
+### 10.3. Best Practices:
 1. Always provide defaults for our optional fields
 2. Use unions with null for our optional fields
 3. Document units and semantics clearly
 4. Version our message schemas
 5. Test with old and new consumers
 
-## Validation
+## 11. Validation
 
 To validate a message against a schema:
 
@@ -1591,7 +1591,7 @@ java -jar avro-tools.jar validate \
   result_message.avro
 ```
 
-## Tools
+## 12. Tools
 
 Recommended tools:
 - **avro-tools** - Command-line tools for Avro
@@ -1599,13 +1599,13 @@ Recommended tools:
 - **Kafka** - Streaming platform (commonly used with Avro)
 - **Schema Registry** - Schema versioning and compatibility
 
-## References
+## 13. References
 
 - **CIMTool**: See [https://cimtool.ucaiug.io/](https://cimtool.ucaiug.io/) 
 - **CIMTool Application**: Release 2.3.0-RC3 available at [CIMTool-2.3.0-RC3](https://github.com/cimug-org/CIMTool/releases/download/2.2.0/CIMTool-2.3.0-RC3-win32.win32.x86_64.zip)
 - **SAR Profile**: See [ENTSO-E's Security Analysis Result Profile Specification 2.4.0](https://eepublicdownloads.entsoe.eu/clean-documents/CIM_documents/Grid_Model_CIM/NC/2.4/SecurityAnalysisResults_Profile_Specification_2-4-0.pdf)
 - **Avro Format**: See https://avro.apache.org/
 
-## License
+## 14. License
 
 Generated schemas are distributed under the Apache License 2.0 license.
