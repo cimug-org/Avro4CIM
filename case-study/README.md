@@ -81,7 +81,7 @@ Unlike XML Schema or JSON Schema which focus primarily on validation, Avro schem
 
 ## Apache Avro Schema Limitations -vs- JSON and XSD Schema Specifications
 
-In view of the primary objectives and purposes just outlined, Apache Avro schemas do not entirely align with more traditional schema specifications and therefore do not support the full breadth of features one might be accustomed to. The following outline specific limitations:
+In view of the primary objectives and purposes just outlined, Apache Avro schemas do not entirely align with more traditional schema specifications and therefore do not support the full breadth of features one might be accustomed to. The following outlines specific limitations:
 
 **Validation Capabilities:** Avro schemas provide only basic type validation (is this field an integer? a string? an array?), whereas XSD supports rich validation rules including regular expression patterns, numeric ranges, string length constraints, enumerations, and complex cross-field validation. For example, XSD can enforce that an email field matches a specific pattern or that an age value falls between 0 and 150, while Avro simply validates that the field is a string or integer respectively. This means Avro schemas cannot express business rules or data constraints beyond structural type correctness.
 
@@ -207,7 +207,7 @@ eu.cim4.ap_voc.securityanalysisresult.SecurityAnalysisResult
 ```
 
 **Alternative Approach:**
-A flat namespace (all types in `eu.cim4.ap_voc.securityanalysisresult`) would be simpler but loses the organizational benefits of sub-packages. For profiles with multiple type categories (domain types, extensions, compound types), the hierarchical approach provides better structure and maintainability. Avro's limitation of type-level namespaces (not field-level like XML) means that field origins must be documented through the `modelReference` attribute rather than field-level namespace prefixes.
+A flat namespace (all types in `eu.cim4.ap_voc.securityanalysisresult`) would be simpler but loses the organizational benefits of sub-packages. For profiles with multiple type categories (domain types, extensions, compound types), the hierarchical approach provides better structure and maintainability. Avro's limitation of type-level namespaces (not field-level like XML) means that field origins must be documented through the custom `modelReference` annotation described next rather than field-level namespace prefixes.
 
 ### 3. Canonical Model Traceability Within Avro Schemas
 
