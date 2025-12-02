@@ -3,9 +3,9 @@
 ## Table of Contents
 - [1. UML Profiles Overview](#1-uml-profiles-overview)
   - [1.1. UML Diagram of the CSA 2.4 SAR Profile](#11-uml-diagram-of-the-csa-24-sar-profile)
-  - [1.2. SAR Profile Generate Apache Avro Schema](#12-sar-profile-generate-apache-avro-schema) 
+  - [1.2. SAR Apache Avro Schema](#12-sar-apache-avro-schema) 
   - [1.3. UML Diagram of the CSA 2.4 SAR EXTENDED Profile](#13-uml-diagram-of-the-csa-24-sar-extended-profile) 
-  - [1.4. SAR EXTENDED Profile Generate Apache Avro Schema](#14-sar-extended-profile-generate-apache-avro-schema)  
+  - [1.4. SAR EXTENDED Apache Avro Schema](#14-sar-extended-apache-avro-schema)  
 - [2. CIMTool Workflow for Generating Artifacts](#2-cimtool-workflow-for-generating-artifacts)
 - [3. Overview of Apache Avro](#3-overview-of-apache-avro)
 - [4. The Purpose of an Apache Avro Schema (.avsc)](#4-the-purpose-of-an-apache-avro-schema-avsc)
