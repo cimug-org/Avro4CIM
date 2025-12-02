@@ -353,7 +353,7 @@ For this CIM mapping to Apache Avro schema case study the CSA 2.4 Security Analy
 
 ### 1.4. SAR EXTENDED Apache Avro Schema
 
-The EXTENDED version includes additional classes for demonstration purposes (Location, OperationalLimit, OperationalLimitSet, OperationalLimitType with compound types). See [SecurityAnalysisResult_EXTENDED.avsc](./case-study/example-schemas/SecurityAnalysisResult_EXTENDED.md).
+The EXTENDED version includes additional classes for demonstration purposes (Location, OperationalLimit, OperationalLimitSet, OperationalLimitType with compound types). See [SecurityAnalysisResult_EXTENDED.avsc](./example-schemas/SecurityAnalysisResult_EXTENDED.md).
 
 ## 2. CIMTool Workflow for Generating Artifacts
 
