@@ -587,16 +587,12 @@ Below is a comprehensive table of programming languages with Avro code generatio
 | **Python** | `.` (dot) | `a-z A-Z 0-9 _` (each component is a valid identifier; cannot start with digit) | `com.acme.www.mycode` | Convention: all lowercase with underscores; no hyphens |
 | **C++** | `::` (double colon) | `a-z A-Z 0-9 _` (each component is a valid identifier) | `com::acme::www::mycode` | Namespace components follow C++ identifier rules; no dots; no dollar signs |
 | **C#** | `.` (dot) | `a-z A-Z 0-9 _` (each component is a valid identifier; typically PascalCase) | `Com.Acme.Www.MyCode` | Convention: PascalCase for each component; dots separate namespaces |
-| **JavaScript** | N/A | N/A (no native package system) | N/A | Uses module paths or objects; no formal package naming |
-| **TypeScript** | N/A | N/A (uses module paths) | N/A | Follows JavaScript; namespaces use dots in syntax but are compiled away |
-| **Go** | `/` (slash) | `a-z A-Z 0-9 _ - .` (import path components; directory-based) | `github.com/acme/mycode` | Import paths are URLs/file paths; package name (last component) follows identifier rules |
-| **Rust** | `::` (double colon) | `a-z 0-9 _` (lowercase letters, digits, underscores only; cannot start with digit) | `com_acme_www_mycode` or `com::acme::www::mycode` | Convention: snake_case; crate names use hyphens but convert to underscores in code |
 | **PHP** | `\` (backslash) | `a-z A-Z 0-9 _` (each component is a valid identifier) | `Com\Acme\Www\MyCode` | Convention: PascalCase for each component; backslash separates namespaces |
 | **Ruby** | `::` (double colon) | `a-z A-Z 0-9 _` (each component must start with uppercase - modules/classes) | `Com::Acme::Www::MyCode` | Convention: PascalCase (constants); each component is a module/class name |
 | **Scala** | `.` (dot) | `a-z A-Z 0-9 _ $` (follows Java package conventions) | `com.acme.www.mycode` | Convention: all lowercase like Java; fully compatible with Java packages |
 | **Perl** | `::` (double colon) | `a-z A-Z 0-9 _` (each component is a valid identifier) | `Com::Acme::Www::MyCode` | Convention: PascalCase for each component; represents nested packages |
 
-**Characters Universally Allowed in Package Components:**
+**Rules for Implementation for this Case Study:**
 
 | Character Type | Status | Notes |
 |----------------|--------|-------|
@@ -604,15 +600,7 @@ Below is a comprehensive table of programming languages with Avro code generatio
 | Uppercase letters (A-Z) | ✅ Most languages | Required in Ruby, C#, PHP; discouraged in Java, Python |
 | Digits (0-9) | ⚠️ Not as first char | Allowed in subsequent positions in all languages |
 | Underscore (_) | ✅ All languages | Safe separator within components |
-| Hyphen (-) | ⚠️ Very limited | Only Go import paths; not in actual code |
-| Dot (.) | Only as separator | In Java, Python, C#, Scala; not within components |
-| Double colon (::) | Only as separator | In C++, Rust, Ruby, Perl; not within components |
-| Dollar ($) | ❌ Avoid | Java/Scala allow but not conventional in packages |
 
-**Rules for Implementation for this Case Study**
-
-- Use only lowercase letters (a-z) in each component
-- Use underscores (_) to separate words within a component
 
 **Alternative Approach:**
 A flat namespace (all types in `eu.cim4.ap_voc.securityanalysisresult`) would be simpler but loses the organizational benefits of sub-packages. For profiles with multiple type categories (domain types, extensions, compound types), the hierarchical approach provides better structure and maintainability. Avro's limitation of type-level namespaces (not field-level like XML) means that field origins must be documented through the custom `modelReference` annotation described next rather than field-level namespace prefixes.
