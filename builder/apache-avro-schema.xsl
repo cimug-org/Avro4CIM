@@ -15,32 +15,32 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<xsl:stylesheet exclude-result-prefixes="a" version="3.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:a="http://langdale.com.au/2005/Message#" xmlns="http://langdale.com.au/2009/Indent" xmlns:map="http://www.w3.org/2005/xpath-functions/map" xmlns:fn="http://www.ucaiug.org/functions">
+<xsl:stylesheet exclude-result-prefixes="a" version="3.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:a="http://langdale.com.au/2005/Message#" xmlns="http://langdale.com.au/2009/Indent" xmlns:map="http://www.w3.org/2005/xpath-functions/map" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:uca-fn="http://www.ucaiug.org/functions">
 
     <xsl:output xmlns:xalan="http://xml.apache.org/xslt" method="xml" omit-xml-declaration="no" indent="yes" encoding="utf-8" xalan:indent-amount="4" />
     <xsl:param name="copyright-single-line" />
 	<xsl:param name="version"/>
 	<xsl:param name="baseURI"/>
 	<xsl:param name="envelope">Profile</xsl:param>
-	<xsl:variable name="package_prefix" select="concat(fn:baseuri-to-package($baseURI), '.', lower-case(replace($envelope, '- ', '_')))"/>
+	<xsl:variable name="package_prefix" select="fn:concat(uca-fn:baseuri-to-package($baseURI), '.', fn:lower-case(fn:replace($envelope, '- ', '_')))"/>
 	<!-- The following <xsl:text> element is our newline representation where needed. -->
     <xsl:variable name="newline"><xsl:text>
 </xsl:text></xsl:variable>
 	
 	<!-- 
-		Function: fn:baseuri-to-package
+		Function: uca-fn:baseuri-to-package
 		Purpose: Converts a baseURI into a package name by reversing the order of dot-separated tokens in a string
 		Parameters: 
 			$baseURI - The baseURI to reverse (e.g., "a.b.c" becomes "c.b.a")
 		Returns: xs:string - The reversed text
-		Example: fn:convert-baseuri-to-package('https://ap-voc.cim4.eu/SecurityAnalysisResult/2.4#') returns 'eu.cim4.ap-voc'
+		Example: uca-fn:convert-baseuri-to-package('https://ap-voc.cim4.eu/SecurityAnalysisResult/2.4#') returns 'eu.cim4.ap-voc'
 	-->
-	<xsl:function name="fn:baseuri-to-package" as="xs:string">
+	<xsl:function name="uca-fn:baseuri-to-package" as="xs:string">
 		<xsl:param name="text" as="xs:string"/>
 		<xsl:variable name="package-text" as="xs:string">
 			<xsl:choose>
 				<xsl:when test="contains($text, '://')">
-					<xsl:value-of select="substring-before(substring-after(lower-case(replace($text, '-', '_')),'://'),'/')"/>
+					<xsl:value-of select="fn:substring-before(fn:substring-after(fn:lower-case(fn:replace($text, '-', '_')),'://'),'/')"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of select="$text"/>
@@ -51,7 +51,7 @@
 		<xsl:choose>
 			<xsl:when test="contains($text, '.')">
 				<!-- Recursive call for the part after the first dot -->
-				<xsl:variable name="reversed-tail" select="fn:baseuri-to-package(substring-after($package-text, '.'))"/>
+				<xsl:variable name="reversed-tail" select="uca-fn:baseuri-to-package(substring-after($package-text, '.'))"/>
 				<!-- Concatenate: reversed tail + dot + first token -->
 				<xsl:sequence select="concat($reversed-tail, '.', substring-before($package-text, '.'))"/>
 			</xsl:when>
@@ -63,14 +63,14 @@
 	</xsl:function>
 
 	<!-- 
-		Function: fn:fully-qualified-class
+		Function: uca-fn:fully-qualified-class
 		Purpose: Generates a fully qualified class name with package prefix
 		Parameters: 
 			$element - The element (a:Root or other) to generate the fully qualified class name from
 			$package-prefix - The package prefix to prepend to the package/class name
 		Returns: xs:string - The fully qualified class name
 	-->
-	<xsl:function name="fn:fully-qualified-class" as="xs:string">
+	<xsl:function name="uca-fn:fully-qualified-class" as="xs:string">
 		<xsl:param name="element" as="element()"/>
 		<xsl:param name="package-prefix" as="xs:string"/>
 		
@@ -90,34 +90,38 @@
 		"/>
 		
 		<!-- Build the fully qualified name -->
-		<xsl:sequence select="
+		<xsl:variable name="result" select="
 			if ($element/@package)
 			then concat($package-prefix, '.', lower-case($element/@package), '.', $class-name)
 			else concat($package-prefix, '.', $class-name)
 		"/>
+
+		<xsl:sequence select="$result"/>
 	</xsl:function>
 	
 	<!-- 
-		Function: fn:package-name
+		Function: uca-fn:package-name
 		Purpose: Generates a package name based on the element's @package attribute
 		Parameters: 
 			$element - The element to get the package name from
 			$package-prefix - The prefix to prepend to the package name
 		Returns: xs:string - The full package name
 	-->
-	<xsl:function name="fn:package-name" as="xs:string">
+	<xsl:function name="uca-fn:package-name" as="xs:string">
 		<xsl:param name="element" as="element()"/>
 		<xsl:param name="package-prefix" as="xs:string"/>
 		
-		<xsl:sequence select="
+		<xsl:variable name="result" select="
 			if ($element/@package)
 			then concat($package-prefix, '.', lower-case($element/@package))
 			else $package-prefix
 		"/>
+		
+		<xsl:sequence select="$result"/>
 	</xsl:function>
-	
+
 	<!-- 
-		Function: fn:to-avro-type
+		Function: uca-fn:to-avro-type
 		Purpose: Maps XSD types to Apache Avro primitive types or logical types
 		Parameters: 
 			$xstype - The XSD type name to map
@@ -126,47 +130,70 @@
 		Note: int = 32-bit, long = 64-bit; prefer long for timestamps and ids.
 		
 		Special cases:
-		- date: Uses custom logicalType  (i.e. {"type": "int", "logicalType": "date"} )
-		- time: Uses custom logicalType  (i.e. {"type": "int", "logicalType": "time-millis"} )
-		- dateTime: Uses custom logicalType  (i.e. {"type": "long", "logicalType": "timestamp-millis"} )
-		- duration: Uses custom logicalType (i.e. {"type": "string", "logicalType": "iso8601-duration"} ) "iso8601-duration" (not official Avro)
-		  because Avro has no built-in duration type (months/years vary in length)
-		- gMonthDay: Uses a record structure with month and day fields  (i.e. {"type": {"type": "record", "name": "MonthDay", "fields": [{"name": "month", "type": "int"},{"name": "day", "type": "int"}]}} )
-		  because Avro has no built-in equivalent
+		- duration: Uses custom logicalType because Avro has no built-in duration type (months/years vary in length)
+		- gMonthDay: Uses a record structure with month and day fields because Avro has no built-in equivalent
 	-->
-	<xsl:function name="fn:get-avro-type" as="xs:string">
-		<xsl:param name="xstype" as="xs:string"/>
+	<xsl:function name="uca-fn:get-avro-type" as="xs:string">
+		<xsl:param name="xstype"/>
 		
-		<xsl:sequence select="
-			if ($xstype = 'string') then '&quot;string&quot;'
-			else if ($xstype = 'normalizedString') then '&quot;string&quot;'
-			else if ($xstype = 'token') then '&quot;string&quot;'
-			else if ($xstype = 'NMTOKEN') then '&quot;string&quot;'
-			else if ($xstype = 'anyURI') then '&quot;string&quot;'
-			else if ($xstype = 'NCName') then '&quot;string&quot;'
-			else if ($xstype = 'Name') then '&quot;string&quot;'
-			else if ($xstype = ('integer', 'int', 'short')) then '&quot;int&quot;'
-			else if ($xstype = 'long') then '&quot;long&quot;'
-			else if ($xstype = 'float') then '&quot;float&quot;'
-			else if ($xstype = ('double', 'decimal', 'number')) then '&quot;double&quot;'
-			else if ($xstype = 'boolean') then '&quot;boolean&quot;'
-			else if ($xstype = 'dateTime') then '{&quot;type&quot;: &quot;long&quot;, &quot;logicalType&quot;: &quot;timestamp-millis&quot;}'
-			else if ($xstype = 'date') then '{&quot;type&quot;: &quot;int&quot;, &quot;logicalType&quot;: &quot;date&quot;}'
-			else if ($xstype = 'time') then '{&quot;type&quot;: &quot;int&quot;, &quot;logicalType&quot;: &quot;time-millis&quot;}'
-			else if ($xstype = 'duration') then '{&quot;type&quot;: &quot;string&quot;, &quot;logicalType&quot;: &quot;iso8601-duration&quot;}'
-			else if ($xstype = 'gMonthDay') then '{&quot;type&quot;: {&quot;type&quot;: &quot;record&quot;, &quot;name&quot;: &quot;MonthDay&quot;, &quot;fields&quot;: [{&quot;name&quot;: &quot;month&quot;, &quot;type&quot;: &quot;int&quot;},{&quot;name&quot;: &quot;day&quot;, &quot;type&quot;: &quot;int&quot;}]}}'
-			else $xstype
-		"/>
+		<!-- int = 32-bit, long = 64-bit; prefer long for timestamps and ids. -->
+		<xsl:variable name="avro-type-string">
+			<xsl:choose>
+				<xsl:when test="$xstype = 'string'">"string"</xsl:when>
+				<xsl:when test="$xstype = 'normalizedString'">"string"</xsl:when>
+				<xsl:when test="$xstype = 'token'">"string"</xsl:when>
+				<xsl:when test="$xstype = 'NMTOKEN'">"string"</xsl:when>
+				<xsl:when test="$xstype = 'anyURI'">"string"</xsl:when>
+				<xsl:when test="$xstype = 'NCName'">"string"</xsl:when>
+				<xsl:when test="$xstype = 'Name'">"string"</xsl:when>
+				<xsl:when test="$xstype = 'integer' or $xstype = 'int' or $xstype = 'short'">"int"</xsl:when>
+				<xsl:when test="$xstype = 'long'">"long"</xsl:when>
+				<xsl:when test="$xstype = 'float'">"float"</xsl:when>
+				<xsl:when test="$xstype = 'double' or $xstype = 'decimal' or $xstype = 'number'">"double"</xsl:when>
+				<xsl:when test="$xstype = 'boolean'">"boolean"</xsl:when>
+				<xsl:when test="$xstype = 'dateTime'">{"type": "long", "logicalType": "timestamp-millis"}</xsl:when>
+				<xsl:when test="$xstype = 'date'">{"type": "int", "logicalType": "date"}</xsl:when>
+				<xsl:when test="$xstype = 'time'">{"type": "int", "logicalType": "time-millis"}</xsl:when>
+				<!--
+				Note that Apache Avro does not have a built-in logicalType equivalent to XSD duration (xs:duration).
+	
+				Why? Avro's logical types are deliberately narrow: they cover dates, times, timestamps, decimal, and
+				a few UUID-like identifiers. There's nothing built-in for:
+	
+					- ISO-8601 durations like "P3Y6M4DT12H30M5S"
+					- Arbitrary time spans with months/years where calendar context matters
+	
+				That's because durations in XSD (and ISO-8601) are not fixed units — months and years vary in length — so
+				they can't be represented unambiguously as a simple integer count of milliseconds or days. Avro's philosophy
+				is: if a type needs more context than the stored value can provide, "it stays in application space".
+	
+				Here a custom logicalType is used that is not officially recognized by Avro — but for which we can enforce
+				meaning in our tooling.
+				-->
+				<xsl:when test="$xstype = 'duration'">{"type": "string", "logicalType": "iso8601-duration"}</xsl:when>
+				<!--
+				Note that Apache Avro does not have a built-in logicalType equivalent to XSD duration (xs:gMonthDay).
+				Therefore the below custom logicalType convention for representing the 'gMonthDay'.
+				-->
+				<xsl:when test="$xstype = 'gMonthDay'">{"type": {"type": "record", "name": "MonthDay", "fields": [{"name": "month", "type": "int"},{"name": "day", "type": "int"}]}}</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$xstype"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
+		<!-- Convert the string variable to a sequence and return it -->
+		<xsl:sequence select="$avro-type-string"/>
 	</xsl:function>
-
+	
 	<!-- Single parameter version (starts count at 0) -->
-	<xsl:function name="fn:count-fields" as="xs:integer">
+	<xsl:function name="uca-fn:count-fields" as="xs:integer">
 		<xsl:param name="element" as="element()"/>
-		<xsl:sequence select="fn:count-fields($element, 0)"/>
+		<xsl:sequence select="uca-fn:count-fields($element, 0)"/>
 	</xsl:function>
 	
 	<!-- Two parameter version (for recursion) -->
-	<xsl:function name="fn:count-fields" as="xs:integer">
+	<xsl:function name="uca-fn:count-fields" as="xs:integer">
 		<xsl:param name="element" as="element()"/>
 		<xsl:param name="count" as="xs:integer"/>
 		
@@ -174,32 +201,35 @@
 			$count + count($element/(a:Complex|a:Enumerated|a:Compound|a:SimpleEnumerated|a:Simple|a:Domain|a:Instance|a:Reference|a:Choice))
 		"/>
 		
-		<xsl:sequence select="
+		<xsl:variable name="result-count" select="
 			if ($element/a:SuperType) then
 				let $baseClass := $element/a:SuperType/@baseClass,
 					$parent := root($element)/*/node()[@baseClass = $baseClass]
 				return 
 					if ($parent) 
-					then fn:count-fields($parent, $total-count)
+					then uca-fn:count-fields($parent, $total-count)
 					else $total-count
 			else
 				$total-count
 		"/>
+		
+		<!-- Convert the integer variable to a sequence and return it -->
+		<xsl:sequence select="$result-count"/>
 	</xsl:function>
 	
 	<!-- 
-		Function: fn:inherits-from
+		Function: uca-fn:inherits-from
 		Purpose: Checks if an element inherits from a given baseClass (recursively checks SuperType hierarchy)
 		Parameters: 
 			$element - The element to check (Root or ComplexType)
 			$targetBaseClass - The baseClass to check for in the inheritance hierarchy
 		Returns: xs:boolean - true if element inherits from targetBaseClass, false otherwise
 	-->
-	<xsl:function name="fn:inherits-from" as="xs:boolean">
+	<xsl:function name="uca-fn:inherits-from" as="xs:boolean">
 		<xsl:param name="element" as="element()"/>
 		<xsl:param name="targetBaseClass" as="xs:string"/>
 		
-		<xsl:sequence select="
+		<xsl:variable name="result" select="
 			if ($element/@baseClass = $targetBaseClass) then
 				(: Direct match - this element has the target baseClass :)
 				true()
@@ -209,16 +239,18 @@
 					$parent := (root($element)//a:Root[@baseClass = $superBaseClass]|root($element)//a:ComplexType[@baseClass = $superBaseClass])[1]
 				return 
 					if ($parent) 
-					then fn:inherits-from($parent, $targetBaseClass)
+					then uca-fn:inherits-from($parent, $targetBaseClass)
 					else false()
 			else
 				(: No match and no parent - doesn't inherit :)
 				false()
 		"/>
+		
+		<xsl:sequence select="$result"/>
 	</xsl:function>
 	
 	<!-- 
-		Function: fn:model-reference
+		Function: uca-fn:model-reference
 		Purpose: Gets the model reference for an element (dataType, baseClass, or baseProperty)
 		Parameters: 
 			$element - The element to get the model reference from
@@ -229,50 +261,54 @@
 		- EnumeratedType/CompoundType/ComplexType/Root: uses @baseClass
 		- Other elements (attributes/associations): uses @baseProperty (if present)
 	-->
-	<xsl:function name="fn:model-reference" as="xs:string">
+	<xsl:function name="uca-fn:model-reference" as="xs:string">
 		<xsl:param name="element" as="element()"/>
 		
-		<xsl:sequence select="
+		<xsl:variable name="result" select="
 			if ($element/self::a:SimpleType) then
-				string($element/@dataType)
+				fn:string($element/@dataType)
 			else if ($element/self::a:EnumeratedType or 
 					 $element/self::a:CompoundType or 
 					 $element/self::a:ComplexType or 
 					 $element/self::a:Root) then
-				string($element/@baseClass)
+				fn:string($element/@baseClass)
 			else if ($element/@baseProperty) then
-				string($element/@baseProperty)
+				fn:string($element/@baseProperty)
 			else
 				''
 		"/>
+		
+		<xsl:sequence select="$result"/>
 	</xsl:function>
 	
 	<!-- 
-		Function: fn:get-union-dependencies
+		Function: uca-fn:get-union-dependencies
 		Purpose: Gets all concrete subclasses (Root elements) that inherit from an abstract class (ComplexType)
 				 These represent the union members in Avro schema.
 		Parameters: 
 			$abstract-element - The ComplexType element (abstract class)
 		Returns: xs:string* - Sequence of baseClass values for all concrete subclasses
 	-->
-	<xsl:function name="fn:get-union-dependencies" as="xs:string*">
+	<xsl:function name="uca-fn:get-union-dependencies" as="xs:string*">
 		<xsl:param name="abstract-element" as="element()"/>
 		
 		<xsl:variable name="abstract-baseClass" select="string($abstract-element/@baseClass)"/>
 		
-		<xsl:sequence select="
+		<xsl:variable name="result" select="
 			distinct-values(
 				for $root in root($abstract-element)//a:Root
 				return
-					if (fn:inherits-from($root, $abstract-baseClass))
+					if (uca-fn:inherits-from($root, $abstract-baseClass))
 					then string($root/@baseClass)
 					else ()
 			)
 		"/>
+		
+		<xsl:sequence select="$result"/>
 	</xsl:function>
 
 	<!-- 
-		Function: fn:get-dependencies
+		Function: uca-fn:get-dependencies
 		Purpose: Gets all distinct @baseClass values from child elements, 
 				 including inherited dependencies from SuperType hierarchy.
 				 For Instance/Reference to abstract classes (ComplexType), includes union members.
@@ -282,11 +318,11 @@
 			$exclusion-map - Map where keys are baseClass values to exclude
 		Returns: xs:string* - Sequence of baseClass values (filtered)
 	-->
-	<xsl:function name="fn:get-dependencies" as="xs:string*">
+	<xsl:function name="uca-fn:get-dependencies" as="xs:string*">
 		<xsl:param name="element" as="element()"/>
 		<xsl:param name="exclusion-map" as="map(xs:string, xs:boolean)"/>
 		
-		<xsl:sequence select="
+		<xsl:variable name="result" select="
 			distinct-values(
 				(
 					(: Dependencies from non-Instance/Reference/InverseInstance/InverseReference children. These we need to exclude. :)
@@ -300,7 +336,7 @@
 						return
 							if ($referenced-element/self::a:ComplexType) then
 								(: Abstract class - get union members (concrete subclasses) :)
-								fn:get-union-dependencies($referenced-element)[not(map:contains($exclusion-map, .))]
+								uca-fn:get-union-dependencies($referenced-element)[not(map:contains($exclusion-map, .))]
 							else if ($referenced-element/self::a:Root) then
 								(: Concrete class - use directly :)
 								if (not(map:contains($exclusion-map, $assoc-baseClass))) then
@@ -320,7 +356,7 @@
 							$parent := root($element)/*/node()[@baseClass = $supertype_baseClass]
 						return
 							if ($parent) then
-								fn:get-dependencies($parent, $exclusion-map)
+								uca-fn:get-dependencies($parent, $exclusion-map)
 							else
 								()
 					else
@@ -328,10 +364,12 @@
 				)
 			)
 		"/>
+		
+		<xsl:sequence select="$result"/>
 	</xsl:function>
 
     <!-- 
-        Function: fn:build-dependencies-map
+        Function: uca-fn:build-dependencies-map
         Purpose: Creates a map of type dependencies for the provided elements
         Parameters: 
             $elements - Node-set of elements to process
@@ -340,23 +378,25 @@
                  - Key: baseClass of each element
                  - Value: Sequence of baseClass values from child elements (filtered)
     -->
-    <xsl:function name="fn:build-dependencies-map" as="map(xs:string, xs:string*)">
+    <xsl:function name="uca-fn:build-dependencies-map" as="map(xs:string, xs:string*)">
         <xsl:param name="elements" as="element()*"/>
         <xsl:param name="exclusion-map" as="map(xs:string, xs:boolean)"/>
         
-        <xsl:sequence select="
+        <xsl:variable name="result" select="
             map:merge(
                 for $type in $elements[@baseClass]
                 return map:entry(
                     string($type/@baseClass),
-                    fn:get-dependencies($type, $exclusion-map)
+                    uca-fn:get-dependencies($type, $exclusion-map)
                 )
             )
         "/>
+        
+        <xsl:sequence select="$result"/>
     </xsl:function>
     
 	<!-- 
-		Function: fn:create-exclusions-map
+		Function: uca-fn:create-exclusions-map
 		Purpose: Creates a map for excluding types based on their @baseClass attribute
 		Parameters: 
 			$elements - Node-set of elements whose baseClass should be excluded
@@ -364,36 +404,38 @@
 				 - Key: baseClass attribute value
 				 - Value: true()
 	-->
-	<xsl:function name="fn:create-exclusions-map" as="map(xs:string, xs:boolean)">
+	<xsl:function name="uca-fn:create-exclusions-map" as="map(xs:string, xs:boolean)">
 		<xsl:param name="elements" as="element()*"/>
 		
-		<xsl:sequence select="
+		<xsl:variable name="result" select="
 			map:merge(
 				for $element in $elements[@baseClass]
 				return map:entry(string($element/@baseClass), true())
 			)
 		"/>
+		
+		<xsl:sequence select="$result"/>
 	</xsl:function>
 	
 	<!-- 
-		Function: fn:is-abstract-with-subclasses
+		Function: uca-fn:is-abstract-with-subclasses
 		Purpose: Checks if a baseClass references an abstract class (ComplexType) that has concrete subclasses (Roots)
 		Parameters: 
 			$baseClass - The baseClass URI to check
 		Returns: xs:boolean - true if it's an abstract class with concrete subclasses, false otherwise
 	-->
-	<xsl:function name="fn:is-abstract-with-subclasses" as="xs:boolean">
+	<xsl:function name="uca-fn:is-abstract-with-subclasses" as="xs:boolean">
 		<xsl:param name="baseClass" as="xs:string"/>
 		
 		<xsl:variable name="is-complex-type" select="exists(root()//a:ComplexType[@baseClass = $baseClass])"/>
 		
-		<xsl:sequence select="
+		<xsl:variable name="result" select="
 			if ($is-complex-type) then
 				(: Count concrete subclasses :)
 				let $concrete-count := count(
 					for $root in root()//a:Root
 					return
-						if (fn:inherits-from($root, $baseClass))
+						if (uca-fn:inherits-from($root, $baseClass))
 						then $root
 						else ()
 				)
@@ -401,28 +443,32 @@
 			else
 				false()
 		"/>
+		
+		<xsl:sequence select="$result"/>
 	</xsl:function>
 
 	<!-- 
-		Function: fn:topological-sort
+		Function: uca-fn:topological-sort
 		Purpose: Sorts elements in topological order based on their dependencies.
 				 Elements with no dependencies come first, then elements that depend only on 
 				 already-processed elements, and so on.
 				 For circular dependencies, falls back to document order.
 		Parameters: 
 			$elements - The elements to sort (e.g., //a:CompoundType or //a:Root)
-			$deps-map - Dependency map created by fn:build-dependencies-map
+			$deps-map - Dependency map created by uca-fn:build-dependencies-map
 		Returns: element()* - Sequence of elements in topological (dependency) order
 	-->
-	<xsl:function name="fn:topological-sort" as="element()*">
+	<xsl:function name="uca-fn:topological-sort" as="element()*">
 		<xsl:param name="elements" as="element()*"/>
 		<xsl:param name="deps-map" as="map(xs:string, xs:string*)"/>
 		
-		<xsl:sequence select="fn:topological-sort-helper($elements, $deps-map, ())"/>
+		<xsl:variable name="result" select="uca-fn:topological-sort-helper($elements, $deps-map, ())"/>
+		
+		<xsl:sequence select="$result"/>
 	</xsl:function>
 
 	<!-- 
-		Function: fn:topological-sort-helper
+		Function: uca-fn:topological-sort-helper
 		Purpose: Recursive helper for topological sort with accumulated results
 		Parameters: 
 			$remaining - Elements not yet sorted
@@ -430,13 +476,13 @@
 			$sorted - Accumulated sorted elements
 		Returns: element()* - Fully sorted sequence
 	-->
-	<xsl:function name="fn:topological-sort-helper" as="element()*">
+	<xsl:function name="uca-fn:topological-sort-helper" as="element()*">
 		<xsl:param name="remaining" as="element()*"/>
 		<xsl:param name="deps-map" as="map(xs:string, xs:string*)"/>
 		<xsl:param name="sorted" as="element()*"/>
 		
 		<xsl:choose>
-			<xsl:when test="empty($remaining)">
+			<xsl:when test="fn:empty($remaining)">
 				<!-- Base case: all elements sorted -->
 				<xsl:sequence select="$sorted"/>
 			</xsl:when>
@@ -451,7 +497,7 @@
 				<xsl:variable name="ready-elements" select="
 					for $elem in $remaining
 					return
-						let $elem-baseClass := string($elem/@baseClass),
+						let $elem-baseClass := fn:string($elem/@baseClass),
 							$elem-deps := $deps-map($elem-baseClass)
 						return
 							if (every $dep in $elem-deps satisfies $dep = $sorted-baseClasses) then
@@ -461,23 +507,25 @@
 				"/>
 				
 				<xsl:choose>
-					<xsl:when test="exists($ready-elements)">
+					<xsl:when test="fn:exists($ready-elements)">
 						<!-- Process ready elements and recurse -->
-						<xsl:variable name="new-sorted" select="($sorted, $ready-elements)"/>
+						<xsl:variable name="new-sorted" select="$sorted, $ready-elements"/>
 						<xsl:variable name="new-remaining" select="$remaining except $ready-elements"/>
-						<xsl:sequence select="fn:topological-sort-helper($new-remaining, $deps-map, $new-sorted)"/>
+						<xsl:sequence select="uca-fn:topological-sort-helper($new-remaining, $deps-map, $new-sorted)"/>
 					</xsl:when>
 					<xsl:otherwise>
 						<!-- Circular dependency detected - fall back to document order -->
-						<xsl:sequence select="($sorted, $remaining)"/>
+						<xsl:sequence select="$sorted"/>
+						<xsl:sequence select="$remaining"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
+		
 	</xsl:function>
 
 	<!-- 
-		Function: fn:get-root-fields
+		Function: uca-fn:get-root-fields
 		Purpose: Identifies top-level Root classes that are never referenced by other classes.
 				 These are the true "message roots" that should appear at the top level of the schema.
 				 Handles both direct references and references through abstract classes (unions).
@@ -485,11 +533,8 @@
 			$all-roots - All a:Root elements in the profile
 		Returns: element()* - Sequence of Root elements that are never referenced by any other class
 	-->
-	<xsl:function name="fn:get-root-fields" as="element()*">
+	<xsl:function name="uca-fn:get-root-fields" as="element()*">
 		<xsl:param name="all-roots" as="element()*"/>
-		
-		<xsl:message select="'=== fn:get-root-fields Debug ==='"/>
-		<xsl:message select="concat('Total Roots: ', count($all-roots))"/>
 		
 		<!-- Build a set of all baseClass values referenced by Instance/Reference in ANY Root or ComplexType -->
 		<xsl:variable name="direct-references" select="
@@ -501,11 +546,6 @@
 			)
 		"/>
 		
-		<xsl:message select="concat('Direct references count: ', count($direct-references))"/>
-		<xsl:for-each select="$direct-references">
-			<xsl:message select="concat('  Direct ref: ', .)"/>
-		</xsl:for-each>
-		
 		<!-- For each direct reference, find all Root classes that inherit from it -->
 		<xsl:variable name="indirect-references" select="
 			distinct-values(
@@ -514,21 +554,14 @@
 					(: Get all Root classes that inherit from this reference :)
 					for $root in $all-roots
 					return
-						if (fn:inherits-from($root, $ref))
+						if (uca-fn:inherits-from($root, $ref))
 						then string($root/@baseClass)
 						else ()
 			)
 		"/>
 		
-		<xsl:message select="concat('Indirect references count: ', count($indirect-references))"/>
-		<xsl:for-each select="$indirect-references">
-			<xsl:message select="concat('  Indirect ref: ', .)"/>
-		</xsl:for-each>
-		
 		<!-- Combine direct and indirect references -->
 		<xsl:variable name="all-references" select="($direct-references, $indirect-references)"/>
-		
-		<xsl:message select="concat('Total references (combined): ', count(distinct-values($all-references)))"/>
 		
 		<!-- Return roots whose baseClass is NOT in the referenced set -->
 		<xsl:variable name="result" select="
@@ -538,11 +571,6 @@
 				then $root
 				else ()
 		"/>
-		
-		<xsl:message select="concat('Root fields result count: ', count($result))"/>
-		<xsl:for-each select="$result">
-			<xsl:message select="concat('  Root field: ', @name, ' (', @baseClass, ')')"/>
-		</xsl:for-each>
 		
 		<xsl:sequence select="$result"/>
 	</xsl:function>
@@ -610,26 +638,26 @@
 				<xsl:apply-templates select="a:EnumeratedType"/>
 				
 				<!-- Step 1: Create exclusion map for EnumeratedTypes ONLY -->
-				<xsl:variable name="compound-exclusions" select="fn:create-exclusions-map(//a:EnumeratedType)"/>
+				<xsl:variable name="compound-exclusions" select="uca-fn:create-exclusions-map(//a:EnumeratedType)"/>
 				
 				<!-- Step 2: Create dependency map for CompoundTypes. Note we exclude any dependencies to enumerations since they've been processed. -->
-				<xsl:variable name="compound-deps-map" select="fn:build-dependencies-map(//a:CompoundType, $compound-exclusions)"/>
+				<xsl:variable name="compound-deps-map" select="uca-fn:build-dependencies-map(//a:CompoundType, $compound-exclusions)"/>
 
 				<!-- Step 3: Process CompoundTypes in correct dependency order. -->
-				<xsl:variable name="sorted-compound-types" select="fn:topological-sort(//a:CompoundType, $compound-deps-map)"/>
+				<xsl:variable name="sorted-compound-types" select="uca-fn:topological-sort(//a:CompoundType, $compound-deps-map)"/>
 				<xsl:apply-templates select="$sorted-compound-types"/>
 				
 				<!-- Step 4: Create exclusion map for EnumeratedTypes AND CompoundTypes (already processed) -->
-				<xsl:variable name="root-exclusions" select="fn:create-exclusions-map(//a:EnumeratedType|//a:CompoundType)"/>
+				<xsl:variable name="root-exclusions" select="uca-fn:create-exclusions-map(//a:EnumeratedType|//a:CompoundType)"/>
 				
 				<!-- Step 5: Finally, we create dependency map for Root types excluding EnumeratedTypes and CompoundTypes -->
 				<!-- Note that we do not include a:ComplexType as they are abstract and Avro does not support inheritance -->
 				<!-- and instead the inheritance hierarchy is "flattened" and all attributes and associations are in the  -->
 				<!-- concrete (i.e. a:Root) classes.                                                                      -->
-				<xsl:variable name="root-deps-map" select="fn:build-dependencies-map(//a:Root, $root-exclusions)"/>
+				<xsl:variable name="root-deps-map" select="uca-fn:build-dependencies-map(//a:Root, $root-exclusions)"/>
 				
 				<!-- Step 6: Process Root elements in correct dependency order -->
-				<xsl:variable name="sorted-root-types" select="fn:topological-sort(//a:Root, $root-deps-map)"/>
+				<xsl:variable name="sorted-root-types" select="uca-fn:topological-sort(//a:Root, $root-deps-map)"/>
 				<xsl:apply-templates select="$sorted-root-types"/>
 				
 				<!-- The final step is to create the 'document wrapper' derived from the name of the profile -->
@@ -637,22 +665,44 @@
 					<xsl:if test="$copyright-single-line and $copyright-single-line != ''">
 						<item>"copyright": "<xsl:value-of select="$copyright-single-line" disable-output-escaping="yes"/>"</item>			
 					</xsl:if>
+					<item>"generator": "Generated by CIMTool https://cimtool.ucaiug.io"</item>
+					<list begin="&quot;header&quot;: {{" indent="    " delim="," end="}}">
+						<item>"metaDoc": "Abstract profile this schema implements (DX-PROF prof:Profile):"</item>
+						<item>"profProfile": "<xsl:value-of select="$baseURI"/>"</item>
+						<item>"metaDoc": "Underlying standards the profile/schema conforms to (IEC etc.):"</item>
+						<item>"metaDoc": "Currently hardcoded until concensus is reached on how/where this will be specified/sourced from in tooling:"</item>
+						<list begin="&quot;dctConformsTo&quot;: [" indent="     " delim="," end="]">
+							<item>"urn:iso:std:iec:61970-301:ed-7:amd1"</item>
+							<item>"urn:iso:std:iec:61970-600-2:ed-1"</item>
+						</list>
+						<item>"metaDoc": "Where this schema was generated from (OWL/RDFS/SHACL/LinkML, etc.):"</item>
+						<list begin="&quot;dctSource&quot;: [" indent="     " delim="," end="]">
+							<item>"<xsl:value-of select="concat(substring-before($baseURI, '#'), '/owl')"/>"</item>
+						</list>
+						<item>"metaDoc": "Identity + version of this Avro schema itself:"</item>
+						<item>"metaDoc": "Currently hardcoded until concensus is reached on how/where this will be specified/sourced from in tooling:"</item>
+						<item>"schemaId": "https://schema-registry.example.com/subjects/cim-sv-dataset-value/versions/5"</item>
+						<item>"metaDoc": "Currently hardcoded to 1.0.0 until concensus is reached on how/where this will be specified/sourced from in tooling:"</item>
+						<item>"schemaVersion": "<xsl:value-of select="'1.0.0'"/>"</item>
+					</list>
+				
 					<item>"type": "record"</item>
 					<item>"name": "<xsl:value-of select="$envelope"/>"</item>
 					<item>"namespace": "<xsl:value-of select="$package_prefix"/>"</item>
 					<item>"doc": "<xsl:call-template name="annotate"/>"</item>
-					<xsl:if test="a:Root">
+
 						<list begin="&quot;fields&quot;: [" indent="     " delim="," end="]">
+							<list begin="{{" indent="     " delim="," end="}}">
+								<item>"name": "header"</item>
+								<item>"type": "<xsl:value-of select="concat($package_prefix, '.', 'Header')"/>"</item>
+								<item>"doc": "The standardized messaging header that must be included with each message compliant with this profile."</item>
+							</list>
+							
 							<!-- Get all Root elements -->
 							<xsl:variable name="all-roots" select="//a:Root"/>
 							
 							<!-- Find true root fields (never referenced) -->
-							<xsl:variable name="root-fields" select="fn:get-root-fields($all-roots)"/>
-						
-							<!-- Process only the root fields -->
-							<xsl:for-each select="$root-fields">
-								<xsl:message select="concat('Root field: ', @name, ' (', @baseClass, ')')"/>
-							</xsl:for-each>
+							<xsl:variable name="root-fields" select="uca-fn:get-root-fields($all-roots)"/>
 
 							<xsl:for-each select="$root-fields">
 								<list begin="{{" indent="     " delim="," end="}}">
@@ -661,14 +711,14 @@
 										<xsl:when test="@maxOccurs = 'unbounded' or @maxOccurs &gt; 1">
 											<list begin="&quot;type&quot;: {{" indent="    " delim="," end="}}">
 												<item>"type": "array"</item>
-												<item>"items": "<xsl:value-of select="fn:fully-qualified-class(., $package_prefix)"/>"</item>
+												<item>"items": "<xsl:value-of select="uca-fn:fully-qualified-class(., $package_prefix)"/>"</item>
 											</list>
 											<xsl:if test="@minOccurs = 0">
 												<item>"default": []</item>
 											</xsl:if>
 										</xsl:when>	
 										<xsl:otherwise>
-											<item>"type": "<xsl:value-of select="fn:fully-qualified-class(., $package_prefix)"/>"</item>
+											<item>"type": "<xsl:value-of select="uca-fn:fully-qualified-class(., $package_prefix)"/>"</item>
 										</xsl:otherwise>
 									</xsl:choose>
 									<item>"doc": "<xsl:call-template name="annotate"/>"</item>
@@ -683,7 +733,7 @@
 								</list>
 							</xsl:for-each>
 						</list>
-					</xsl:if>
+						
 				</list>		
 							
 			</list>
@@ -692,14 +742,14 @@
 				
 	<!-- Note that for AVRO schemas we don't generate Root classes that don't have any attributes. These are considered association references to "external" entities. -->
 	<xsl:template match="a:Root">
-		<xsl:variable name="fieldCount" select="fn:count-fields(.)"/>
+		<xsl:variable name="fieldCount" select="uca-fn:count-fields(.)"/>
 		<xsl:if test="$fieldCount > 0">
 			<list begin="{{" indent="     " delim="," end="}}">
 				<item>"type": "record"</item>
 				<item>"name": "<xsl:value-of select="@name"/>"</item>
-				<item>"namespace": "<xsl:value-of select="fn:package-name(., $package_prefix)"/>"</item>
+				<item>"namespace": "<xsl:value-of select="uca-fn:package-name(., $package_prefix)"/>"</item>
 				<item>"doc": "<xsl:call-template name="annotate"/>"</item>
-				<item>"modelReference": "<xsl:value-of select="fn:model-reference(.)"/>"</item>
+				<item>"modelReference": "<xsl:value-of select="uca-fn:model-reference(.)"/>"</item>
 				<list begin="&quot;fields&quot;: [" indent="     " delim="," end="]">
 					<xsl:call-template name="generate-fields"/>
 				</list>
@@ -711,9 +761,9 @@
 		<list begin="{{" indent="     " delim="," end="}}">
 			<item>"type": "record"</item>
 			<item>"name": "<xsl:value-of select="@name"/>"</item>
-			<item>"namespace": "<xsl:value-of select="fn:package-name(., $package_prefix)"/>"</item>
+			<item>"namespace": "<xsl:value-of select="uca-fn:package-name(., $package_prefix)"/>"</item>
 			<item>"doc": "<xsl:call-template name="annotate"/>"</item>
-			<item>"modelReference": "<xsl:value-of select="fn:model-reference(.)"/>"</item>
+			<item>"modelReference": "<xsl:value-of select="uca-fn:model-reference(.)"/>"</item>
 			<list begin="&quot;fields&quot;: [" indent="     " delim="," end="]">
 				<xsl:call-template name="generate-fields"/>
 			</list>
@@ -724,9 +774,9 @@
 		<list begin="{{" indent="     " delim="," end="}}">
 			<item>"type": "enum"</item>
 			<item>"name": "<xsl:value-of select="@name"/>"</item>
-			<item>"namespace": "<xsl:value-of select="fn:package-name(., $package_prefix)"/>"</item>
+			<item>"namespace": "<xsl:value-of select="uca-fn:package-name(., $package_prefix)"/>"</item>
 			<item>"doc": "<xsl:call-template name="annotate"/>"</item>
-			<item>"modelReference": "<xsl:value-of select="fn:model-reference(.)"/>"</item>
+			<item>"modelReference": "<xsl:value-of select="uca-fn:model-reference(.)"/>"</item>
 			<list begin="&quot;symbols&quot;: [" indent="     " delim="," end="]">
 				<xsl:for-each select="a:EnumeratedValue">
 					<item>"<xsl:value-of select="@name"/>"</item>
@@ -737,7 +787,7 @@
 	
 	<xsl:template match="a:Simple|a:Domain">
 		<list begin="{{" indent="     " delim="," end="}}">
-			<xsl:variable name="type" select="fn:get-avro-type(@xstype)"/>
+			<xsl:variable name="type" select="uca-fn:get-avro-type(@xstype)"/>
 			<item>"name": "<xsl:value-of select="@name"/>"</item>
 			<xsl:choose>
 				<xsl:when test="@maxOccurs = 'unbounded' or @maxOccurs &gt; 1">
@@ -762,7 +812,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 			<item>"doc": "<xsl:call-template name="annotate"/>"</item>
-			<item>"modelReference": "<xsl:value-of select="fn:model-reference(.)"/>"</item>
+			<item>"modelReference": "<xsl:value-of select="uca-fn:model-reference(.)"/>"</item>
 			<xsl:if test="@maxOccurs = 'unbounded' or @maxOccurs &gt; 1">
 				<xsl:if test="@minOccurs != 0">
 					<item>"minCardDoc": "[min cardinality = <xsl:value-of select="@minOccurs"/>] Application level validation will be required to ensure the array contains at least <xsl:value-of select="@minOccurs"/> <xsl:choose><xsl:when test="@minOccurs = 1"> item.</xsl:when><xsl:otherwise> items.</xsl:otherwise></xsl:choose>"</item>
@@ -781,7 +831,7 @@
 				<xsl:when test="@maxOccurs = 'unbounded' or @maxOccurs &gt; 1">
 					<list begin="&quot;type&quot;: {{" indent="    " delim="," end="}}">
 						<item>"type": "array"</item>
-						<item>"items": "<xsl:value-of select="fn:fully-qualified-class(., $package_prefix)"/>"</item>
+						<item>"items": "<xsl:value-of select="uca-fn:fully-qualified-class(., $package_prefix)"/>"</item>
 					</list>
 					<xsl:if test="@minOccurs = 0">
 						<item>"default": []</item>
@@ -792,18 +842,18 @@
 						<xsl:when test="@minOccurs = 0">
 							<list begin="&quot;type&quot;: [" indent="     " delim="," end="]">
 								<item>"null"</item>
-								<item>"<xsl:value-of select="fn:fully-qualified-class(., $package_prefix)"/>"</item>
+								<item>"<xsl:value-of select="uca-fn:fully-qualified-class(., $package_prefix)"/>"</item>
 							</list>
 							<item>"default": null</item>
 						</xsl:when>
 						<xsl:otherwise>
-							<item>"type": "<xsl:value-of select="fn:fully-qualified-class(., $package_prefix)"/>"</item>
+							<item>"type": "<xsl:value-of select="uca-fn:fully-qualified-class(., $package_prefix)"/>"</item>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:otherwise>
 			</xsl:choose>
 			<item>"doc": "<xsl:call-template name="annotate"/>"</item>
-			<item>"modelReference": "<xsl:value-of select="fn:model-reference(.)"/>"</item>
+			<item>"modelReference": "<xsl:value-of select="uca-fn:model-reference(.)"/>"</item>
 			<xsl:if test="@maxOccurs = 'unbounded' or @maxOccurs &gt; 1">
 				<xsl:if test="@minOccurs != 0">
 					<item>"minCardDoc": "[min cardinality = <xsl:value-of select="@minOccurs"/>] Application level validation will be required to ensure the array contains at least <xsl:value-of select="@minOccurs"/> <xsl:choose><xsl:when test="@minOccurs = 1"> item.</xsl:when><xsl:otherwise> items.</xsl:otherwise></xsl:choose>"</item>
@@ -818,8 +868,8 @@
 	<xsl:template match="a:Instance|a:Reference">
 		<xsl:variable name="baseClass" select="@baseClass"/>
 		<xsl:variable name="theClass" select="//a:Root[@baseClass = $baseClass]|//a:ComplexType[@baseClass = $baseClass]"/>
-		<xsl:variable name="fullyQualifiedClass" select="fn:fully-qualified-class($theClass, $package_prefix)"/>
-		<xsl:variable name="fieldCount" select="fn:count-fields($theClass)"/>
+		<xsl:variable name="fullyQualifiedClass" select="uca-fn:fully-qualified-class($theClass, $package_prefix)"/>
+		<xsl:variable name="fieldCount" select="uca-fn:count-fields($theClass)"/>
 		
 		<!-- Check if this references an abstract class (ComplexType) that has concrete subclasses -->
 		<xsl:variable name="isAbstractWithSubclasses">
@@ -828,8 +878,8 @@
 					<!-- This references a ComplexType - check if there are Root subclasses -->
 					<xsl:variable name="concreteSubclasses">
 						<xsl:for-each select="//a:Root">
-							<xsl:if test="fn:inherits-from(., $baseClass)">
-								<xsl:value-of select="fn:fully-qualified-class(., $package_prefix)"/>
+							<xsl:if test="uca-fn:inherits-from(., $baseClass)">
+								<xsl:value-of select="uca-fn:fully-qualified-class(., $package_prefix)"/>
 							</xsl:if>
 						</xsl:for-each>
 					</xsl:variable>
@@ -861,8 +911,8 @@
 									<xsl:when test="$isAbstractWithSubclasses = 'true'">
 										<list begin="&quot;items&quot;: [" indent="     " delim="," end="]">
 											<xsl:for-each select="//a:Root">
-												<xsl:if test="fn:inherits-from(., $baseClass)">
-													<item>"<xsl:value-of select="fn:fully-qualified-class(., $package_prefix)"/>"</item>
+												<xsl:if test="uca-fn:inherits-from(., $baseClass)">
+													<item>"<xsl:value-of select="uca-fn:fully-qualified-class(., $package_prefix)"/>"</item>
 												</xsl:if>
 											</xsl:for-each>
 										</list>
@@ -885,8 +935,8 @@
 										<xsl:when test="$isAbstractWithSubclasses = 'true'">
 											<list begin="&quot;type&quot;: [" indent="     " delim="," end="]">
 												<xsl:for-each select="//a:Root">
-													<xsl:if test="fn:inherits-from(., $baseClass)">
-														<item>"<xsl:value-of select="fn:fully-qualified-class(., $package_prefix)"/>"</item>
+													<xsl:if test="uca-fn:inherits-from(., $baseClass)">
+														<item>"<xsl:value-of select="uca-fn:fully-qualified-class(., $package_prefix)"/>"</item>
 													</xsl:if>
 												</xsl:for-each>
 											</list>
@@ -906,8 +956,8 @@
 										<xsl:when test="$isAbstractWithSubclasses = 'true'">
 											<list begin="&quot;type&quot;: [" indent="     " delim="," end="]">
 												<xsl:for-each select="//a:Root">
-													<xsl:if test="fn:inherits-from(., $baseClass)">
-														<item>"<xsl:value-of select="fn:fully-qualified-class(., $package_prefix)"/>"</item>
+													<xsl:if test="uca-fn:inherits-from(., $baseClass)">
+														<item>"<xsl:value-of select="uca-fn:fully-qualified-class(., $package_prefix)"/>"</item>
 													</xsl:if>
 												</xsl:for-each>
 											</list>
@@ -922,7 +972,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					<item>"doc": "<xsl:call-template name="annotate"/>"</item>
-					<item>"modelReference": "<xsl:value-of select="fn:model-reference(.)"/>"</item>
+					<item>"modelReference": "<xsl:value-of select="uca-fn:model-reference(.)"/>"</item>
 					<xsl:if test="@maxOccurs = 'unbounded' or @maxOccurs &gt; 1">
 						<xsl:if test="@minOccurs != 0">
 							<item>"minCardDoc": "[min cardinality = <xsl:value-of select="@minOccurs"/>] Application level validation will be required to ensure the array contains at least <xsl:value-of select="@minOccurs"/> <xsl:choose><xsl:when test="@minOccurs = 1"> item.</xsl:when><xsl:otherwise> items.</xsl:otherwise></xsl:choose>"</item>
@@ -957,7 +1007,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					<item>"doc": "<xsl:call-template name="annotate"/> Note that the value of this field is the identifier (e.g. mRID) used to reference the <xsl:value-of select="@type"/> external to this profile."</item>
-					<item>"modelReference": "<xsl:value-of select="fn:model-reference(.)"/>"</item>
+					<item>"modelReference": "<xsl:value-of select="uca-fn:model-reference(.)"/>"</item>
 					<xsl:if test="@maxOccurs = 'unbounded' or @maxOccurs &gt; 1">
 						<xsl:if test="@minOccurs != 0">
 							<item>"minCardDoc": "[min cardinality = <xsl:value-of select="@minOccurs"/>] Application level validation will be required to ensure the array contains at least <xsl:value-of select="@minOccurs"/> <xsl:choose><xsl:when test="@minOccurs = 1"> item.</xsl:when><xsl:otherwise> items.</xsl:otherwise></xsl:choose>"</item>
