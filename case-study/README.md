@@ -545,7 +545,7 @@ Profile baseURI:   https://ap-voc.cim4.eu/SecurityAnalysisResult/2.4#
                    ↓
 Extract domain:    ap-voc.cim4.eu
                    ↓
-Reverse DNS:       eu.cim4.ap_voc
+Reverse DNS:       eu.cim4.ap_voc (replace dashes and non-namespace characters with underscores)
                    ↓
 Add profile name:  eu.cim4.ap_voc + securityanalysisresult (lowercase)
                    ↓
