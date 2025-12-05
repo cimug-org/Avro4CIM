@@ -1,4 +1,12 @@
 {
+  "header": {
+    "profProfile": "https://ap-voc.cim4.eu/SecurityAnalysisResult/2.4",
+    "identifier": "sar-single-action-002",
+    "isVersionOf": "urn:uuid:base-case-2024-01-01",
+    "version": "1.0",
+    "startDate": "2024-01-01T00:00:00Z",
+    "schemaRef": "https://schemas.cim4.eu/avro/SecurityAnalysisResult/2.4.0"
+  },
   "RemedialActionApplied": [
     {
       "mRID": "550e8400-e29b-41d4-a716-446655440000",

@@ -660,7 +660,7 @@
 				<xsl:variable name="sorted-root-types" select="uca-fn:topological-sort(//a:Root, $root-deps-map)"/>
 				<xsl:apply-templates select="$sorted-root-types"/>
 				
-				<!-- The final step is to create the 'document wrapper' derived from the name of the profile -->
+				<!-- The final step is to create the 'document root' derived from the name of the profile -->
 				<list begin="{{" indent="     " delim="," end="}}">
 					<xsl:if test="$copyright-single-line and $copyright-single-line != ''">
 						<item>"copyright": "<xsl:value-of select="$copyright-single-line" disable-output-escaping="yes"/>"</item>			
@@ -670,7 +670,7 @@
 						<item>"metaDoc": "Abstract profile this schema implements (DX-PROF prof:Profile):"</item>
 						<item>"profProfile": "<xsl:value-of select="$baseURI"/>"</item>
 						<item>"metaDoc": "Underlying standards the profile/schema conforms to (IEC etc.):"</item>
-						<item>"metaDoc": "Currently hardcoded until concensus is reached on how/where this will be specified/sourced from in tooling:"</item>
+						<item>"metaDoc": "Currently hardcoded until consensus is reached on how/where this will be specified/sourced from in tooling:"</item>
 						<list begin="&quot;dctConformsTo&quot;: [" indent="     " delim="," end="]">
 							<item>"urn:iso:std:iec:61970-301:ed-7:amd1"</item>
 							<item>"urn:iso:std:iec:61970-600-2:ed-1"</item>
@@ -680,9 +680,9 @@
 							<item>"<xsl:value-of select="concat(substring-before($baseURI, '#'), '/owl')"/>"</item>
 						</list>
 						<item>"metaDoc": "Identity + version of this Avro schema itself:"</item>
-						<item>"metaDoc": "Currently hardcoded until concensus is reached on how/where this will be specified/sourced from in tooling:"</item>
+						<item>"metaDoc": "Currently hardcoded until consensus is reached on how/where this will be specified/sourced from in tooling:"</item>
 						<item>"schemaId": "https://schema-registry.example.com/subjects/cim-sv-dataset-value/versions/5"</item>
-						<item>"metaDoc": "Currently hardcoded to 1.0.0 until concensus is reached on how/where this will be specified/sourced from in tooling:"</item>
+						<item>"metaDoc": "Currently hardcoded to 1.0.0 until consensus is reached on how/where this will be specified/sourced from in tooling:"</item>
 						<item>"schemaVersion": "<xsl:value-of select="'1.0.0'"/>"</item>
 					</list>
 				

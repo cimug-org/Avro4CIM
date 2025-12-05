@@ -1,4 +1,12 @@
 {
+  "header": {
+    "profProfile": "https://ap-voc.cim4.eu/SecurityAnalysisResult/2.4",
+    "identifier": "sar-multi-region-004",
+    "isVersionOf": "urn:uuid:cross-border-analysis-2024-01-01",
+    "version": "1.5",
+    "startDate": "2024-01-01T05:00:00Z",
+    "schemaRef": "https://schemas.cim4.eu/avro/SecurityAnalysisResult/2.4.0"
+  },
   "RemedialActionApplied": [
     {
       "mRID": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
