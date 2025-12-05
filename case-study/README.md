@@ -527,7 +527,7 @@ Multiple files (one type per file) offer better modularity for reusable type lib
 
 **Decision: Hierarchical Namespace Structure with Sub-packages**
 
-For this case study, Avro namespaces follow a hierarchical structure based on reverse-DNS naming convention with logical sub-packages to organize different categories of types.
+For the reference implementation, Avro namespaces follow a hierarchical structure based on reverse-DNS naming convention with logical sub-packages to organize different categories of types. The approach is outlined below.
 
 **Key Advantages:**
 - **Clear type organization** - Types grouped by their semantic purpose
