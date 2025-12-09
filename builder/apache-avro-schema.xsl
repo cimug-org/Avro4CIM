@@ -27,6 +27,162 @@
     <xsl:variable name="newline"><xsl:text>
 </xsl:text></xsl:variable>
 	
+	<!--
+	════════════════════════════════════════════════════════════════════════════════
+	BEGIN: NUMERIC CHARACTER REFERENCE AND ESCAPING UTILITIES
+	════════════════════════════════════════════════════════════════════════════════
+
+	This group of functions handles conversion between hexadecimal strings, numeric
+	character references (HTML/XML entities), and escape sequences. These are
+	used to properly encode Unicode text when generating documentation orvprocessing 
+	XML entities.
+	-->
+	
+	<!-- Variable used to process unicode with hex prefixes. -->
+	<xsl:variable name="hex-digits" as="xs:string">0123456789ABCDEF</xsl:variable>
+		
+	<!-- 
+		Function: uca-fn:hex-char-value
+		Purpose: Converts a single hexadecimal character (0-9, A-F) to its integer value (0-15)
+		Parameters: 
+			$ch (xs:string) - Single hexadecimal character (case-insensitive)
+		Returns: xs:integer - The numeric value (0-15) of the hex character
+		Algorithm: Converts character to uppercase, then finds its position in the hex-digits string "0123456789ABCDEF"
+		Examples: 
+			uca-fn:hex-char-value('0') returns 0
+			uca-fn:hex-char-value('A') returns 10
+			uca-fn:hex-char-value('F') returns 15
+			uca-fn:hex-char-value('a') returns 10 (case-insensitive)
+	-->
+	<xsl:function name="uca-fn:hex-char-value" as="xs:integer">
+		<xsl:param name="ch" as="xs:string"/>
+		<xsl:variable name="u" select="upper-case($ch)"/>
+		<!-- Index of the character in 0..15 -->
+		<xsl:sequence select="string-length(substring-before($hex-digits, $u))"/>
+	</xsl:function>
+	
+	<!-- 
+		Function: uca-fn:hex-to-int
+		Purpose: Converts a hexadecimal string to its decimal integer equivalent
+		Parameters: 
+			$s (xs:string) - Hexadecimal string (e.g., "1A2F", "FF")
+		Returns: xs:integer - The decimal integer value
+		Algorithm: Recursive conversion using positional values (base-16). For each position, multiplies the digit value by 16^position and sums all positions. Processes right-to-left: rightmost digit + 16 × (remaining digits).
+		Examples: 
+			uca-fn:hex-to-int('0') returns 0
+			uca-fn:hex-to-int('FF') returns 255
+			uca-fn:hex-to-int('1A2F') returns 6703
+			uca-fn:hex-to-int('CAFE') returns 51966
+		Dependencies: uca-fn:hex-char-value() function
+	-->
+	<xsl:function name="uca-fn:hex-to-int" as="xs:integer">
+		<xsl:param name="s" as="xs:string"/>
+	
+		<xsl:variable name="result" select="
+			if (string-length($s) = 0)
+			then 0
+			else uca-fn:hex-char-value(substring($s, string-length($s), 1))
+				 + 16 * uca-fn:hex-to-int(substring($s, 1, string-length($s) - 1))
+		"/>
+		
+		<xsl:sequence select="$result"/>
+	</xsl:function>
+	
+	<!-- ASCII range we want to pass through unchanged: space (32) to tilde (126) -->
+	<xsl:variable name="ascii-min" as="xs:integer">32</xsl:variable>
+	<xsl:variable name="ascii-max" as="xs:integer">126</xsl:variable>
+	
+	<!-- 
+		Function: uca-fn:json-escape
+		Purpose: Escapes text for use in JSON strings by escaping special characters according to JSON specification
+		Parameters: 
+			$text (xs:string) - Text to escape for JSON
+		Returns: xs:string - JSON-escaped text
+		Algorithm: Escapes backslashes, double quotes, and control characters. For non-ASCII characters, either passes through as UTF-8 (recommended) or converts to JSON Unicode escapes (\uHHHH format with 4 hex digits).
+		Examples: 
+			uca-fn:json-escape('Hello "World"') returns 'Hello \"World\"'
+			uca-fn:json-escape('Line1
+	Line2') returns 'Line1\nLine2'
+			uca-fn:json-escape('C:\path\file') returns 'C:\\path\\file'
+			uca-fn:json-escape('Café') returns 'Café' (UTF-8 passthrough, valid in JSON)
+		Notes: Modern JSON parsers accept UTF-8 directly, so non-ASCII characters typically don't need escaping. However, backslashes, quotes, and control characters MUST be escaped.
+	-->
+	<xsl:function name="uca-fn:json-escape" as="xs:string">
+		<xsl:param name="text" as="xs:string"/>
+		
+		<!-- Step 1: Escape backslashes (MUST be first!) -->
+		<xsl:variable name="step1" select="replace($text, '\\', '\\\\')"/>
+		
+		<!-- Step 2: Escape double quotes -->
+		<xsl:variable name="step2" select="replace($step1, '&quot;', '\\&quot;')"/>
+		
+		<!-- Step 3: Escape control characters -->
+		<xsl:variable name="step3" select="replace($step2, '&#x0A;', '\\n')"/>  <!-- newline -->
+		<xsl:variable name="step4" select="replace($step3, '&#x0D;', '\\r')"/>  <!-- carriage return -->
+		<xsl:variable name="step5" select="replace($step4, '&#x09;', '\\t')"/>  <!-- tab -->
+		
+		<xsl:sequence select="$step5"/>
+	</xsl:function>
+	
+	<!-- 
+		Function: uca-fn:unescape-numeric
+		Purpose: Decodes HTML/XML numeric character references (both hexadecimal and decimal) back to their Unicode character equivalents
+		Parameters: 
+			$text (xs:string) - Text containing numeric character references
+		Returns: xs:string - Text with all numeric entities converted to Unicode characters
+		Numeric Character Reference Formats:
+			Hexadecimal: &#xHHHH; (e.g., &#xE9; for é)
+			Decimal: &#NNNN; (e.g., &#233; for é)
+		Algorithm: Two-pass processing. Pass 1: Decode hexadecimal entities (&#xHHHH;) using regex, extract hex digits, convert to codepoint, convert to character. Pass 2: Decode decimal entities (&#NNNN;) using regex, extract decimal digits, convert to codepoint, convert to character.
+		Examples: 
+			uca-fn:unescape-numeric('Caf&#xE9;') returns 'Café'
+			uca-fn:unescape-numeric('Caf&#233;') returns 'Café'
+			uca-fn:unescape-numeric('&#x4E16;&#x754C;') returns '世界'
+			uca-fn:unescape-numeric('&lt;tag&gt;') returns '&lt;tag&gt;' (named entities unchanged)
+		Dependencies: uca-fn:hex-to-int() function for hexadecimal conversion
+		Notes: Handles both hex and decimal formats. Named entities (&lt;, &gt;, &amp;, etc.) are NOT decoded. Case-insensitive for hex digits.
+		Use Cases: Processing XML/HTML content with encoded characters, converting entity-encoded text to readable Unicode, pre-processing before RTF generation
+		Relationship: Inverse operation of XML serialization entity encoding. Often used before uca-fn:json-escape() in pipelines: XML entities → Unicode → RTF escapes
+	-->
+	<xsl:function name="uca-fn:unescape-numeric" as="xs:string">
+		<xsl:param name="text" as="xs:string"/>
+	
+		<!-- First, decode hex entities: &#xHHHH; -->
+		<xsl:variable name="after-hex">
+			<xsl:analyze-string select="$text" regex="&amp;#x([0-9A-Fa-f]+);">
+				<xsl:matching-substring>
+					<xsl:variable name="hex" select="regex-group(1)"/>
+					<xsl:variable name="cp" select="uca-fn:hex-to-int($hex)"/>
+					<xsl:value-of select="fn:codepoints-to-string($cp)"/>
+				</xsl:matching-substring>
+				<xsl:non-matching-substring>
+					<xsl:value-of select="."/>
+				</xsl:non-matching-substring>
+			</xsl:analyze-string>
+		</xsl:variable>
+	
+		<!-- Then, decode decimal entities: &#NNNN; -->
+		<xsl:variable name="after-dec">
+			<xsl:analyze-string select="string($after-hex)" regex="&amp;#([0-9]+);">
+				<xsl:matching-substring>
+					<xsl:variable name="cp" select="xs:integer(regex-group(1))"/>
+					<xsl:value-of select="fn:codepoints-to-string($cp)"/>
+				</xsl:matching-substring>
+				<xsl:non-matching-substring>
+					<xsl:value-of select="."/>
+				</xsl:non-matching-substring>
+			</xsl:analyze-string>
+		</xsl:variable>
+	
+		<xsl:sequence select="string($after-dec)"/>
+	</xsl:function>
+
+	<!--
+	════════════════════════════════════════════════════════════════════════════════
+	END: NUMERIC CHARACTER REFERENCE AND ESCAPING UTILITIES
+	════════════════════════════════════════════════════════════════════════════════
+	-->
+	
 	<!-- 
 		Function: uca-fn:baseuri-to-package
 		Purpose: Converts a baseURI into a package name by reversing the order of dot-separated tokens in a string
@@ -423,7 +579,7 @@
 		Parameters: 
 			$baseClass - The baseClass URI to check
 		Returns: xs:boolean - true if it's an abstract class with concrete subclasses, false otherwise
-	-->
+	
 	<xsl:function name="uca-fn:is-abstract-with-subclasses" as="xs:boolean">
 		<xsl:param name="baseClass" as="xs:string"/>
 		
@@ -446,6 +602,7 @@
 		
 		<xsl:sequence select="$result"/>
 	</xsl:function>
+	-->
 
 	<!-- 
 		Function: uca-fn:topological-sort
@@ -660,13 +817,13 @@
 				<xsl:variable name="sorted-root-types" select="uca-fn:topological-sort(//a:Root, $root-deps-map)"/>
 				<xsl:apply-templates select="$sorted-root-types"/>
 				
-				<!-- The final step is to create the 'document root' derived from the name of the profile -->
+				<!-- The final step is to create the 'document wrapper' derived from the name of the profile -->
 				<list begin="{{" indent="     " delim="," end="}}">
 					<xsl:if test="$copyright-single-line and $copyright-single-line != ''">
 						<item>"copyright": "<xsl:value-of select="$copyright-single-line" disable-output-escaping="yes"/>"</item>			
 					</xsl:if>
 					<item>"generator": "Generated by CIMTool https://cimtool.ucaiug.io"</item>
-					<list begin="&quot;header&quot;: {{" indent="    " delim="," end="}}">
+					<list begin="&quot;profile-metadata&quot;: {{" indent="    " delim="," end="}}">
 						<item>"metaDoc": "Abstract profile this schema implements (DX-PROF prof:Profile):"</item>
 						<item>"profProfile": "<xsl:value-of select="$baseURI"/>"</item>
 						<item>"metaDoc": "Underlying standards the profile/schema conforms to (IEC etc.):"</item>
@@ -897,6 +1054,11 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
+		<xsl:message select="'===================================='"/>
+		<xsl:message select="concat('#1 Instance/Reference:  ', @name)"/>
+		<xsl:message select="concat('#2 isAbstractWithSubclasses:  ', $isAbstractWithSubclasses)" />
+		<!-- <xsl:message select="concat('#3 uca-fn:is-abstract-with-subclasses:  ', string(uca-fn:is-abstract-with-subclasses($baseClass)))" /> -->
+	
 		
 		<list begin="{{" indent="     " delim="," end="}}">	
 			<xsl:choose>
@@ -1026,20 +1188,15 @@
 	</xsl:template>
 	
 	<xsl:template match="a:Comment|a:Note" mode="annotate">
-		<!-- Remove double quotes to eliminate broken comments, etc. -->
-		<xsl:value-of select="translate(., '&quot;', '')"/>
-	</xsl:template>
-	
-	<xsl:template match="text()">
-		<!-- dont pass text through -->
+		<!-- Decode entities and escape properly for JSON -->
+		<xsl:value-of select="uca-fn:json-escape(uca-fn:unescape-numeric(string(.)))"/>
 	</xsl:template>
 	
 	<xsl:template match="node()" mode="annotate">
 		<!-- dont pass any defaults in annotate mode -->
 	</xsl:template>
 	
-	<xsl:template match="node()" mode="declare">
-		<!-- dont pass any defaults in declare mode -->
+	<xsl:template match="node()">
 	</xsl:template>
 	
 </xsl:stylesheet>
