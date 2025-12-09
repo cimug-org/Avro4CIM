@@ -1495,7 +1495,7 @@ Some serialization formats (like Protocol Buffers v3) make all fields implicitly
 
 **Decision: Topological Analysis to Identify True Message Roots**
 
-Within the Avro schemas, the document container (top-level message record named SecurityAnalysisResult) includes only those Root classes that are never referenced by other classes in the profile. This ensures a clean, logical message structure where referenced types appear as nested fields rather than redundant top-level arrays.
+Within the Avro schemas, the document container (top-level message record named SecurityAnalysisResult) will include a required header along with fields referencing only those Root classes that are never referenced by other classes in the profile. This ensures a clean, logical message structure where referenced types appear as nested fields rather than redundant top-level arrays.
 
 **Key Advantages:**
 - **Correct message topology** - Only true roots appear at the top level
