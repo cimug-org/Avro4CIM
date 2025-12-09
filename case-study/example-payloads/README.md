@@ -1,34 +1,97 @@
 # SecurityAnalysisResult Example Payloads
 
-This directory contains example JSON payloads for the SecurityAnalysisResult Apache Avro schema based on the updated schema structure where only `RemedialActionApplied` appears at the container level.
+This directory contains example JSON payloads for the SecurityAnalysisResult Apache Avro schema. Two schema versions are available:
+- **BASE schema** (`SecurityAnalysisResult.avsc`) - Simple, lightweight schema with 7 types
+- **EXTENDED schema** (`SecurityAnalysisResult_EXTENDED.avsc`) - Comprehensive schema with 24 types
 
-## Schema Structure Changes
+## Schema Structure
 
-The updated schema reflects the topological analysis results:
-- **Container field**: Only `RemedialActionApplied` array (minimum cardinality = 1)
+### BASE Schema Structure
+
+The BASE schema uses a simplified structure:
+- **Container fields**: `header` and `RemedialActionApplied` array
+- **OperationalLimit**: String UUID reference
+- **7 types total**: Header, 2 enums, 4 records
+
+**Container Structure:**
+```json
+{
+  "header": {
+    "profProfile": "string",
+    "identifier": "string",
+    "isVersionOf": "string or null",
+    "version": "string or null",
+    "startDate": "string",
+    "schemaRef": "string"
+  },
+  "RemedialActionApplied": [...]
+}
+```
+
+### EXTENDED Schema Structure
+
+The EXTENDED schema includes additional context and nested objects:
+- **Container fields**: `header`, `Location`, `RemedialActionApplied`, and `Substation` arrays
+- **OperationalLimit**: Nested object with detailed limit information
+- **24 types total**: Includes equipment types, location types, and operational limit details
+
+**Container Structure:**
+```json
+{
+  "header": {...},
+  "Location": [...],
+  "RemedialActionApplied": [...],
+  "Substation": [...]
+}
+```
+
+### Common Structure Elements
+
+Both schemas share:
 - **PowerFlowResult**: Union type (not array) with cardinality 1..1
 - **Union members**: BaseCasePowerFlowResult or ContingencyPowerFlowResult
+- **RemedialActionApplied**: Array with minimum cardinality = 0 (schema-level), though application logic typically requires ≥1 item
 
 ## Example Files
 
-### 01_minimal_valid.json
-**Purpose:** Minimal valid message structure
+### BASE Schema Examples
+
+#### 01_minimal_valid.json
+**Purpose:** Minimal valid message structure for BASE schema
 
 **Content:**
-- Empty RemedialActionApplied array
+- Required `header` field with all mandatory header fields
+- Empty `RemedialActionApplied` array
 
-**Note:** While this is structurally valid Avro, it violates the application-level constraint that requires at least 1 RemedialActionApplied item (minCardinality=1).
+**Note:** While this is structurally valid Avro, it represents an empty result set. Application-level logic may require at least 1 RemedialActionApplied item.
+
+**Structure:**
+```json
+{
+  "header": {
+    "profProfile": "https://ap-voc.cim4.eu/SecurityAnalysisResult/2.4",
+    "identifier": "sar-minimal-base-001",
+    "isVersionOf": null,
+    "version": null,
+    "startDate": "2024-01-01T00:00:00Z",
+    "schemaRef": "https://schemas.cim4.eu/avro/SecurityAnalysisResult/2.4.0"
+  },
+  "RemedialActionApplied": []
+}
+```
 
 ---
 
-### 02_single_remedial_action.json
+#### 02_single_remedial_action.json
 **Purpose:** Single remedial action with base case power flow result
 
 **Content:**
+- Complete `header` with metadata
 - 1 RemedialActionApplied record
 - PowerFlowResult uses BaseCasePowerFlowResult type
 - Demonstrates proper UUID format for all references
 - Shows ENTSO-E EIC code for Region
+- OperationalLimit as string UUID (BASE schema format)
 
 **Key Features:**
 - Base case result (no contingency)
@@ -38,10 +101,11 @@ The updated schema reflects the topological analysis results:
 
 ---
 
-### 03_complete_analysis.json
+#### 03_complete_analysis.json
 **Purpose:** Complete security analysis with multiple remedial actions and scenarios
 
 **Content:**
+- Complete `header` with versioning information
 - 4 RemedialActionApplied records showing:
   1. Base case - normal operation (85% loading)
   2. Base case - violation (105% loading)
@@ -55,13 +119,15 @@ Comprehensive analysis demonstrating:
 - Remedial action staging (StageForRemedialActionScheme)
 - Multiple regions (Germany, France)
 - Both union types (BaseCasePowerFlowResult and ContingencyPowerFlowResult)
+- OperationalLimit as string UUID references
 
 ---
 
-### 04_multi_region_union_demo.json
+#### 04_multi_region_union_demo.json
 **Purpose:** Demonstrates Avro union type encoding with cross-border analysis
 
 **Content:**
+- Complete `header` with cross-border analysis metadata
 - 2 RemedialActionApplied records
 - First: PowerFlowResult as BaseCasePowerFlowResult (preventive action)
 - Second: PowerFlowResult as ContingencyPowerFlowResult (curative action with stage)
@@ -78,39 +144,144 @@ Comprehensive analysis demonstrating:
 The fully qualified type name acts as the discriminator for union types.
 
 **Scenario:**
-- Preventive: FR-ES interconnector at 1850 MW (74% loading)
-- Curative: DE-FR interconnector at 2400 MW (96% loading after contingency)
+- Preventive: FR region at 1850 MW (74% loading)
+- Curative: DE region at 2400 MW (96% loading after contingency)
 
 **Key Features:**
 - Demonstrates both union members
 - Shows preventive vs curative actions
 - Cross-border multi-region analysis
 - ENTSO-E EIC codes for regions
+- Alternative measurements (valueW instead of valueA)
+
+---
+
+### EXTENDED Schema Examples
+
+The EXTENDED schema includes all BASE schema features plus additional context. All EXTENDED examples use the `_EXTENDED.json` suffix.
+
+#### 01_minimal_valid_EXTENDED.json
+**Purpose:** Minimal valid message structure for EXTENDED schema
+
+**Content:**
+- Required `header` field
+- Empty `Location` array
+- Empty `RemedialActionApplied` array
+- Empty `Substation` array
+
+**Key Differences from BASE:**
+- Adds `Location` array field (empty)
+- Adds `Substation` array field (empty)
+
+---
+
+#### 02_single_remedial_action_EXTENDED.json
+**Purpose:** Single remedial action with EXTENDED schema features
+
+**Content:**
+- Same base structure as 02_single_remedial_action.json
+- Empty `Location` array
+- Empty `Substation` array
+- OperationalLimit as **nested object** (not string)
+
+**Key Differences from BASE:**
+- OperationalLimit structure:
+  ```json
+  "OperationalLimit": {
+    "mRID": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+    "OperationalLimitSet": null,
+    "OperationalLimitType": null
+  }
+  ```
+
+---
+
+#### 03_complete_analysis_EXTENDED.json
+**Purpose:** Complete security analysis with EXTENDED schema features
+
+**Content:**
+- Same 4 remedial action scenarios as BASE version
+- Empty `Location` array
+- Empty `Substation` array
+- All OperationalLimit references as nested objects
+
+**Key Differences from BASE:**
+- Nested OperationalLimit objects throughout
+- Additional container fields (Location, Substation)
+
+---
+
+#### 04_multi_region_union_demo_EXTENDED.json
+**Purpose:** Cross-border analysis with EXTENDED schema features
+
+**Content:**
+- Same 2 remedial action scenarios as BASE version
+- Empty `Location` array
+- Empty `Substation` array
+- OperationalLimit as nested objects
+
+**Potential Extensions:**
+This example uses empty Location and Substation arrays for simplicity. In a comprehensive deployment, these could include:
+- **Location**: Physical addresses of substations or equipment
+- **Substation**: Equipment topology (Breakers, Disconnectors, etc.)
+
+---
 
 ## Field Reference
 
-### Required Fields (RemedialActionApplied)
+### Header Fields (Required in both BASE and EXTENDED)
+
+**Required Fields:**
+- `profProfile` - Profile URI (e.g., "https://ap-voc.cim4.eu/SecurityAnalysisResult/2.4")
+- `identifier` - Unique message identifier (UUID format recommended)
+- `startDate` - Analysis timestamp (ISO 8601 format)
+- `schemaRef` - Schema reference URI
+
+**Optional Fields:**
+- `isVersionOf` - Reference to base case or previous version (UUID or URI)
+- `version` - Message version string
+
+### RemedialActionApplied Fields
+
+**Required Fields:**
 - `mRID` - UUID format recommended
 - `PowerFlowResult` - Union type, exactly one required
 - `RemedialAction` - UUID reference to external RemedialAction
 
-### Required Fields (BaseCasePowerFlowResult / ContingencyPowerFlowResult)
+**Optional Fields:**
+- `StageForRemedialActionScheme` - UUID reference for staged remedial actions
+
+### PowerFlowResult Fields (BaseCasePowerFlowResult / ContingencyPowerFlowResult)
+
+**Required Fields:**
 - `atTime` - timestamp-millis (long integer)
 - `isViolation` - boolean
 - `ACDCTerminal` - UUID reference
 
-### Optional Fields (PowerFlowResult)
+**Optional Fields:**
 - `absoluteValue` - float
 - `value` - float (percentage)
 - `valueA`, `valueAngle`, `valueV`, `valueVA`, `valueVAR`, `valueW` - float measurements
-- `OperationalLimit` - UUID reference (optional)
 - `ReportedByRegion` - EIC code or UUID (optional)
+
+**OperationalLimit:**
+- **BASE schema**: String UUID reference (optional)
+- **EXTENDED schema**: Nested object with mRID, OperationalLimitSet, OperationalLimitType (optional)
 
 ### ContingencyPowerFlowResult Specific
 - `Contingency` - UUID reference (required for ContingencyPowerFlowResult)
 
-### RemedialActionApplied Optional
-- `StageForRemedialActionScheme` - UUID reference (optional)
+### EXTENDED Schema Additional Fields
+
+**Location Array:**
+- Array of Location objects with address information
+- Can be empty array for basic examples
+
+**Substation Array:**
+- Array of Substation objects with equipment topology
+- Each substation contains an Equipments array
+- Equipment types: Breaker, Cut, DisconnectingCircuitBreaker, Disconnector, GroundDisconnector, Recloser
+- Can be empty array for basic examples
 
 ## Data Format Notes
 
@@ -158,12 +329,12 @@ Region references may use ENTSO-E Energy Identification Codes:
 
 ### Avro Schema Validation
 
-**Using Python (fastavro):**
+**Using Python (fastavro) - BASE Schema:**
 ```python
 from fastavro import reader, parse_schema
 import json
 
-# Load schema
+# Load BASE schema
 with open('SecurityAnalysisResult.avsc') as f:
     schema = json.load(f)
 
@@ -182,30 +353,67 @@ writer(output, container_schema, [message])
 print("Valid!")
 ```
 
+**Using Python (fastavro) - EXTENDED Schema:**
+```python
+from fastavro import reader, parse_schema
+import json
+
+# Load EXTENDED schema
+with open('SecurityAnalysisResult_EXTENDED.avsc') as f:
+    schema = json.load(f)
+
+# Find SecurityAnalysisResult record
+container_schema = next(s for s in schema if s.get('name') == 'SecurityAnalysisResult')
+
+# Validate EXTENDED message
+with open('03_complete_analysis_EXTENDED.json') as f:
+    message = json.load(f)
+    
+# fastavro will validate during write
+from fastavro import writer
+from io import BytesIO
+output = BytesIO()
+writer(output, container_schema, [message])
+print("Valid!")
+```
+
 **Using Java (Apache Avro):**
 ```bash
 # Download avro-tools
 wget https://repo1.maven.org/maven2/org/apache/avro/avro-tools/1.11.3/avro-tools-1.11.3.jar
 
-# Validate (converts JSON to Avro binary, will fail if invalid)
+# Validate BASE schema payload
 java -jar avro-tools-1.11.3.jar fromjson --schema-file SecurityAnalysisResult.avsc 03_complete_analysis.json > /dev/null && echo "Valid!"
+
+# Validate EXTENDED schema payload
+java -jar avro-tools-1.11.3.jar fromjson --schema-file SecurityAnalysisResult_EXTENDED.avsc 03_complete_analysis_EXTENDED.json > /dev/null && echo "Valid!"
 ```
 
 ### Application-Level Validation
 
 The following constraints must be validated at the application level:
 
-1. **Minimum cardinality**: RemedialActionApplied array must contain at least 1 item
+1. **Minimum cardinality**: While the Avro schema allows empty arrays, application logic typically requires at least 1 RemedialActionApplied item for meaningful results
 2. **PowerFlowResult type**: Must be exactly one of BaseCasePowerFlowResult or ContingencyPowerFlowResult
 3. **Contingency field**: Required when PowerFlowResult is ContingencyPowerFlowResult type
-4. **Measurement consistency**: If OperationalLimit provided, appropriate value fields must be present based on limit type
-5. **EIC format**: Region codes should follow ENTSO-E EIC format when used
+4. **Header completeness**: All required header fields must be non-null and properly formatted
+5. **Measurement consistency**: If OperationalLimit provided, appropriate value fields should be present based on limit type
+6. **EIC format**: Region codes should follow ENTSO-E EIC format when used
+7. **EXTENDED schema**: When using EXTENDED schema, Location and Substation arrays must be present (can be empty)
 
 ## Common Patterns
 
-### Creating a Base Case Result
+### Creating a BASE Schema Message with Header
 ```json
 {
+  "header": {
+    "profProfile": "https://ap-voc.cim4.eu/SecurityAnalysisResult/2.4",
+    "identifier": "uuid-here",
+    "isVersionOf": null,
+    "version": "1.0",
+    "startDate": "2024-01-01T00:00:00Z",
+    "schemaRef": "https://schemas.cim4.eu/avro/SecurityAnalysisResult/2.4.0"
+  },
   "RemedialActionApplied": [{
     "mRID": "uuid-here",
     "PowerFlowResult": {
@@ -213,7 +421,8 @@ The following constraints must be validated at the application level:
         "atTime": 1704067200000,
         "isViolation": false,
         "valueA": 850.0,
-        "ACDCTerminal": "terminal-uuid"
+        "ACDCTerminal": "terminal-uuid",
+        "OperationalLimit": "limit-uuid"
       }
     },
     "RemedialAction": "action-uuid",
@@ -222,9 +431,51 @@ The following constraints must be validated at the application level:
 }
 ```
 
-### Creating a Contingency Result
+### Creating an EXTENDED Schema Message with Header
 ```json
 {
+  "header": {
+    "profProfile": "https://ap-voc.cim4.eu/SecurityAnalysisResult/2.4",
+    "identifier": "uuid-here",
+    "isVersionOf": null,
+    "version": "1.0",
+    "startDate": "2024-01-01T00:00:00Z",
+    "schemaRef": "https://schemas.cim4.eu/avro/SecurityAnalysisResult/2.4.0"
+  },
+  "Location": [],
+  "RemedialActionApplied": [{
+    "mRID": "uuid-here",
+    "PowerFlowResult": {
+      "eu.cim4.ap_voc.securityanalysisresult.extsecurityanalysisresult.BaseCasePowerFlowResult": {
+        "atTime": 1704067200000,
+        "isViolation": false,
+        "valueA": 850.0,
+        "ACDCTerminal": "terminal-uuid",
+        "OperationalLimit": {
+          "mRID": "limit-uuid",
+          "OperationalLimitSet": null,
+          "OperationalLimitType": null
+        }
+      }
+    },
+    "RemedialAction": "action-uuid",
+    "StageForRemedialActionScheme": null
+  }],
+  "Substation": []
+}
+```
+
+### Creating a Contingency Result (BASE Schema)
+```json
+{
+  "header": {
+    "profProfile": "https://ap-voc.cim4.eu/SecurityAnalysisResult/2.4",
+    "identifier": "uuid-here",
+    "isVersionOf": null,
+    "version": null,
+    "startDate": "2024-01-01T00:00:00Z",
+    "schemaRef": "https://schemas.cim4.eu/avro/SecurityAnalysisResult/2.4.0"
+  },
   "RemedialActionApplied": [{
     "mRID": "uuid-here",
     "PowerFlowResult": {
@@ -233,6 +484,7 @@ The following constraints must be validated at the application level:
         "isViolation": true,
         "valueA": 1450.0,
         "ACDCTerminal": "terminal-uuid",
+        "OperationalLimit": "limit-uuid",
         "Contingency": "contingency-uuid"
       }
     },
@@ -242,9 +494,53 @@ The following constraints must be validated at the application level:
 }
 ```
 
+## Schema Comparison
+
+### When to Use BASE Schema
+- Simple messaging requirements
+- Lightweight data exchange
+- String references are sufficient
+- Focus on power flow results only
+- No need for equipment or location details
+
+### When to Use EXTENDED Schema
+- Comprehensive data requirements
+- Need equipment topology information
+- Location data is important
+- Detailed operational limit information needed
+- Integration with asset management systems
+- Rich data model preferred
+
+### Key Differences
+
+| Feature | BASE Schema | EXTENDED Schema |
+|---------|-------------|-----------------|
+| **Container Fields** | 2 (header, RemedialActionApplied) | 4 (header, Location, RemedialActionApplied, Substation) |
+| **Total Types** | 7 | 24 |
+| **OperationalLimit** | String UUID | Nested object |
+| **Location Field** | No | Yes (array) |
+| **Substation Field** | No | Yes (array) |
+| **Equipment Types** | None | 6 types (Breaker, Cut, etc.) |
+| **Complexity** | Simple | Comprehensive |
+
+## File Inventory
+
+### BASE Schema Payloads
+- `01_minimal_valid.json` - Empty arrays, minimal structure
+- `02_single_remedial_action.json` - Single base case result
+- `03_complete_analysis.json` - 4 scenarios (base + contingency)
+- `04_multi_region_union_demo.json` - Cross-border analysis
+
+### EXTENDED Schema Payloads
+- `01_minimal_valid_EXTENDED.json` - Empty arrays with EXTENDED fields
+- `02_single_remedial_action_EXTENDED.json` - Single result with nested OperationalLimit
+- `03_complete_analysis_EXTENDED.json` - 4 scenarios with EXTENDED features
+- `04_multi_region_union_demo_EXTENDED.json` - Cross-border with EXTENDED features
+
 ## References
 
 - [Apache Avro Documentation](https://avro.apache.org/docs/)
 - [ENTSO-E EIC Codes](https://www.entsoe.eu/data/energy-identification-codes-eic/)
 - [RFC 4122 UUID Specification](https://www.rfc-editor.org/rfc/rfc4122)
 - [ISO 8601 Timestamp Format](https://en.wikipedia.org/wiki/ISO_8601)
+- [CIM Standards](https://www.iec.ch/smartgrid/standards/)
