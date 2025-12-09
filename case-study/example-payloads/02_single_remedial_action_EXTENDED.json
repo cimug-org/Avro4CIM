@@ -1,12 +1,13 @@
 {
   "header": {
     "profProfile": "https://ap-voc.cim4.eu/SecurityAnalysisResult/2.4",
-    "identifier": "sar-single-action-base-002",
+    "identifier": "sar-single-action-extended-002",
     "isVersionOf": "urn:uuid:base-case-2024-01-01",
     "version": "1.0",
     "startDate": "2024-01-01T00:00:00Z",
     "schemaRef": "https://schemas.cim4.eu/avro/SecurityAnalysisResult/2.4.0"
   },
+  "Location": [],
   "RemedialActionApplied": [
     {
       "mRID": "550e8400-e29b-41d4-a716-446655440000",
@@ -23,12 +24,17 @@
           "valueVAR": null,
           "valueW": null,
           "ACDCTerminal": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-          "OperationalLimit": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+          "OperationalLimit": {
+            "mRID": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+            "OperationalLimitSet": null,
+            "OperationalLimitType": null
+          },
           "ReportedByRegion": "10Y-DE-ENTSOE-1"
         }
       },
       "RemedialAction": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
       "StageForRemedialActionScheme": null
     }
-  ]
+  ],
+  "Substation": []
 }

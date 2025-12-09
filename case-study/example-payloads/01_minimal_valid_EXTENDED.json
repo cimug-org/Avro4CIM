@@ -1,11 +1,13 @@
 {
   "header": {
     "profProfile": "https://ap-voc.cim4.eu/SecurityAnalysisResult/2.4",
-    "identifier": "sar-minimal-base-001",
+    "identifier": "sar-minimal-extended-001",
     "isVersionOf": null,
     "version": null,
     "startDate": "2024-01-01T00:00:00Z",
     "schemaRef": "https://schemas.cim4.eu/avro/SecurityAnalysisResult/2.4.0"
   },
-  "RemedialActionApplied": []
+  "Location": [],
+  "RemedialActionApplied": [],
+  "Substation": []
 }

@@ -1,12 +1,13 @@
 {
   "header": {
     "profProfile": "https://ap-voc.cim4.eu/SecurityAnalysisResult/2.4",
-    "identifier": "sar-complete-analysis-base-003",
+    "identifier": "sar-complete-analysis-extended-003",
     "isVersionOf": "urn:uuid:n-1-analysis-2024-01-01",
     "version": "2.1",
     "startDate": "2024-01-01T00:00:00Z",
     "schemaRef": "https://schemas.cim4.eu/avro/SecurityAnalysisResult/2.4.0"
   },
+  "Location": [],
   "RemedialActionApplied": [
     {
       "mRID": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
@@ -23,7 +24,11 @@
           "valueVAR": null,
           "valueW": null,
           "ACDCTerminal": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-          "OperationalLimit": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+          "OperationalLimit": {
+            "mRID": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+            "OperationalLimitSet": null,
+            "OperationalLimitType": null
+          },
           "ReportedByRegion": "10Y-DE-ENTSOE-1"
         }
       },
@@ -45,7 +50,11 @@
           "valueVAR": null,
           "valueW": null,
           "ACDCTerminal": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a",
-          "OperationalLimit": "e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b",
+          "OperationalLimit": {
+            "mRID": "e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b",
+            "OperationalLimitSet": null,
+            "OperationalLimitType": null
+          },
           "ReportedByRegion": "10Y-FR-ENTSOE-1"
         }
       },
@@ -67,7 +76,11 @@
           "valueVAR": null,
           "valueW": null,
           "ACDCTerminal": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-          "OperationalLimit": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+          "OperationalLimit": {
+            "mRID": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+            "OperationalLimitSet": null,
+            "OperationalLimitType": null
+          },
           "ReportedByRegion": "10Y-DE-ENTSOE-1",
           "Contingency": "b8c9d0e1-f2a3-4b4c-5d6e-7f8a9b0c1d2e"
         }
@@ -90,7 +103,11 @@
           "valueVAR": null,
           "valueW": null,
           "ACDCTerminal": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a",
-          "OperationalLimit": "e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b",
+          "OperationalLimit": {
+            "mRID": "e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b",
+            "OperationalLimitSet": null,
+            "OperationalLimitType": null
+          },
           "ReportedByRegion": "10Y-FR-ENTSOE-1",
           "Contingency": "e1f2a3b4-c5d6-4e7f-8a9b-0c1d2e3f4a5b"
         }
@@ -98,5 +115,6 @@
       "RemedialAction": "f2a3b4c5-d6e7-4f8a-9b0c-1d2e3f4a5b6c",
       "StageForRemedialActionScheme": "a3b4c5d6-e7f8-4a9b-0c1d-2e3f4a5b6c7d"
     }
-  ]
+  ],
+  "Substation": []
 }
