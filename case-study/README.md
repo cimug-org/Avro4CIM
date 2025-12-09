@@ -26,7 +26,7 @@
   - [7.6. Mapping CIM Compound Types](#76-mapping-cim-compound-types)
   - [7.7. Date Datatypes and Apache Avro Logical Types](#77-date-datatypes-and-apache-avro-logical-types)
   - [7.8. Cardinality Mapping](#78-cardinality-mapping)
-  - [7.9. Document Element Root Fields](#79-document-element-root-fields)
+  - [7.9. Document Wrapper Root Fields](#79-document-wrapper-root-fields)
   - [7.10. Code Generation and CIM Naming Conventions Preservation](#710-code-generation-and-cim-naming-conventions-preservation)
 - [8. Example SAR Profile JSON Payloads](#8-example-sar-profile-json-payloads)
   - [8.1. SecurityAnalysisResult JSON](#81-securityanalysisresult-json)
@@ -1491,11 +1491,11 @@ All fields could be made optional by default (always using unions with null), bu
 
 Some serialization formats (like Protocol Buffers v3) make all fields implicitly optional, but Avro's union-based approach provides explicit control while maintaining schema evolution compatibility.
 
-### 7.9. Document Element Root Fields
+### 7.9. Document Wrapper Root Fields
 
 **Decision: Topological Analysis to Identify True Message Roots**
 
-Within the Avro schemas, the document container (top-level message record) includes only those Root classes that are never referenced by other classes in the profile. This ensures a clean, logical message structure where referenced types appear as nested fields rather than redundant top-level arrays.
+Within the Avro schemas, the document container (top-level message record named SecurityAnalysisResult) includes only those Root classes that are never referenced by other classes in the profile. This ensures a clean, logical message structure where referenced types appear as nested fields rather than redundant top-level arrays.
 
 **Key Advantages:**
 - **Correct message topology** - Only true roots appear at the top level
@@ -1509,6 +1509,7 @@ Within the Avro schemas, the document container (top-level message record) inclu
 Container structure:
 ```json
 {
+  . . .
   "type": "record",
   "name": "SecurityAnalysisResult",
   "namespace": "eu.cim4.ap_voc.securityanalysisresult",
