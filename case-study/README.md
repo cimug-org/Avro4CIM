@@ -848,7 +848,7 @@ The OWL profile declares abstract reference classes but defines no properties fo
 These classes are declared as part of the profile but have:
 - **No properties defined** - Only the class itself is referenced
 - **No parent class properties inherited** - They serve as placeholders
-- **"Limited to OWL" principle** - Since no properties are specified, only the reference (mRID) is utilied.
+- **"Limited to OWL" principle** - Since no properties are specified, only the reference (mRID) is utilized.
 
 **Reference Classes in the SecurityAnalysisResult Profile:**
 - `ACDCTerminal` - Terminal where power flow measurements occur
