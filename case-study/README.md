@@ -1552,7 +1552,6 @@ Container structure:
       ]
  }
 ```
-```
 
 The topological analysis approach provides a generic, scalable solution that works correctly for any CIM profile structure without requiring manual intervention or profile-specific customization. The algorithm automatically adapts to changes in the profile as classes and associations are added or removed.
 
