@@ -41,7 +41,7 @@
           "type": "enum",
           "name": "UnitMultiplier",
           "namespace": "eu.cim4.ap_voc.securityanalysisresult.domain",
-          "doc": "The unit multipliers defined for the CIM. When applied to unit symbols, the unit symbol is treated as a derived unit. Regardless of the contents of the unit symbol text, the unit symbol shall be treated as if it were a single-character unit symbol. Unit symbols should not contain multipliers, and it should be left to the multiplier to define the multiple for an entire data type.For example, if a unit symbol is m2Pers and the multiplier is k, then the value is k(m**2/s), and the multiplier applies to the entire final value, not to any individual part of the value. This can be conceptualized by substituting a derived unit symbol for the unit type. If one imagines that the symbol � represents the derived unit m2Pers, then applying the multiplier k can be conceptualized simply as k�.For example, the SI unit for mass is kg and not g. If the unit symbol is defined as kg, then the multiplier is applied to kg as a whole and does not replace the k in front of the g. In this case, the multiplier of m would be used with the unit symbol of kg to represent one gram. As a text string, this violates the instructions in IEC 80000-1. However, because the unit symbol in CIM is treated as a derived unit instead of as an SI unit, it makes more sense to conceptualize the kg as if it were replaced by one of the proposed replacements for the SI mass symbol. If one imagines that the kg were replaced by a symbol �, then it is easier to conceptualize the multiplier m as creating the proper unit m�, and not the forbidden unit mkg.",
+          "doc": "The unit multipliers defined for the CIM. When applied to unit symbols, the unit symbol is treated as a derived unit. Regardless of the contents of the unit symbol text, the unit symbol shall be treated as if it were a single-character unit symbol. Unit symbols should not contain multipliers, and it should be left to the multiplier to define the multiple for an entire data type.For example, if a unit symbol is \"m2Pers\" and the multiplier is \"k\", then the value is k(m**2/s), and the multiplier applies to the entire final value, not to any individual part of the value. This can be conceptualized by substituting a derived unit symbol for the unit type. If one imagines that the symbol \"�\" represents the derived unit \"m2Pers\", then applying the multiplier \"k\" can be conceptualized simply as \"k�\".For example, the SI unit for mass is \"kg\" and not \"g\". If the unit symbol is defined as \"kg\", then the multiplier is applied to \"kg\" as a whole and does not replace the \"k\" in front of the \"g\". In this case, the multiplier of \"m\" would be used with the unit symbol of \"kg\" to represent one gram. As a text string, this violates the instructions in IEC 80000-1. However, because the unit symbol in CIM is treated as a derived unit instead of as an SI unit, it makes more sense to conceptualize the \"kg\" as if it were replaced by one of the proposed replacements for the SI mass symbol. If one imagines that the \"kg\" were replaced by a symbol \"�\", then it is easier to conceptualize the multiplier \"m\" as creating the proper unit \"m�\", and not the forbidden unit \"mkg\".",
           "modelReference": "http://iec.ch/TC57/CIM100#UnitMultiplier",
           "symbols": [
                "k",
@@ -53,7 +53,7 @@
           "type": "enum",
           "name": "UnitSymbol",
           "namespace": "eu.cim4.ap_voc.securityanalysisresult.domain",
-          "doc": "The derived units defined for usage in the CIM. In some cases, the derived unit is equal to an SI unit. Whenever possible, the standard derived symbol is used instead of the formula for the derived unit. For example, the unit symbol Farad is defined as F instead of CPerV. In cases where a standard symbol does not exist for a derived unit, the formula for the unit is used as the unit symbol. For example, density does not have a standard symbol and so it is represented as kgPerm3. With the exception of the kg, which is an SI unit, the unit symbols do not contain multipliers and therefore represent the base derived unit to which a multiplier can be applied as a whole.Every unit symbol is treated as an unparseable text as if it were a single-letter symbol. The meaning of each unit symbol is defined by the accompanying descriptive text and not by the text contents of the unit symbol.To allow the widest possible range of serializations without requiring special character handling, several substitutions are made which deviate from the format described in IEC 80000-1. The division symbol / is replaced by the letters Per. Exponents are written in plain text after the unit as m3 instead of being formatted as m with a superscript of 3 or introducing a symbol as in m^3. The degree symbol � is replaced with the letters deg. Any clarification of the meaning for a substitution is included in the description for the unit symbol.Non-SI units are included in list of unit symbols to allow sources of data to be correctly labelled with their non-SI units (for example, a GPS sensor that is reporting numbers that represent feet instead of meters). This allows software to use the unit symbol information correctly convert and scale the raw data of those sources into SI-based units.The integer values are used for harmonization with IEC 61850.",
+          "doc": "The derived units defined for usage in the CIM. In some cases, the derived unit is equal to an SI unit. Whenever possible, the standard derived symbol is used instead of the formula for the derived unit. For example, the unit symbol Farad is defined as \"F\" instead of \"CPerV\". In cases where a standard symbol does not exist for a derived unit, the formula for the unit is used as the unit symbol. For example, density does not have a standard symbol and so it is represented as \"kgPerm3\". With the exception of the \"kg\", which is an SI unit, the unit symbols do not contain multipliers and therefore represent the base derived unit to which a multiplier can be applied as a whole.Every unit symbol is treated as an unparseable text as if it were a single-letter symbol. The meaning of each unit symbol is defined by the accompanying descriptive text and not by the text contents of the unit symbol.To allow the widest possible range of serializations without requiring special character handling, several substitutions are made which deviate from the format described in IEC 80000-1. The division symbol \"/\" is replaced by the letters \"Per\". Exponents are written in plain text after the unit as \"m3\" instead of being formatted as \"m\" with a superscript of 3 or introducing a symbol as in \"m^3\". The degree symbol \"�\" is replaced with the letters \"deg\". Any clarification of the meaning for a substitution is included in the description for the unit symbol.Non-SI units are included in list of unit symbols to allow sources of data to be correctly labelled with their non-SI units (for example, a GPS sensor that is reporting numbers that represent feet instead of meters). This allows software to use the unit symbol information correctly convert and scale the raw data of those sources into SI-based units.The integer values are used for harmonization with IEC 61850.",
           "modelReference": "http://iec.ch/TC57/CIM100#UnitSymbol",
           "symbols": [
                "A",
@@ -304,12 +304,12 @@
      },
      {
           "copyright": "Copyright 2025 UCAIug SPDX-License-Identifier: Apache-2.0",
-          "metaDoc": "Generated by CIMTool https://cimtool.ucaiug.io",
-          "header": {
+          "generator": "Generated by CIMTool https://cimtool.ucaiug.io",
+          "profile-metadata": {
               "metaDoc": "Abstract profile this schema implements (DX-PROF prof:Profile):",
               "profProfile": "https://ap-voc.cim4.eu/SecurityAnalysisResult/2.4#",
               "metaDoc": "Underlying standards the profile/schema conforms to (IEC etc.):",
-              "metaDoc": "Currently hardcoded until concensus is reached on how/where this will be specified/sourced from in tooling:",
+              "metaDoc": "Currently hardcoded until consensus is reached on how/where this will be specified/sourced from in tooling:",
               "dctConformsTo": [
                    "urn:iso:std:iec:61970-301:ed-7:amd1",
                    "urn:iso:std:iec:61970-600-2:ed-1"
@@ -319,9 +319,9 @@
                    "https://ap-voc.cim4.eu/SecurityAnalysisResult/2.4/owl"
               ],
               "metaDoc": "Identity + version of this Avro schema itself:",
-              "metaDoc": "Currently hardcoded until concensus is reached on how/where this will be specified/sourced from in tooling:",
+              "metaDoc": "Currently hardcoded until consensus is reached on how/where this will be specified/sourced from in tooling:",
               "schemaId": "https://schema-registry.example.com/subjects/cim-sv-dataset-value/versions/5",
-              "metaDoc": "Currently hardcoded to 1.0.0 until concensus is reached on how/where this will be specified/sourced from in tooling:",
+              "metaDoc": "Currently hardcoded to 1.0.0 until consensus is reached on how/where this will be specified/sourced from in tooling:",
               "schemaVersion": "1.0.0"
           },
           "type": "record",
@@ -329,6 +329,11 @@
           "namespace": "eu.cim4.ap_voc.securityanalysisresult",
           "doc": "The Security Analysis Result (SAR) profile is a profile to exchange a security analysis result.The security analysis result includes each limit violation detected for each assessed element and for a given contingency. The limit violation has a direct association to operational limit and contingency. The association to the operational limit provides information on the following:- The terminal (the end of the equipment) where the limit is defined- The equipment to which the limit is related- The type of the limit e.g. PATL, TATL, etc including the relevant time phase and other conditionsThe association to the contingency provides information which contingency was simulated when this limit violation was detected.This profile is not intended to replace the Topology (TP) and State Variables (SV) profiles. Its intention is to exchange a power flow result that is relevant for security optimization, either through violation or through a loading threshold. Systems should not use this profile for dumping a full database. The modeling is optimized to have the minimum size in addition to a well defined value definition (e.g. active power, apparent power, etc.).Recommendation: If the terminals are connected with zero impedance, it is recommended to include only one terminal with a voltage (e.g. the terminal of a BusbarSection). The connection between Contingency and Remedial Action is given by the Remedial Action Profile. The connection between AssessedElement and PowerFlowResult is given by the OperationalLimit.",
           "fields": [
+               {
+                    "name": "header",
+                    "type": "eu.cim4.ap_voc.securityanalysisresult.Header",
+                    "doc": "The standardized messaging header that must be included with each message compliant with this profile."
+               },
                {
                     "name": "RemedialActionApplied",
                     "type": {
