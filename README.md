@@ -24,7 +24,6 @@ For latest details on development of the Avro schema builder reference implement
 ## Avro Schema Builder Latest Release
 
 - 1.0.0-beta
-- 
   - The beta release is available here on GitHub at [apache-avro-schema.xsl](./builder/apache-avro-schema.xsl).
     
 ## Contributing
