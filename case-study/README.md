@@ -2295,7 +2295,7 @@ Recommended tools:
 ## 13. References
 
 - **CIMTool**: See [https://cimtool.ucaiug.io/](https://cimtool.ucaiug.io/) 
-- **CIMTool Application**: Release 2.3.0-RC3 available at [CIMTool-2.3.0-RC3](https://github.com/cimug-org/CIMTool/releases/download/2.2.0/CIMTool-2.3.0-RC3-win32.win32.x86_64.zip)
+- **CIMTool Application**: Release 2.3.0 available at [CIMTool-2.3.0](https://github.com/cimug-org/CIMTool/releases/download/2.3.0/CIMTool-2.3.0-win32.win32.x86_64.zip)
 - **SAR Profile**: See [ENTSO-E's Security Analysis Result Profile Specification 2.4.0](https://eepublicdownloads.entsoe.eu/clean-documents/CIM_documents/Grid_Model_CIM/NC/2.4/SecurityAnalysisResults_Profile_Specification_2-4-0.pdf)
 - **Avro Format**: See https://avro.apache.org/
 
