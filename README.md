@@ -4,7 +4,7 @@ This UCAIug repository hosts the exploration and development of approaches for p
 
 The focus is on generating Avro schemas for data suitable for exchange on **Kafka**, scheduled transfers, or real-time streams where minimum latency between source and destination is critical. The design goal is to enable **lightweight online validation** while still providing sufficient structure for **extensive offline validation**. Time-series data are expected to remain within defined limits, consistent with the resources described in the structured data exchange.
 
-The **Avro4CIM** project leverages **CIMTool (version 2.3.0-RC3)** to generate Avro schema definitions in alignment with the evolving CIM specification. This approach is intended to complement existing **CIM XML/XSD-based exchanges** by providing Avro as an additional serialization and integration option.
+The **Avro4CIM** project leverages the latest production release of **CIMTool 2.3.0** to generate Avro schema definitions in alignment with the evolving CIM specification. This approach is intended to complement existing **CIM XML/XSD-based exchanges** by providing Avro as an additional serialization and integration option.
 
 ## CSA 2.4 Security Analysis Result (SAR) Profile Case Study
 
@@ -16,7 +16,7 @@ For latest details on development of the Avro schema builder reference implement
 
 - **Clone This Repository**: to access the CIMTool project that defines the CSA 2.4 Security Analysis Result Avro Profile.
 - **For Information on CIMTool**: see [https://cimtool.ucaiug.io/](https://cimtool.ucaiug.io/) 
-- **To Download**: see [CIMTool-2.3.0-RC3](https://github.com/cimug-org/CIMTool/releases/download/2.2.0/CIMTool-2.3.0-RC3-win32.win32.x86_64.zip)
+- **To Download**: see [CIMTool-2.3.0](https://github.com/cimug-org/CIMTool/releases/download/2.3.0/CIMTool-2.3.0-win32.win32.x86_64.zip)
 - **Import the Avro builder**: use the "Import XSLT Transform Builder" wizard with the following settings:
   
   <img width="60%" height="60%" alt="image" src="https://github.com/user-attachments/assets/8bf76618-e444-4f46-ab29-78c09f574efc" />
@@ -24,7 +24,7 @@ For latest details on development of the Avro schema builder reference implement
 ## Avro Schema Builder Latest Release
 
 - 1.0.0-beta
-  - The beta release is available here on GitHub at [apache-avro-schema.xsl](./builder/apache-avro-schema.xsl).
+  - The beta release is now shipped OOTB with the production release of **CIMTool 2.3.0**.
     
 ## Contributing
 We welcome contributions. Please use the standard **fork → branch → pull request** workflow when proposing changes.
